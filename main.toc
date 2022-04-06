@@ -46,150 +46,150 @@
 \contentsline {section}{\numberline {1.19}各OSのアップデートの方法}{36}{}%
 \contentsline {section}{\numberline {1.20}考慮すべき点}{39}{}%
 \contentsline {paragraph}{OS のアップデートの適用可否}{39}{}%
-\contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 2\hfill }\nobreakspace {}章}\hspace {0.5cm}WWW システムと認証および暗号化}{41}{}%
-\contentsline {section}{\numberline {2.1}WWW システム}{41}{}%
-\contentsline {subsection}{\numberline {2.1.1}HTML}{42}{}%
-\contentsline {subsection}{\numberline {2.1.2}HTTP}{42}{}%
-\contentsline {subsection}{\numberline {2.1.3}URI}{42}{}%
-\contentsline {subsection}{\numberline {2.1.4}HTTP におけるリクエストとレスポンス}{43}{}%
-\contentsline {subsection}{\numberline {2.1.5}Web サーバの種類}{44}{}%
-\contentsline {section}{\numberline {2.2}WWW における認証と暗号化}{45}{}%
-\contentsline {subsection}{\numberline {2.2.1}Basic 認証と Digest 認証}{46}{}%
-\contentsline {subsection}{\numberline {2.2.2}接続元による認証}{46}{}%
-\contentsline {subsection}{\numberline {2.2.3}SSL および TLS}{46}{}%
-\contentsline {section}{\numberline {2.3}暗号方式}{47}{}%
-\contentsline {subsection}{\numberline {2.3.1}共通鍵暗号}{48}{}%
-\contentsline {subsection}{\numberline {2.3.2}公開鍵暗号}{48}{}%
-\contentsline {section}{\numberline {2.4}認証手法}{48}{}%
-\contentsline {subsection}{\numberline {2.4.1}電子署名}{48}{}%
-\contentsline {subsection}{\numberline {2.4.2}証明書と認証局}{50}{}%
-\contentsline {section}{\numberline {2.5}実験内容(1)}{51}{}%
-\contentsline {section}{\numberline {2.6}実験内容(2)}{52}{}%
-\contentsline {subsection}{\numberline {2.6.1}HTTPS サーバの設定}{52}{}%
-\contentsline {subsection}{\numberline {2.6.2}HTTPS 通信のモニタ}{52}{}%
-\contentsline {subsection}{\numberline {2.6.3}動的コンテンツ}{53}{}%
-\contentsline {section}{\numberline {2.7}Apache のインストールと各種設定}{53}{}%
-\contentsline {subsection}{\numberline {2.7.1}Apache のインストール}{53}{}%
-\contentsline {subsection}{\numberline {2.7.2}Apache の動作に関連するディレクトリ}{54}{}%
-\contentsline {subsection}{\numberline {2.7.3}コンテンツの公開}{55}{}%
-\contentsline {subsection}{\numberline {2.7.4}HTTP認証(Basic)の設定}{55}{}%
-\contentsline {subsection}{\numberline {2.7.5}IPアドレスによるアクセス制限の設定}{56}{}%
-\contentsline {subsection}{\numberline {2.7.6}HTTPS による暗号通信設定 (modssl)}{57}{}%
-\contentsline {section}{\numberline {2.8}動作確認}{57}{}%
-\contentsline {section}{\numberline {2.9}考慮すべき点}{58}{}%
-\contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 3\hfill }\nobreakspace {}章}\hspace {0.5cm}ルータ・スイッチ}{61}{}%
-\contentsline {section}{\numberline {3.1}目的}{61}{}%
-\contentsline {section}{\numberline {3.2}TCP/IPネットワークのルーティング}{62}{}%
-\contentsline {subsection}{\numberline {3.2.1}クラスフルルーティング}{63}{}%
-\contentsline {subsection}{\numberline {3.2.2}クラスレスルーティング}{64}{}%
-\contentsline {subsection}{\numberline {3.2.3}ルーティングテーブルの構築の種類}{64}{}%
-\contentsline {section}{\numberline {3.3}実験内容 (1)}{65}{}%
-\contentsline {section}{\numberline {3.4}必要となる知識}{67}{}%
-\contentsline {subsection}{\numberline {3.4.1}コンソール}{67}{}%
-\contentsline {subsection}{\numberline {3.4.2}Cisco ルータ，スイッチへの接続}{69}{}%
-\contentsline {subsection}{\numberline {3.4.3}Cisco IOS ルータの設定方法}{69}{}%
-\contentsline {subsection}{\numberline {3.4.4}PCのIPアドレスを変更}{73}{}%
-\contentsline {subsection}{\numberline {3.4.5}ルーティングテーブルの登録}{74}{}%
-\contentsline {section}{\numberline {3.5}ルーティングの設定}{74}{}%
-\contentsline {subsection}{\numberline {3.5.1}コンピュータのネットワーク設定の変更}{75}{}%
-\contentsline {section}{\numberline {3.6}動作確認}{75}{}%
-\contentsline {paragraph}{Destination Unreachable エラーの場合}{75}{}%
-\contentsline {paragraph}{エラーメッセージが出ない場合}{75}{}%
-\contentsline {section}{\numberline {3.7}考慮すべき点}{76}{}%
-\contentsline {section}{\numberline {3.8}スイッチを用いる目的}{77}{}%
-\contentsline {section}{\numberline {3.9}VLAN の種類}{78}{}%
-\contentsline {section}{\numberline {3.10}実験内容 (2)}{79}{}%
-\contentsline {section}{\numberline {3.11}設定に必要な情報}{81}{}%
-\contentsline {section}{\numberline {3.12}作業内容}{81}{}%
-\contentsline {subsection}{\numberline {3.12.1}スイッチの設定}{81}{}%
-\contentsline {subsubsection}{\numberline {(1)}設定確認}{82}{}%
-\contentsline {subsubsection}{\numberline {(2)}初期設定}{83}{}%
-\contentsline {subsubsection}{\numberline {(3)}VLAN定義}{83}{}%
-\contentsline {subsubsection}{\numberline {(4)}リモートログイン設定}{84}{}%
-\contentsline {subsubsection}{\numberline {(5)}接続}{85}{}%
-\contentsline {subsubsection}{\numberline {(6)}スイッチの設定確認}{85}{}%
-\contentsline {subsection}{\numberline {3.12.2}トランクVLAN (4Cのみ)}{86}{}%
-\contentsline {subsection}{\numberline {3.12.3}Spanning Tree 無効化 (4Cのみ)}{87}{}%
-\contentsline {section}{\numberline {3.13}動作確認}{87}{}%
-\contentsline {section}{\numberline {3.14}考慮すべき点}{87}{}%
-\contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 4\hfill }\nobreakspace {}章}\hspace {0.5cm}DNS・メールサービス}{89}{}%
-\contentsline {section}{\numberline {4.1}目的}{89}{}%
-\contentsline {section}{\numberline {4.2}DNS とは}{89}{}%
-\contentsline {section}{\numberline {4.3}実験内容 (1)}{90}{}%
-\contentsline {section}{\numberline {4.4}必要となる情報}{90}{}%
-\contentsline {section}{\numberline {4.5}必要となる知識}{91}{}%
-\contentsline {section}{\numberline {4.6}DNSサービスの構築の手順}{96}{}%
-\contentsline {subsection}{\numberline {4.6.1}BINDのインストール}{96}{}%
-\contentsline {subsection}{\numberline {4.6.2}BINDの全体設定}{96}{}%
-\contentsline {subsection}{\numberline {4.6.3}ドメイン（ゾーン）の設定}{98}{}%
-\contentsline {subsubsection}{\numberline {(1)}BINDゾーンファイルの書式}{98}{}%
-\contentsline {subsubsection}{\numberline {(2)}DNSの設定項目の詳細}{99}{}%
-\contentsline {subsection}{\numberline {4.6.4}本実験でのBINDゾーンファイル例}{100}{}%
-\contentsline {subsection}{\numberline {4.6.5}DNSサーバの起動と動作確認}{100}{}%
-\contentsline {subsection}{\numberline {4.6.6}サーバOSでの参照先DNSサーバ(リゾルバ)設定}{101}{}%
-\contentsline {subsection}{\numberline {4.6.7}クライアントOSのリゾルバ設定}{102}{}%
-\contentsline {section}{\numberline {4.7}発展：Macbook, ChromeBook の固定IP設定}{102}{}%
-\contentsline {section}{\numberline {4.8}動作確認}{102}{}%
-\contentsline {section}{\numberline {4.9}考慮すべき点}{103}{}%
-\contentsline {paragraph}{名前の解決方法}{103}{}%
-\contentsline {paragraph}{DNSによる名前解決の仕組み}{103}{}%
-\contentsline {paragraph}{管理外ホストの名前解決}{103}{}%
-\contentsline {paragraph}{hostsファイルなどとの併用}{103}{}%
-\contentsline {section}{\numberline {4.10}電子メールの送受信}{104}{}%
-\contentsline {section}{\numberline {4.11}実験内容 (2)}{104}{}%
-\contentsline {section}{\numberline {4.12}必要となる情報}{105}{}%
-\contentsline {section}{\numberline {4.13}必要となる知識}{105}{}%
-\contentsline {section}{\numberline {4.14}postfixのインストール}{108}{}%
-\contentsline {paragraph}{注意}{110}{}%
-\contentsline {subsection}{\numberline {4.14.1}DNSの設定の追加}{110}{}%
-\contentsline {subsubsection}{\numberline {(1)}MXレコードの追加}{110}{}%
-\contentsline {subsubsection}{\numberline {(2)}CNAMEの設定}{111}{}%
-\contentsline {section}{\numberline {4.15}MUA の設定，および，postfix，dovecotのテスト}{111}{}%
-\contentsline {section}{\numberline {4.16}考慮すべき点}{112}{}%
-\contentsline {paragraph}{宛先}{112}{}%
-\contentsline {paragraph}{メールサーバ}{112}{}%
-\contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 5\hfill }\nobreakspace {}章}\hspace {0.5cm}データベース・Web システム}{113}{}%
-\contentsline {section}{\numberline {5.1}データベース}{113}{}%
-\contentsline {subsection}{\numberline {5.1.1}データ形式}{113}{}%
-\contentsline {subsection}{\numberline {5.1.2}ハッシュ (Hash)}{114}{}%
-\contentsline {subsection}{\numberline {5.1.3}リレーショナルデータベース(RDB)}{114}{}%
-\contentsline {subsection}{\numberline {5.1.4}SQL}{115}{}%
-\contentsline {subsection}{\numberline {5.1.5}代表的な RDBMS}{115}{}%
-\contentsline {section}{\numberline {5.2}Webシステム}{116}{}%
-\contentsline {subsection}{\numberline {5.2.1}動的コンテンツ}{116}{}%
-\contentsline {subsection}{\numberline {5.2.2}Wiki}{117}{}%
-\contentsline {subsection}{\numberline {5.2.3}ブログ}{117}{}%
-\contentsline {subsection}{\numberline {5.2.4}CMS (Content Management System)}{118}{}%
-\contentsline {subsection}{\numberline {5.2.5}SNS (Social Networking System)}{118}{}%
-\contentsline {section}{\numberline {5.3}実験内容(1)}{119}{}%
-\contentsline {subsubsection}{\numberline {(1)}端末の設定}{119}{}%
-\contentsline {subsubsection}{\numberline {(2)}データのダウンロード，文字コード変換}{119}{}%
-\contentsline {subsubsection}{\numberline {(3)}nkf で日本語文字コード変換}{120}{}%
-\contentsline {subsubsection}{\numberline {(4)}データベース構築}{120}{}%
-\contentsline {subsubsection}{\numberline {(5)}テーブル構築}{120}{}%
-\contentsline {subsubsection}{\numberline {(6)}データ検索・操作}{121}{}%
-\contentsline {section}{\numberline {5.4}必要な知識}{121}{}%
-\contentsline {subsection}{\numberline {5.4.1}文字コード・改行コードの種類}{121}{}%
-\contentsline {paragraph}{日本語コード変換フィルタ NKF の使い方}{122}{}%
-\contentsline {subsection}{\numberline {5.4.2}日本語 UTF-8 を扱うための手順}{123}{}%
-\contentsline {subsection}{\numberline {5.4.3}MySQL インストール}{124}{}%
-\contentsline {subsection}{\numberline {5.4.4}データベース構築の手順}{124}{}%
-\contentsline {subsection}{\numberline {5.4.5}SQL言語によるデータベース操作}{129}{}%
-\contentsline {section}{\numberline {5.5}実験内容(2)}{131}{}%
-\contentsline {section}{\numberline {5.6}必要となる知識}{132}{}%
-\contentsline {subsection}{\numberline {5.6.1}SHELL の環境変数による言語設定}{132}{}%
-\contentsline {subsection}{\numberline {5.6.2}PHP の MySQL 拡張のインストール・有効化}{132}{}%
-\contentsline {subsection}{\numberline {5.6.3}MediaWiki のインストール}{133}{}%
-\contentsline {subsection}{\numberline {5.6.4}WordPress のインストール}{134}{}%
-\contentsline {section}{\numberline {5.7}デバッグ}{136}{}%
-\contentsline {section}{\numberline {5.8}動作確認}{137}{}%
-\contentsline {section}{\numberline {5.9}考慮すべき点}{137}{}%
-\contentsline {section}{\numberline {5.10}実験内容(2’)}{138}{}%
-\contentsline {subsection}{\numberline {5.10.1}HTTPSサーバの設定～認証局による証明書の署名 (これ以降は実験4Cのみ)}{138}{}%
-\contentsline {subsection}{\numberline {5.10.2}Apache のサーバ証明書の作成}{139}{}%
-\contentsline {subsection}{\numberline {5.10.3}証明書の作成}{140}{}%
-\contentsline {subsection}{\numberline {5.10.4}証明書ファイルの配置}{141}{}%
-\contentsline {subsection}{\numberline {5.10.5}注意点}{141}{}%
+\contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 2\hfill }\nobreakspace {}章}\hspace {0.5cm}DNS・メールサービス}{41}{}%
+\contentsline {section}{\numberline {2.1}目的}{41}{}%
+\contentsline {section}{\numberline {2.2}DNS とは}{41}{}%
+\contentsline {section}{\numberline {2.3}実験内容 (1)}{42}{}%
+\contentsline {section}{\numberline {2.4}必要となる情報}{42}{}%
+\contentsline {section}{\numberline {2.5}必要となる知識}{43}{}%
+\contentsline {section}{\numberline {2.6}DNSサービスの構築の手順}{48}{}%
+\contentsline {subsection}{\numberline {2.6.1}BINDのインストール}{48}{}%
+\contentsline {subsection}{\numberline {2.6.2}BINDの全体設定}{48}{}%
+\contentsline {subsection}{\numberline {2.6.3}ドメイン（ゾーン）の設定}{50}{}%
+\contentsline {subsubsection}{\numberline {(1)}BINDゾーンファイルの書式}{50}{}%
+\contentsline {subsubsection}{\numberline {(2)}DNSの設定項目の詳細}{51}{}%
+\contentsline {subsection}{\numberline {2.6.4}本実験でのBINDゾーンファイル例}{52}{}%
+\contentsline {subsection}{\numberline {2.6.5}DNSサーバの起動と動作確認}{52}{}%
+\contentsline {subsection}{\numberline {2.6.6}サーバOSでの参照先DNSサーバ(リゾルバ)設定}{53}{}%
+\contentsline {subsection}{\numberline {2.6.7}クライアントOSのリゾルバ設定}{54}{}%
+\contentsline {section}{\numberline {2.7}発展：Macbook, ChromeBook の固定IP設定}{54}{}%
+\contentsline {section}{\numberline {2.8}動作確認}{54}{}%
+\contentsline {section}{\numberline {2.9}考慮すべき点}{55}{}%
+\contentsline {paragraph}{名前の解決方法}{55}{}%
+\contentsline {paragraph}{DNSによる名前解決の仕組み}{55}{}%
+\contentsline {paragraph}{管理外ホストの名前解決}{55}{}%
+\contentsline {paragraph}{hostsファイルなどとの併用}{55}{}%
+\contentsline {section}{\numberline {2.10}電子メールの送受信}{55}{}%
+\contentsline {section}{\numberline {2.11}実験内容 (2)}{56}{}%
+\contentsline {section}{\numberline {2.12}必要となる情報}{56}{}%
+\contentsline {section}{\numberline {2.13}必要となる知識}{57}{}%
+\contentsline {section}{\numberline {2.14}postfixのインストール}{59}{}%
+\contentsline {paragraph}{注意}{62}{}%
+\contentsline {subsection}{\numberline {2.14.1}DNSの設定の追加}{62}{}%
+\contentsline {subsubsection}{\numberline {(1)}MXレコードの追加}{62}{}%
+\contentsline {subsubsection}{\numberline {(2)}CNAMEの設定}{62}{}%
+\contentsline {section}{\numberline {2.15}MUA の設定，および，postfix，dovecotのテスト}{63}{}%
+\contentsline {section}{\numberline {2.16}考慮すべき点}{64}{}%
+\contentsline {paragraph}{宛先}{64}{}%
+\contentsline {paragraph}{メールサーバ}{64}{}%
+\contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 3\hfill }\nobreakspace {}章}\hspace {0.5cm}WWW システムと認証および暗号化}{65}{}%
+\contentsline {section}{\numberline {3.1}WWW システム}{65}{}%
+\contentsline {subsection}{\numberline {3.1.1}HTML}{66}{}%
+\contentsline {subsection}{\numberline {3.1.2}HTTP}{66}{}%
+\contentsline {subsection}{\numberline {3.1.3}URI}{66}{}%
+\contentsline {subsection}{\numberline {3.1.4}HTTP におけるリクエストとレスポンス}{67}{}%
+\contentsline {subsection}{\numberline {3.1.5}Web サーバの種類}{68}{}%
+\contentsline {section}{\numberline {3.2}WWW における認証と暗号化}{69}{}%
+\contentsline {subsection}{\numberline {3.2.1}Basic 認証と Digest 認証}{70}{}%
+\contentsline {subsection}{\numberline {3.2.2}接続元による認証}{70}{}%
+\contentsline {subsection}{\numberline {3.2.3}SSL および TLS}{70}{}%
+\contentsline {section}{\numberline {3.3}暗号方式}{71}{}%
+\contentsline {subsection}{\numberline {3.3.1}共通鍵暗号}{72}{}%
+\contentsline {subsection}{\numberline {3.3.2}公開鍵暗号}{72}{}%
+\contentsline {section}{\numberline {3.4}認証手法}{72}{}%
+\contentsline {subsection}{\numberline {3.4.1}電子署名}{72}{}%
+\contentsline {subsection}{\numberline {3.4.2}証明書と認証局}{74}{}%
+\contentsline {section}{\numberline {3.5}実験内容(1)}{75}{}%
+\contentsline {section}{\numberline {3.6}実験内容(2)}{76}{}%
+\contentsline {subsection}{\numberline {3.6.1}HTTPS サーバの設定}{76}{}%
+\contentsline {subsection}{\numberline {3.6.2}HTTPS 通信のモニタ}{76}{}%
+\contentsline {subsection}{\numberline {3.6.3}動的コンテンツ}{77}{}%
+\contentsline {section}{\numberline {3.7}Apache のインストールと各種設定}{77}{}%
+\contentsline {subsection}{\numberline {3.7.1}Apache のインストール}{77}{}%
+\contentsline {subsection}{\numberline {3.7.2}Apache の動作に関連するディレクトリ}{78}{}%
+\contentsline {subsection}{\numberline {3.7.3}コンテンツの公開}{79}{}%
+\contentsline {subsection}{\numberline {3.7.4}HTTP認証(Basic)の設定}{79}{}%
+\contentsline {subsection}{\numberline {3.7.5}IPアドレスによるアクセス制限の設定}{80}{}%
+\contentsline {subsection}{\numberline {3.7.6}HTTPS による暗号通信設定 (modssl)}{81}{}%
+\contentsline {section}{\numberline {3.8}動作確認}{81}{}%
+\contentsline {section}{\numberline {3.9}考慮すべき点}{82}{}%
+\contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 4\hfill }\nobreakspace {}章}\hspace {0.5cm}データベース・Web システム}{85}{}%
+\contentsline {section}{\numberline {4.1}データベース}{85}{}%
+\contentsline {subsection}{\numberline {4.1.1}データ形式}{85}{}%
+\contentsline {subsection}{\numberline {4.1.2}ハッシュ (Hash)}{86}{}%
+\contentsline {subsection}{\numberline {4.1.3}リレーショナルデータベース(RDB)}{86}{}%
+\contentsline {subsection}{\numberline {4.1.4}SQL}{87}{}%
+\contentsline {subsection}{\numberline {4.1.5}代表的な RDBMS}{87}{}%
+\contentsline {section}{\numberline {4.2}Webシステム}{88}{}%
+\contentsline {subsection}{\numberline {4.2.1}動的コンテンツ}{88}{}%
+\contentsline {subsection}{\numberline {4.2.2}Wiki}{89}{}%
+\contentsline {subsection}{\numberline {4.2.3}ブログ}{89}{}%
+\contentsline {subsection}{\numberline {4.2.4}CMS (Content Management System)}{90}{}%
+\contentsline {subsection}{\numberline {4.2.5}SNS (Social Networking System)}{90}{}%
+\contentsline {section}{\numberline {4.3}実験内容(1)}{91}{}%
+\contentsline {subsubsection}{\numberline {(1)}端末の設定}{91}{}%
+\contentsline {subsubsection}{\numberline {(2)}データのダウンロード，文字コード変換}{91}{}%
+\contentsline {subsubsection}{\numberline {(3)}nkf で日本語文字コード変換}{92}{}%
+\contentsline {subsubsection}{\numberline {(4)}データベース構築}{92}{}%
+\contentsline {subsubsection}{\numberline {(5)}テーブル構築}{92}{}%
+\contentsline {subsubsection}{\numberline {(6)}データ検索・操作}{93}{}%
+\contentsline {section}{\numberline {4.4}必要な知識}{93}{}%
+\contentsline {subsection}{\numberline {4.4.1}文字コード・改行コードの種類}{93}{}%
+\contentsline {paragraph}{日本語コード変換フィルタ NKF の使い方}{94}{}%
+\contentsline {subsection}{\numberline {4.4.2}日本語 UTF-8 を扱うための手順}{95}{}%
+\contentsline {subsection}{\numberline {4.4.3}MySQL インストール}{96}{}%
+\contentsline {subsection}{\numberline {4.4.4}データベース構築の手順}{96}{}%
+\contentsline {subsection}{\numberline {4.4.5}SQL言語によるデータベース操作}{101}{}%
+\contentsline {section}{\numberline {4.5}実験内容(2)}{103}{}%
+\contentsline {section}{\numberline {4.6}必要となる知識}{104}{}%
+\contentsline {subsection}{\numberline {4.6.1}SHELL の環境変数による言語設定}{104}{}%
+\contentsline {subsection}{\numberline {4.6.2}PHP の MySQL 拡張のインストール・有効化}{104}{}%
+\contentsline {subsection}{\numberline {4.6.3}MediaWiki のインストール}{105}{}%
+\contentsline {subsection}{\numberline {4.6.4}WordPress のインストール}{106}{}%
+\contentsline {section}{\numberline {4.7}デバッグ}{108}{}%
+\contentsline {section}{\numberline {4.8}動作確認}{109}{}%
+\contentsline {section}{\numberline {4.9}考慮すべき点}{109}{}%
+\contentsline {section}{\numberline {4.10}実験内容(2’)}{110}{}%
+\contentsline {subsection}{\numberline {4.10.1}HTTPSサーバの設定～認証局による証明書の署名 (これ以降は実験4Cのみ)}{110}{}%
+\contentsline {subsection}{\numberline {4.10.2}Apache のサーバ証明書の作成}{111}{}%
+\contentsline {subsection}{\numberline {4.10.3}証明書の作成}{112}{}%
+\contentsline {subsection}{\numberline {4.10.4}証明書ファイルの配置}{113}{}%
+\contentsline {subsection}{\numberline {4.10.5}注意点}{113}{}%
+\contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 5\hfill }\nobreakspace {}章}\hspace {0.5cm}ルータ・スイッチ}{115}{}%
+\contentsline {section}{\numberline {5.1}目的}{115}{}%
+\contentsline {section}{\numberline {5.2}TCP/IPネットワークのルーティング}{116}{}%
+\contentsline {subsection}{\numberline {5.2.1}クラスフルルーティング}{117}{}%
+\contentsline {subsection}{\numberline {5.2.2}クラスレスルーティング}{118}{}%
+\contentsline {subsection}{\numberline {5.2.3}ルーティングテーブルの構築の種類}{118}{}%
+\contentsline {section}{\numberline {5.3}実験内容 (1)}{119}{}%
+\contentsline {section}{\numberline {5.4}必要となる知識}{121}{}%
+\contentsline {subsection}{\numberline {5.4.1}コンソール}{121}{}%
+\contentsline {subsection}{\numberline {5.4.2}Cisco ルータ，スイッチへの接続}{123}{}%
+\contentsline {subsection}{\numberline {5.4.3}Cisco IOS ルータの設定方法}{123}{}%
+\contentsline {subsection}{\numberline {5.4.4}PCのIPアドレスを変更}{127}{}%
+\contentsline {subsection}{\numberline {5.4.5}ルーティングテーブルの登録}{128}{}%
+\contentsline {section}{\numberline {5.5}ルーティングの設定}{128}{}%
+\contentsline {subsection}{\numberline {5.5.1}コンピュータのネットワーク設定の変更}{129}{}%
+\contentsline {section}{\numberline {5.6}動作確認}{129}{}%
+\contentsline {paragraph}{Destination Unreachable エラーの場合}{129}{}%
+\contentsline {paragraph}{エラーメッセージが出ない場合}{129}{}%
+\contentsline {section}{\numberline {5.7}考慮すべき点}{130}{}%
+\contentsline {section}{\numberline {5.8}スイッチを用いる目的}{131}{}%
+\contentsline {section}{\numberline {5.9}VLAN の種類}{132}{}%
+\contentsline {section}{\numberline {5.10}実験内容 (2)}{133}{}%
+\contentsline {section}{\numberline {5.11}設定に必要な情報}{135}{}%
+\contentsline {section}{\numberline {5.12}作業内容}{135}{}%
+\contentsline {subsection}{\numberline {5.12.1}スイッチの設定}{135}{}%
+\contentsline {subsubsection}{\numberline {(1)}設定確認}{136}{}%
+\contentsline {subsubsection}{\numberline {(2)}初期設定}{137}{}%
+\contentsline {subsubsection}{\numberline {(3)}VLAN定義}{137}{}%
+\contentsline {subsubsection}{\numberline {(4)}リモートログイン設定}{138}{}%
+\contentsline {subsubsection}{\numberline {(5)}接続}{139}{}%
+\contentsline {subsubsection}{\numberline {(6)}スイッチの設定確認}{139}{}%
+\contentsline {subsection}{\numberline {5.12.2}トランクVLAN (4Cのみ)}{140}{}%
+\contentsline {subsection}{\numberline {5.12.3}Spanning Tree 無効化 (4Cのみ)}{141}{}%
+\contentsline {section}{\numberline {5.13}動作確認}{141}{}%
+\contentsline {section}{\numberline {5.14}考慮すべき点}{141}{}%
 \contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 6\hfill }\nobreakspace {}章}\hspace {0.5cm}ネットワークセキュリティ}{143}{}%
 \contentsline {section}{\numberline {6.1}ネットワークセキュリティ}{143}{}%
 \contentsline {subsection}{\numberline {6.1.1}ファイアウォール}{143}{}%

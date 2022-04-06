@@ -1,4 +1,4 @@
-This is e-pTeX, Version 3.141592653-p3.9.0-210218-2.6 (utf8.euc) (TeX Live 2021) (preloaded format=platex 2022.2.13)  6 APR 2022 13:37
+This is e-pTeX, Version 3.141592653-p3.9.0-210218-2.6 (utf8.euc) (TeX Live 2021) (preloaded format=platex 2022.2.13)  6 APR 2022 15:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -316,7 +316,7 @@ Overfull \hbox (8.92538pt too wide) detected at line 280
 
 ] [2]
 第  1 章
-(./01_os/os.tex
+(./01_1_os/os.tex
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <8> on input line 15.
 LaTeX Font Info:    External font `cmex10' loaded for size
@@ -334,19 +334,19 @@ LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <12> not available
 LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <12> not available
 (Font)              Font shape `JY1/gt/m/n' tried instead on input line 305.
  [9] [10] [11]
-File: 01_os/01-partition.eps Graphic file (type eps)
-<01_os/01-partition.eps>
- [12] [13] [14] [15] [16] [17]) (./01_os/02main.tex
+File: 01_1_os/01-partition.eps Graphic file (type eps)
+<01_1_os/01-partition.eps>
+ [12] [13] [14] [15] [16] [17]) (./01_1_os/02main.tex
 [18]
-File: 01_os/system-network.pdf Graphic file (type pdf)
-<01_os/system-network.pdf>
+File: 01_1_os/system-network.pdf Graphic file (type pdf)
+<01_1_os/system-network.pdf>
  [19
 
 ] [20] [21] [22] [23] [24]
-File: 01_os/lan.eps Graphic file (type eps)
-<01_os/lan.eps>
-File: 01_os/cable4.ps Graphic file (type eps)
-<01_os/cable4.ps>
+File: 01_1_os/lan.eps Graphic file (type eps)
+<01_1_os/lan.eps>
+File: 01_1_os/cable4.ps Graphic file (type eps)
+<01_1_os/cable4.ps>
  [25] [26] [27]
 Overfull \hbox (18.0279pt too wide) in paragraph at lines 524--537
  [][][] 
@@ -356,81 +356,17 @@ Overfull \hbox (18.0279pt too wide) in paragraph at lines 524--537
 
 ] [37] [38] [39]) [40]
 第  2 章
-(./04_http_auth_crypt/04main.tex [41
+(./01_2_dns_mail/05main.tex [41
 
-] [42]
-File: 04_http_auth_crypt/http.pdf Graphic file (type pdf)
-<04_http_auth_crypt/http.pdf>
-LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 155.
- [43] [44] [45] [46]
-File: 04_http_auth_crypt/crypt.pdf Graphic file (type pdf)
-<04_http_auth_crypt/crypt.pdf>
- [47] [48]
-File: 04_http_auth_crypt/publickey-auth.pdf Graphic file (type pdf)
-<04_http_auth_crypt/publickey-auth.pdf>
-File: 04_http_auth_crypt/sign.pdf Graphic file (type pdf)
-<04_http_auth_crypt/sign.pdf>
-
-[49] [50] [51] [52] [53] [54] [55] [56] [57] [58]) [59
-
-] [60
-
-]
-第  3 章
-(./02_router_sw/router.tex [61] [62]
-Overfull \hbox (0.63153pt too wide) in paragraph at lines 118--133
- [][][][] 
- []
-
-[63] [64] [65]
-File: 02_router_sw/router_before.pdf Graphic file (type pdf)
-<02_router_sw/router_before.pdf>
-File: 02_router_sw/router_after.pdf Graphic file (type pdf)
-<02_router_sw/router_after.pdf>
-File: 02_router_sw/router2.pdf Graphic file (type pdf)
-<02_router_sw/router2.pdf>
- [66] [67] [68] [69] [70] [71
-
-] [72] [73] [74] [75] [76])
-(./02_router_sw/switch.tex
-File: 02_router_sw/vlan1.pdf Graphic file (type pdf)
-<02_router_sw/vlan1.pdf>
-File: 02_router_sw/vlan2.pdf Graphic file (type pdf)
-<02_router_sw/vlan2.pdf>
-File: 02_router_sw/vlan3.pdf Graphic file (type pdf)
-<02_router_sw/vlan3.pdf>
- [77
-
-
-] [78] [79] [80] [81]
-Overfull \hbox (3.05197pt too wide) in paragraph at lines 229--229
-[]\OT1/cmtt/m/n/10 1    default                          active    Fa0/19, Fa0/
-20, Fa0/21, Fa0/22, Fa0/23[]  
- []
-
-
-Overfull \hbox (3.05197pt too wide) in paragraph at lines 229--229
-[]                                                \OT1/cmtt/m/n/10 Fa0/14, Fa0/
-15, Fa0/16, Fa0/17, Fa0/18[]  
- []
-
-[82] [83] [84]
-File: 02_router_sw/switch.pdf Graphic file (type pdf)
-<02_router_sw/switch.pdf>
- [85] [86]) [87] [88
-
-]
-第  4 章
-(./03_dns_mail/05main.tex [89] [90] [91] [92]
+] [42] [43] [44]
 Underfull \hbox (badness 1009) in paragraph at lines 196--212
 []\OT1/cmr/m/n/10 DNS \JY1/mc/m/n/10 では ， 名前を管理する名前空間を図 \OT1/cm
-r/m/n/10 4.1 \JY1/mc/m/n/10 のような階層的なツリ ー構造で構成しており， ホ
+r/m/n/10 2.1 \JY1/mc/m/n/10 のような階層的なツリ ー構造で構成しており， ホ
  []
 
 
 Underfull \hbox (badness 2529) in paragraph at lines 196--212
-\JY1/mc/m/n/10 スト名は ， 図  \OT1/cmr/m/n/10 4.1 \JY1/mc/m/n/10 に示したツリ 
+\JY1/mc/m/n/10 スト名は ， 図  \OT1/cmr/m/n/10 2.1 \JY1/mc/m/n/10 に示したツリ 
 ーのラベルを最下層から順に並べ ， \OT1/cmr/m/n/10 ``[]\OT1/cmtt/m/n/10 .[]\OT1/
 cmr/m/n/10 '' \JY1/mc/m/n/10 で区切 っ て表記する ．
  []
@@ -442,27 +378,25 @@ Underfull \hbox (badness 3019) in paragraph at lines 196--212
 これらの場合
  []
 
-File: 03_dns_mail/dns-domain.eps Graphic file (type eps)
-<03_dns_mail/dns-domain.eps>
-File: 03_dns_mail/dns1.pdf Graphic file (type pdf)
-<03_dns_mail/dns1.pdf>
-[93]
-File: 03_dns_mail/dns-ip-domain.eps Graphic file (type eps)
-<03_dns_mail/dns-ip-domain.eps>
- [94] [95] [96
+File: 01_2_dns_mail/dns-domain.eps Graphic file (type eps)
+<01_2_dns_mail/dns-domain.eps>
+File: 01_2_dns_mail/dns1.pdf Graphic file (type pdf)
+<01_2_dns_mail/dns1.pdf>
+[45]
+File: 01_2_dns_mail/dns-ip-domain.eps Graphic file (type eps)
+<01_2_dns_mail/dns-ip-domain.eps>
+ [46] [47] [48
 
-] [97] [98] [99]
+] [49] [50] [51]
 Overfull \hbox (3.05197pt too wide) in paragraph at lines 547--547
 []\OT1/cmtt/m/n/10 @       IN   SOA  server.gX.exp.info.kochi-tech.ac.jp.  post
 master.gX.exp.info.kochi-t[]  
  []
 
-[100] [101] [102]) [103] (./03_dns_mail/07main.tex
-File: 03_dns_mail/mail1.eps Graphic file (type eps)
-<03_dns_mail/mail1.eps>
- [104
-
-]
+[52] [53] [54]) (./01_2_dns_mail/07main.tex
+File: 01_2_dns_mail/mail1.eps Graphic file (type eps)
+<01_2_dns_mail/mail1.eps>
+ [55]
 Underfull \hbox (badness 5359) in paragraph at lines 63--69
 []\JY1/mc/m/n/10 メ ールサ ーバである \OT1/cmr/m/n/10 server \JY1/mc/m/n/10 は 
 \OT1/cmr/m/n/10 server \JY1/mc/m/n/10 に登録されているユ ーザ[]\OT1/cmtt/m/n/10
@@ -477,30 +411,51 @@ Underfull \hbox (badness 2318) in paragraph at lines 70--72
 /m/n/10 POP \JY1/mc/m/n/10 サ ーバ名は ，
  []
 
-[105]
-File: 03_dns_mail/mailserver.eps Graphic file (type eps)
-<03_dns_mail/mailserver.eps>
- [106]
+[56]
+File: 01_2_dns_mail/mailserver.eps Graphic file (type eps)
+<01_2_dns_mail/mailserver.eps>
+ [57] [58]
 Underfull \hbox (badness 10000) in paragraph at lines 191--195
 []\OT1/cmr/m/n/10 3 \JY1/mc/m/n/10 行目の例は \OT1/cmr/m/n/10 for-ward@mail.jp 
 \JY1/mc/m/n/10 という宛先のメ ールが ， 別のメ ールサ ーバ \OT1/cmr/m/n/10 my-
  []
 
-[107] [108] [109] [110] [111]) [112]
-第  5 章
-(./05_database_websystem/05main.tex [113
+[59] [60] [61]
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 382.
+ [62] [63]) [64]
+第  3 章
+(./02_1_http_auth_crypt/04main.tex [65
 
-] [114] [115] [116] [117] [118]
-[119
+] [66]
+File: 02_1_http_auth_crypt/http.pdf Graphic file (type pdf)
+<02_1_http_auth_crypt/http.pdf>
+ [67] [68] [69] [70]
+File: 02_1_http_auth_crypt/crypt.pdf Graphic file (type pdf)
+<02_1_http_auth_crypt/crypt.pdf>
+ [71] [72]
+File: 02_1_http_auth_crypt/publickey-auth.pdf Graphic file (type pdf)
+<02_1_http_auth_crypt/publickey-auth.pdf>
+File: 02_1_http_auth_crypt/sign.pdf Graphic file (type pdf)
+<02_1_http_auth_crypt/sign.pdf>
 
-] [120] [121] [122] [123] [124] [125] [126] [127] [128] [129] [130]
-[131
+[73] [74] [75] [76] [77] [78] [79] [80] [81] [82]) [83
 
-] [132
+] [84
 
-] [133] [134] [135] [136] [137
+]
+第  4 章
+(./02_2_database_websystem/05main.tex [85] [86] [87] [88] [89] [90] [91
 
-] [138
+]
+[92] [93] [94] [95] [96] [97] [98] [99] [100] [101] [102] [103
+
+] [104
+
+] [105]
+[106] [107] [108] [109
+
+] [110
 
 ]
 Underfull \hbox (badness 1014) in paragraph at lines 1215--1216
@@ -509,22 +464,65 @@ Underfull \hbox (badness 1014) in paragraph at lines 1215--1216
 OT1/cmtt/m/n/10 SSLCertificateFile$\OT1/cmr/m/n/10 ,
  []
 
-[139] [140]) [141] [142]
-第  6 章
-(./06_firewall_appgw/06main.tex [143
+[111] [112]) [113] [114]
+第  5 章
+(./03_1_router_sw/router.tex [115
+
+] [116]
+Overfull \hbox (0.63153pt too wide) in paragraph at lines 118--133
+ [][][][] 
+ []
+
+[117] [118] [119]
+File: 03_1_router_sw/router_before.pdf Graphic file (type pdf)
+<03_1_router_sw/router_before.pdf>
+File: 03_1_router_sw/router_after.pdf Graphic file (type pdf)
+<03_1_router_sw/router_after.pdf>
+File: 03_1_router_sw/router2.pdf Graphic file (type pdf)
+<03_1_router_sw/router2.pdf>
+ [120] [121] [122] [123] [124] [125
+
+] [126] [127] [128]
+[129] [130]) (./03_1_router_sw/switch.tex
+File: 03_1_router_sw/vlan1.pdf Graphic file (type pdf)
+<03_1_router_sw/vlan1.pdf>
+File: 03_1_router_sw/vlan2.pdf Graphic file (type pdf)
+<03_1_router_sw/vlan2.pdf>
+File: 03_1_router_sw/vlan3.pdf Graphic file (type pdf)
+<03_1_router_sw/vlan3.pdf>
+ [131
+
+] [132] [133] [134] [135]
+Overfull \hbox (3.05197pt too wide) in paragraph at lines 229--229
+[]\OT1/cmtt/m/n/10 1    default                          active    Fa0/19, Fa0/
+20, Fa0/21, Fa0/22, Fa0/23[]  
+ []
+
+
+Overfull \hbox (3.05197pt too wide) in paragraph at lines 229--229
+[]                                                \OT1/cmtt/m/n/10 Fa0/14, Fa0/
+15, Fa0/16, Fa0/17, Fa0/18[]  
+ []
+
+[136] [137] [138]
+File: 03_1_router_sw/switch.pdf Graphic file (type pdf)
+<03_1_router_sw/switch.pdf>
+ [139] [140]) [141] [142
 
 ]
-File: ./06_firewall_appgw/fw1.eps Graphic file (type eps)
-<./06_firewall_appgw/fw1.eps>
-File: ./06_firewall_appgw/fw2.eps Graphic file (type eps)
-<./06_firewall_appgw/fw2.eps>
+第  6 章
+(./03_2_firewall/06main.tex [143]
+File: 03_2_firewall/fw1.eps Graphic file (type eps)
+<03_2_firewall/fw1.eps>
+File: 03_2_firewall/fw2.eps Graphic file (type eps)
+<03_2_firewall/fw2.eps>
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [144] [145] [146] [147]
-File: ./06_firewall_appgw/fw_pf_nat_4c.pdf Graphic file (type pdf)
-<./06_firewall_appgw/fw_pf_nat_4c.pdf>
+File: 03_2_firewall/fw_pf_nat_4c.pdf Graphic file (type pdf)
+<03_2_firewall/fw_pf_nat_4c.pdf>
  [148
 
 ] [149]
@@ -766,12 +764,12 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 2540 strings out of 478741
- 42633 string characters out of 5858835
- 369423 words of memory out of 5000000
- 20785 multiletter control sequences out of 15000+600000
+ 2542 strings out of 478741
+ 42731 string characters out of 5858835
+ 369426 words of memory out of 5000000
+ 20788 multiletter control sequences out of 15000+600000
  486413 words of font info for 94 fonts, out of 8000000 for 9000
  929 hyphenation exceptions out of 8191
  55i,14n,62p,3720b,407s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on main.dvi (231 pages, 834616 bytes).
+Output written on main.dvi (231 pages, 834628 bytes).

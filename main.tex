@@ -1,6 +1,6 @@
 
 %//////////////////////////////////////////////////////////////////////
-% 2021年度 情報学群実験第３ｉ・第４Ｃ テキスト
+% 2022年度 情報学群実験第3i・第4C テキスト
 %                                       高知工科大学情報学群
 %//////////////////////////////////////////////////////////////////////
 \documentclass[10pt]{text2002}
@@ -110,37 +110,36 @@
 %===================================================================== 第一部
 \part{情報学群実験第3i・第4C}\label{part:1}
 
-
 \chapter[オペレーティングシステムの導入とネットワーク設定]
 {オペレーティングシステムの\\導入とネットワーク設定}\label{ch:os}
-\def\chapos{01_os/}
+\def\chapos{01_1_os/}
 \input{\chapos os.tex}
-\def\chapnet{01_os/}
+\def\chapnet{01_1_os/}
 \input{\chapnet 02main.tex}
 
-\chapter{WWW システムと認証および暗号化}
-\input{./04_http_auth_crypt/04main.tex}
-
-
-\chapter{ルータ・スイッチ}\label{ch:patch}
-\def\chaprouter{02_router_sw/}
-\input{\chaprouter router.tex}
-\clearpage
-\def\chapsw{02_router_sw/}
-\input{\chapsw switch.tex}
-
 \chapter{DNS・メールサービス}\label{ch:dns}
-\def\chapdns{03_dns_mail/}
+\def\chapdns{01_2_dns_mail/}
 \input{\chapdns 05main.tex}
-\clearpage
-\def\chapmail{03_dns_mail/}
+\def\chapmail{01_2_dns_mail/}
 \input{\chapmail 07main.tex}
 
+\chapter{WWW システムと認証および暗号化}
+\def\chapwww{02_1_http_auth_crypt/}
+\input{\chapwww 04main.tex}
+
 \chapter{データベース・Web システム}
-\input{./05_database_websystem/05main.tex}
+\def\chapdb{02_2_database_websystem/}
+\input{\chapdb 05main.tex}
+
+\chapter{ルータ・スイッチ}\label{ch:patch}
+\def\chaprouter{03_1_router_sw/}
+\input{\chaprouter router.tex}
+\def\chapsw{03_1_router_sw/}
+\input{\chapsw switch.tex}
 
 \chapter{ネットワークセキュリティ}
-\input{./06_firewall_appgw/06main.tex}
+\def\chapfw{03_2_firewall/}
+\input{\chapfw 06main.tex}
 
 \chapter{最終課題}
 \def\chapfinal{07_final/}
