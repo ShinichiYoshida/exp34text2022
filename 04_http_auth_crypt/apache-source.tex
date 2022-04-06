@@ -1,0 +1,857 @@
+\subsection{Apache 導入に必要なソフト}
+
+まず，Apache は以前は apache-x.y.z.tar.gz のような名称で配布されていたが，
+現在では Apache プロジェクトの中には，HTTP サーバ以外にもJava や Web シ
+ステムなどのフレームワークなすソフトウェア群を構築する多くのプロジェクト
+があり，多くのソフトウェアが公開されているため，現在のバージョンでは，
+httpd-x.y.z.tar.gz のような名称で公開されているのでこれをダウンロードす
+る．
+
+構築手順は，これまでのソースコードからの手順に従うが，pcre，apr,
+apr-icong, apr-util などのソフトウェア群も必要なため，これらを事前にイン
+ストールしておく．
+
+\subsection{Apache の設定}
+
+デフォルトでは，/usr/local/apache2 にすべての必要なファイルがインストー
+ルされる．以下，配置される主なディレクトリとそこにどのようなファイルが置かれるかを示す．
+
+\begin{description}
+ \item[bin] \ \\
+            Apache の起動・停止スクリプトがある．apachectl が起動スクリ
+	    プトで，引数に start, stop, restart をとる．
+\begin{cli}
+# /usr/local/apache2/bin/apachectl start
+\end{cli}
+ \item[htdocs] \ \\
+            公開用ファイル(HTMLファイルや画像ファイル，CGI等のプログ
+	    ラムファイル）が置かれる．外部からアクセスされるディレクトリ
+	    である．
+ \item[etc] \ \\
+            設定ファイルがある．httpd.conf が起動時に読み込まれる．
+ \item[var] \ \\
+            ログファイルがある．アクセスログ・エラーログには常に注意する．
+\end{description}
+
+httpd.conf ファイルにて設定を記述する．
+設定項目を，Apache ではディレクティブと呼び，HTML/XML 風の記述を行う．
+以下に具体例を挙げる．
+
+\begin{description}
+ \item[ServerRoot] \ \\
+            サーバファイル群のディレクトリ (/usr/local/apache2)
+ \item[Listen] \ \\
+            サーバがサービスを行う IP アドレス・ポート番号
+ \item[LoadModule] \ \\
+            必要な機能のモジュールを指定
+ \item[User] \ \\
+            サーバを動作させるユーザ権限．公開用ディレクトリのパーミッション
+	    に合わせる．
+ \item[Group] \ \\
+            サーバを動作させるグループ．同様にパーミッションに合わせる．
+ \item[ServerAdmin] \ \\
+            サーバ管理者の連絡先
+ \item[DocumentRoot] \ \\
+            公開ディレクトリのトップ
+\end{description}
+
+これ以外の，CGI や SSI，オプションの設定などは適宜追加・修正する．
+
+
+\subsection{OpenSSL のコマンド}
+
+OpenSSL は，openssl コマンドの後，サブコマンドを指定して多くの操作を行う．
+\begin{cli}
+#openssl サブコマンド 引数
+\end{cli}
+
+サブコマンドのリストは，man openssl を参照のこと．また，各サブコマンドは，
+それぞれまた別の man マニュアルとして記述されている（例：man x590 など）．
+
+主なサブコマンドとして，下記のようなものがあげられる．
+\begin{description}
+ \item[genrsa] \ \\
+            RSA 方式の秘密鍵を生成する．-out オプションで鍵のファイル
+	    名を指定する．その他，-des，-3des,-idea オプションは，それぞ
+	    れ，DES, TripleDES, IDEA 方式の共通鍵暗号で生成する鍵を暗号
+	    化する．個人の鍵は暗号化が強く推奨されるが，サーバ鍵を暗号化
+	    するとApache 起動が自動的に行えなくなるため，あまり行わない．
+	    鍵ファイルは，.key といった拡張子をよく用いるが標準的なもの
+	    はない．ファイルを開き，BEGIN RSA PRIVATE KEY とあれば，それ
+	    は秘密鍵である．また最後に，鍵のビット数を指定するが，512 な
+	    どの小さいものではなく，2048など大きなものを指定する（計算負
+	    荷が上がるが，安全性が向上する）．
+ \item[rsa] \ \\
+            秘密鍵の確認等に用いる．-in で鍵を指定し，-text オプションを
+	    用いると，鍵を情報をテキスト形式で表示する．鍵長などが確認で
+	    きる．
+ \item[req] \ \\
+            証明書署名要求 (certificate request) を生成する．公開鍵暗号
+	    方式における公開鍵にあたるものであるが，その公開鍵を所有する
+	    者（サーバ名，国情報，機関名など）の情報が一緒に入ったもので
+	    ある．通常は，これを認証機関（認証局=CA）に送付し，署名して
+	    もらう．-new オプションで公開鍵の生成を指定し，-key オプショ
+	    ンで対応する秘密鍵を指定する．-out オプションで，公開鍵を出
+	    力するファイル名を指定する．拡張子は，.csr などが用いられる．
+	    \\ ファイルを開き，BEGIN CERTIFICATE REQUEST とあれば，それ
+	    は証明書署名要求である．\\
+            -in で鍵を指定し，-text オプションを用いると，作成した証
+	    明書署名要求の内容を確認できる．CN が CommonName を指し，こ
+	    れが正しく設定されているか確認する．
+ \item[x509] \ \\
+            X.509 形式の証明書を作成する．すなわち証明書署名要求ファイ
+	    ルに，自身の秘密鍵で署名し(sign key)，証明書を作成する．通常
+	    は，この証明書が公開鍵としてクライアントに伝達される．通常は，
+	    これは認証機関が世界的に認められている公開鍵に対応する秘密鍵
+	    で証明するため，CA が行う．すなわち CA が，サーバ証明書を受
+	    け取り，CAの秘密鍵で署名し，サーバ管理者へ送り返す．\\ 署名
+	    は，-in オプションで証明する証明書署名要求（公開鍵）を指定
+	    し，-req オプションで要求に対する操作であることを指定し，-signkey
+            で署名に用いる秘密鍵を指定する．また，証明書には有効
+	    期限を設定する必要があり，-days オプションで日数を指定する．
+	    -out オプションで，署名した証明書を保存するファイルを指定す
+	    る．拡張子は通常，.crt などが用いられる．\\
+            ファイルを開き，BEGIN CERTIFICATE とあれば，それは証明書ファ
+	    イルである．\\
+            -in オプションで
+	    証明書ファイルを指定し，-text オプションを用いると，証明書の
+	    内容を確認できる．
+\end{description}
+
+%openssl genrsa -out server2.key
+%openssl rsa -in server2.key -text
+%openssl req -new -key server2.key -out server2.csr
+%openssl req -in server2.csr -text
+%openssl x509 -in server2.csr -days 365 -req -signkey server2.key -out server2.crt
+%openssl x509 -in server2.crt -text
+
+\clearpage
+
+\subsection*{OpenSSL でのサーバ鍵作成の補足事項}
+
+近年，コンピュータの性能やセキュリティ技術の進展があり，OpenSSL をはじめ
+とするセキュリティソフトウェア運用に関してアップデートされた情報があるの
+で，ここに記す．
+
+ここに記したことは，OpenSSL の公式サイト (www.openssl.org) のドキュメン
+ト Docs の項目で高く推薦されているフリーの本であるIvan Risti\'c著
+「OpenSSL Codebook」（Docs からのリンクもある）に書かれている．
+
+\paragraph{OpenSSL のバージョン} FreeBSD 9.0-RELEASE 標準の OpenSSL のバー
+ジョンは 0.9.8q であるが，2014年に ``Heartbleed'' や ``CCS Injection
+Vulnerability'', `` DROWN (Decrypting RSA with Obsolete and Weakened
+eNcryption)'' などの脆弱性の存在が明らかになり，秘密鍵をはじめ，クッキー，
+パスワード，クレジットカード番号などメモリ上の情報が漏洩する可能性が指摘
+された．このため，最新版 (少なくともバージョン 1.0.2g 以降)を使うことが
+望ましい（ただし，本章では，OpenSSL の再構築は行わない）．
+
+OpenSSL のバージョンは以下のコマンドで確認できる．
+\begin{cli}
+# openssl version
+\end{cli}
+
+\paragraph{サーバ用秘密鍵の生成}
+
+秘密鍵の鍵長は 2048 ビットが望ましい\footnote{OpenSSL Codebook 補足Aより}．
+また，サーバの他のユーザに安易にコピーされないよう，パーミッションの設定
+など秘密鍵の取り扱いは大変重要である．鍵生成アルゴリズムは RSA が一般的
+である．
+
+\begin{cli}
+(# cd /usr/local/apache2/conf 等，鍵を置く場所に行く．)
+# openssl genrsa -out 秘密鍵のファイル名 2048
+\end{cli}
+ファイル名は，httpd.conf のデフォルトでは，server.key となっているので，
+これでも良い．
+
+\textbf{注意！：} Passphrase を付与した方が安全上望ましいが，サーバの秘
+密鍵の場合，Apache 再起動時に毎回 Passphrase を入力する必要があるため，
+省略（パスフレーズ無し）にすることも多い．ここでもそのようにする．
+
+秘密鍵のファイル名は，server.key 等のように拡張子は key を付与することが
+多い（必須ではない）．
+
+\paragraph{サーバ用証明書署名要求 (公開鍵) の生成 (req)}
+
+秘密鍵を用いて，証明書を作成するために，証明書署名要求（Request から 
+.req という拡張子を付与することが多い）を作成する．これは，公開鍵に，
+サーバ情報（ホスト名や機関等）を付与したものである．
+
+\begin{cli}
+# openssl req -new -key 秘密鍵のファイル名 -out 証明書署名要求のファイル名
+\end{cli}
+\textbf{注意！：} Country Name や Organization Name など，本来は正しい英
+語名称を入力する必要がある（そうしないとどうなるか考えてみてください）が，
+ここでは，Common Name がブラウザからアクセスされる正しい FQDN ホスト名と
+なっていれば良い．ブラウザからアクセスされる URI のホスト名が，
+``www...'' などの CNAME で設定されたホスト名なら，その名前を Common Name
+として入力する．
+
+\paragraph{サーバ用証明書署名要求に自己署名して証明書を生成 (crt)}
+
+証明書署名要求 (.req) ファイルに署名して，証明書 (Certificate, .crt 拡張
+子を使うことが多い）を生成するが，通常は，認証局 (CA) が行う作業である．
+
+ここでは，プライベートな用途のみでSSL/TLSサーバを用いる場合に，CA に署名
+を依頼せずに証明書を作成する，自己署名\footnote{俗にオレオレ証明書と呼ば
+れる．}を行う方法を説明する（実験4Cでは自己署名せずに認証局を作成する）．
+
+\begin{cli}
+# openssl x509 -req -days 365 -in 署名要求 -signkey 秘密鍵 -out 証明書のファイル名
+\end{cli}
+% openssl req -nodes -newkey rsa:2048 -keyout a.key -new -x509 -out a.crt -days 365
+-days オプションは，有効期間を表す．
+
+\paragraph{認証局(Certification Authority: CA)の構築}
+
+証明書の署名を行うために認証局を構築する．
+
+\texttt{/etc/ssl/openssl.cnf} の変更
+
+\begin{cli}
+# mkdir /usr/local/apache2/ca
+# vi /etc/ssl/openssl.cnf
+[ CA_default ]
+
+dir             = /usr/local/apache2/ca        # Where everything is kept
+                  ↑
+   CA が用いるファイルを保存するディレクトリを絶対パスで指定する
+
+# cd /usr/local/apache2/ca  (CAディレクトリに移動)
+# touch index.txt   ←署名した証明書についての情報を格納するための空ファイル作成
+# echo "01" > serial ←"01" と書かれたテキストファイルを作成
+               証明書の通し番号が書かれ署名するたびに, 02, 03 ... と上がっていく．
+# mkdir newcerts  ←証明書用ディレクトリ
+# mkdir private   ←CA秘密鍵を置く場所
+# cd priavate
+# openssl genrsa -out cakey.pem 2048
+   ↑秘密鍵ファイル名は cakey.pem とするよう openssl.cnf で設定している
+# cd ..
+# openssl req -new -key private/cakey.pem -out cacsr.pem
+   ↑証明書署名要求の作成（Common Name はサーバ証明書とは異なるものに！）
+# openssl ca -in cacsr.pem -out cacert.pem -selfsign -days 365 (↓次行に続く)
+    -extensions v3_ca -batch
+   ↑証明書ファイル名は cacert.pem とするよう openssl.cnf で設定している
+\end{cli}
+
+以上で CA の設定は終了であるが，今回作成する CA は，一般に認められたルー
+ト CA ではないので，この CA で署名してもブラウザで警告が出る．そのため，
+ブラウザにこのCAの証明書を，ルートCA の証明書としてインポートしておく．
+
+このためには，ファイル名形式を PEM 形式から DER 形式に変換し，変換後のファ
+イルをいったん HTTP サーバにおいてブラウザからアクセスすることで，インポー
+トできる．通常は DER ファイルを安全な手段でアクセスするクライアント（ユー
+ザ）に配布することが望ましい．
+\begin{cli}
+# openssl x509 -in cacert.pem -outform DER -out cacert.der
+# mv cacert.der /usr/local/apache2/htdocs
+\end{cli}
+ブラウザから http://ホスト名/cacert.der にアクセスし，
+ルート認証局の証明書としてブラウザに格納する．
+（証明書のダウンロード）
+インターネットエクスプローラ\footnote{ファイルを開く→証明書のインストー
+ ル}の場合は，証明書のストアを自動にすると，ルート証明機関としてインポー
+ トされない場合があるので，ストアの配置を明示的に設定する．
+
+\paragraph{認証局(CA)でサーバ証明書の署名}
+
+作成した CA でサーバ証明書の署名要求に署名し，サーバ証明書を作成する．
+\begin{cli}
+# cd /usr/local/apache2/ca
+# openssl ca -policy policy_anything -out サーバ証明書 -infiles 署名要求ファイル
+\end{cli}
+
+生成した証明書の内容は，下記のコマンドで確認できる．
+\begin{cli}
+# openssl x509 -text -in 証明書のファイル -noout
+\end{cli}
+
+\paragraph{サーバ証明書・秘密鍵を Apache に設定}
+
+テキスト，Apache modsslの有効化，Apache への鍵の指定を参照し設定する．
+
+また，下記も有効にする．
+\begin{cli}
+LoadModule socache_shmcb_module modules/mod_socache_shmcb.so
+\end{cli}
+
+SSL の virtualhost 内の ServerName も適切に設定しておく．
+CommonName と同じにしておく方が望ましい．
+
+httpd.conf 等，設定ファイルを変更した場合は，Apache の再起動を忘れないよ
+うにする．
+
+\paragraph{雑多なメモ} 任意のブラウザで警告の出ない証明書を作成するには
+ややコツがいる．v3\_ca の指定は IE のために，また DNS ホスト名は，Safari
+では必須（IPアドレスによるHTTPSサーバは警告が出る），2014年以降作成され
+る証明書では，鍵長は，2048 ビット以上必要など．
+\clearpage
+
+\subsection*{鍵情報}
+
+鍵の作成は，openssl コマンドのマニュアルおよびプロンプトに従って行う．
+ただし，下記の点に留意する．
+
+\begin{itemize}
+ \item Common Name はブラウザからアクセスするサーバのホスト名あるいは IP 
+       アドレスを指定する．SSL では，URI のホスト名単位で証明書が作成さ
+       れる．
+ \item x509 証明書での署名は，ここではサーバの秘密鍵を用いる．これを自己
+       署名とよぶ．
+\end{itemize}
+
+
+
+\subsection*{認証局の構築と認証局による署名}
+
+\begin{description}
+ \item[CA用証明書への署名] \ \\
+            サーバ公開鍵と同様，CA秘密鍵で，CA公開
+	    鍵を署名する（自己署名）．具体的な手順は次節に記述するが，本
+	    来であれば Verisign などのルート証明書機関と契約し署名しても
+	    らう．
+\end{description}
+
+%\subsection*{認証局(CA: Certificate Authority)の構築}
+
+ここでは認証局の構築手順について述べる．
+
+\begin{description}
+ \item[OpenSSLのCA設定を変更] \ \\
+            \texttt{/etc/ssl/openssl.cnf} の下記の部分
+	    を変更する．\\
+\begin{cli}
+[ CA_default ]
+
+dir             = パス名        # Where everything is kept
+                  ↑
+   CA が用いるファイルを保存するディレクトリを絶対パスで指定する
+\end{cli}
+ \item[CA用ディレクトリ作成] \ \\
+            上記のパス名のディレクトリを作成する
+ \item[CA秘密鍵用ディレクトリ作成] \ \\
+            CA用ディレクトリ内に private ディレク
+	    トリを作成する．ここには CA の秘密鍵を置く．このディレクトリ
+	    が自由にアクセスでき，秘密鍵が自由に閲覧できると，任意の署名
+	    が可能になってしまうので，パーミッションの設定をよく考える．
+ \item[証明書保存場所の作成] \ \\
+            CA用ディレクトリ内に newcerts ディレクトリ
+	    を作成する．署名した証明書が置かれていく．
+ \item[CAが使うファイルの作成] \ \\
+            CA用ディレクトリ内に，ファイル index.txt
+	    とファイル serial を作成（touch コマンドで空ファイルを作成す
+	    れば良い）．署名した証明書の履歴情報が記録されていく．
+ \item[シリアル値設定] \ \\
+            CAが用いるシリアル番号として，ファイル serial に 01 と書き込む．
+ \item[CA用秘密鍵の作成] \ \\
+            openssl genrsa コマンドで秘密鍵を作成する．その
+	    際，\texttt{/etc/ssl/openssl.cnf} の \texttt{private\_key} の
+	    項目にあるように，出力先を ディレクトリ \texttt{private} 下のファイル
+	    \texttt{cakey.pem} とする．
+ \item[CA用公開鍵の作成] \ \\
+            CA用秘密鍵から，openssl req コマンドで公開鍵を
+	    作成する．ファイル名は，\texttt{/etc/ssl/openssl.cnf} の
+	    \texttt{certificate} の項目にあるように，\texttt{cacert.pem} とする．
+	    ここでは，この CA がルート CA となるので，この鍵がルート証明
+	    書となる．
+ \item[サーバ証明書への署名] \ \\
+            openssl ca コマンドで，Apache サーバ用に作
+	    成されたサーバ証明書に署名する．openssl ca コマンドの使用方
+	    法は，-policy オプションで policy\_anything を指定する（署名
+	    への制限がデフォルトでは存在するため）．また，-out オプショ
+	    ンで出力する（署名済）サーバ証明書を指定し，-infiles オプショ
+	    ンで，Apache サーバ用の証明書署名要求ファイルを指定する．な
+	    お，-infiles オプションは最後に指定する．
+ \item[CA証明書の配布] \ \\
+            CA 証明書をブラウザへ配布するために，DER 形式に変
+	    換した証明書を作成する．これは，openssl x509 コマンドで，-in 
+	    にて変換したい証明書を指定し，-outform にて DER を指定し，-out 
+            で変換先の証明書ファイルを指定する．拡張子は .der にする．こ
+	    のファイルを，Apache の公開ディレクトリに置く．この証明書は
+	    公開鍵証明書であるので，一般に公開するのは問題ない．ブラウザ
+	    は，http 接続でこのファイルへアクセスし，ブラウザのルート証
+	    明書の保存場所にインストールする．IE であれば，アクセスした
+	    後，「ファイルを開く」を選択し，「証明書のインストール」の後，
+	    「証明書をすべて次のストアに配置する」を選択し，「証明書スト
+	    ア」に「信頼されたルート証明機関」を選択しインストールする．
+\end{description}
+
+参考手順を以下に示す．
+\begin{cli}
+# mkdir /path/to/ca
+# cd /path/to/ca
+# touch index.txt
+# echo "01" > serial
+# mkdir private
+# mkdir newcerts
+# openssl genrsa -out 鍵ファイル名 ビット数 
+# openssl req -new -x509 -key private/cakey.pem -out cacert.pem
+
+# openssl ca -in careq.pem -out cacert.pem -selfsign -days 3650
+               (続き→) -extensions v3_ca -batch 
+# openssl x509 -in cacert.pem -outform DER -out cacert.der
+# cacert.der を安全な手段でクライアントのブラウザへインストール
+
+そして，この CA にて，サーバ証明書を署名する．
+
+\end{cli}
+
+
+% \begin{cli}
+% #vi /etc/ssl/openssl.cnf
+% [ CA_default ]
+% dir             = /usr/local/apache2/ca              # Where everything is kept
+
+% #mkdir /usr/local/apache2/ca
+% #cd /usr/local/apache2/ca
+% #mkdir private
+% #chmod 700 private
+% #mkdir newcerts
+% #touch index.txt
+% #echo "01" > serial
+% #openssl genrsa -out private/cakey.pem
+% #openssl req -new -key private/cakey/pem -out cacert.pem
+
+% サーバの鍵・証明書署名要求を作成
+% #openssl genrsa -out server20120521.key
+% #openssl req -new -key server20120521.key -out server20120521.csr
+
+% CAにおいて署名
+% #openssl ca -out server20120521.crt -policy\_anything -infiles server20120521.csr
+
+% server20120521.key，server20120521.crt をそれぞれサーバ秘密鍵・
+% サーバ証明書としてApache を設定し起動
+% \end{cli}
+
+
+
+\section{必要となる情報}
+
+\subsection{必要なソフトの格納場所}
+
+ftp://192.168.0.1/pub/sources に必要なファイルが全てある．
+
+Apache の構築の際に，その他の必要なファイルが要求される場合があるが，こ
+れらもすべて上記ディレクトリにあるので，必要に応じてダウンロードして用い
+ること．
+
+
+\section{補足資料}
+
+\subsection*{公開鍵暗号化と電子署名の復習}
+
+公開鍵認証は，\textbf{公開鍵}・\textbf{秘密鍵}のペアを用いて行う公開鍵暗
+号方式を，受信者の認証に用いるものである．
+
+公開鍵暗号を暗号方式として用いる場合の手順は，下記の通りである．
+\begin{itemize}
+ \item 受信者が，秘密鍵・公開鍵のペアを作成（秘密鍵は決して誰にも見せな
+       い）
+ \item 送信者は，まず受信者の公開鍵を得る
+ \item 送信者は，受信者の公開鍵で送信内容を暗号化，送信
+ \item 受信者は，受信した暗号データを，秘密鍵で復号．
+\end{itemize}
+
+ここで，公開鍵で暗号化することは誰にでもできるが，一度暗号化したデータを
+復号できるのは，世界で唯一，秘密鍵を持つものだけである点が重要である．
+
+逆に，秘密鍵で暗号化し，公開鍵で復号することもできる．これが，一般に電子
+署名と言われるものである．手順は，
+\begin{itemize}
+ \item 送信者は，秘密鍵・公開鍵のペアを作成しておく（秘密鍵は決して誰に
+       も見せない）
+ \item 送信者は，秘密鍵で暗号化する
+ \item 受信者は，送信者の公開鍵を得る
+ \item 受信者は，送信者の公開鍵で復号する
+\end{itemize}
+となり，ここで重要なことは，暗号データを公開鍵で復号することは世界中の誰
+でも行えるが，公開鍵で復号できる暗号データを作成できるのは，世界で唯一秘
+密鍵を持つものだけである．このため，正しいデータが復号できたとき，そのデー
+タを作成したのは，秘密鍵を持つものだけあり，第3者が偽って作成・改竄する
+ことはできない．
+
+\subsection*{公開鍵認証を行うために必要こと}
+
+SSH や SSL では公開鍵暗号を用いた認証を行うことができるが，基本的には，
+電子署名を行うことで実現される．
+
+そのため，行うことは，
+\begin{itemize}
+ \item Step1. ログインを試みる者は，秘密鍵・公開鍵のペアを作成しておく（秘密鍵
+       は決して誰にも見せない）
+ \item Step 2. サービスを提供するもの，ログイン者の公開鍵を得る
+ \item Step 3. ログイン者は，ログインのための情報を自らの秘密鍵で暗号化し，サー
+       ビス提供者に送信
+ \item Step 4. サービス提供者は，公開鍵で復号し，その情報を送信できたのは秘密鍵
+       を持つログイン者だけであるから，ログインを許可
+\end{itemize}
+となる．
+
+例えば，SSH の場合では，Step 1 は ssh-keygen コマンドあるいは，Putty で
+あれば，puttygen.exe  を用いて，ログインを試みる者が秘密鍵・公開鍵を生成
+する．
+
+
+
+
+
+% には，を行うために必要なことは，下記の3てん
+
+
+% 14 名前：名無しさん：2013/05/20(月) 17:01:26
+% server11# mkdir ca
+% server11# cd ca
+% server11# mkdir private
+% server11# mkdir newcerts
+% server11# touch index.txt
+% server11# echo "01" > serial
+% server11# openssl genrsa -out private/cakey.pem
+% Generating RSA private key, 512 bit long modulus
+% ..........++++++++++++
+% .....................++++++++++++
+% e is 65537 (0x10001)
+% server11# openssl req -new -x509 -key private/cakey.pem -out cacert.pem
+
+% server11# openssl x509 -in cacert.pem -outform DER -out cacert.der
+
+% server11# openssl genrsa -out server11.key
+% server11# openssl req -new -key server11.key -out server11.csr
+% server11# openssl ca -policy policy_anything -out server11.crt -infiles
+% server11.csr
+
+
+
+% 15 名前：名無しさん：2013/05/20(月) 18:00:30
+% openssl req -new -newkey -keyout private/cakey.pem -out careq.pem
+% openssl ca -in careq.pem -out cacert.pem -selfsign -days 3650
+% -extensions v3_ca
+
+
+% 16 名前：名無しさん：2013/05/20(月) 18:16:19
+% openssl genrsa -out private/cakey.pem
+% openssl req -new -key private/cakey.pem -out careq.pem
+% openssl ca -in careq.pem -out cacert.pem -selfsign -days 3650
+% -extensions v3_ca
+
+% CA の顧問ネームは、0000でよろしく、
+% そんでもって
+
+% openssl x509 -in cacert.pem -outform DER -out cacert.der
+% cp cacert.der /usr/local/apache2/htdocs/
+
+% あとは、サーバ証明書認証してやりゃOK
+
+
+%\subsubsection{httpd.conf ファイルの誤りチェック}
+%apachectl コマンドの機能を利用して\texttt{httpd.conf} に誤りがないかどうか 
+%チェックする．誤りが無ければ以下のように OK がでる．
+%\begin{center}
+%\begin{breakbox}
+%\begin{alltt}
+%# \underline{/usr/local/apache2/bin/apachectl configtest} 
+%Syntax OK 
+%#
+%\end{alltt}
+%\end{breakbox}
+%\end{center}
+%ここで，もし \texttt{httpd.conf}ファイルに誤りがあれば，
+%エラーメッセージが表示される． 
+%例として，ServerName の表記を誤って SererName と書いてしまった場合の
+%エラーメッセージは以下のようになる．
+%\begin{center}
+%\begin{breakbox}
+%\begin{alltt}
+%# \underline{/usr/local/apache2/bin/apachectl configtest}
+%Syntax error on line 274 of /usr/local/apache2/conf/httpd.conf:
+%Invalid command 'SererName', perhaps mis-spelled or defined by a module 
+%not included in the server configuration 
+%#
+%\end{alltt}
+%\end{breakbox}
+%\end{center}
+%また，Warning が出た場合は何らかの問題があることを意味する．
+%これは，Apache の起動は妨げることはできないので，スタートすることは可能である．
+%しかし，ファイルが表示されないなどの弊害が出る．
+%
+%\subsubsection{Apacheの制御}
+%Apache の実行制御には，以下のコマンドを実行する．
+%
+%\begin{center}
+%\begin{breakbox}
+%\begin{alltt}
+%# /usr/local/apache2/bin/apachectl \{start|stop|restart\}
+%\end{alltt}
+%\end{breakbox}
+%\end{center}
+%
+%起動を行いたい場合は start を，終了させる場合は stop, 設定ファイルの変更など再起動
+%を必要とする場合は restart を用いる．
+%
+%apacheの起動時に
+%\begin{cli}
+%No such file or directory: AH00075: Failed to enable the 'httpready' Accept Filter
+%\end{cli}
+%のようなwarningが出る場合がある．
+%これは，HTTPパケットの最適化を行うFreeBSDのカーネルの機能が読み込まれていないために起こるもので，実際の挙動には問題ない．
+%どうしても気になる場合は，カーネルの機能を読み込むかHTTPパケットの最適化を行わない設定をする必要がある．
+%カーネルの機能を読み込むには
+%\begin{cli}
+%# kldload accf_http
+%\end{cli}
+%と入力するか，
+%\begin{cli}
+%# echo 'accf_http_load="YES"' >> /boot/loader.conf
+%\end{cli}
+%などとして/boot/loader.confにaccf$\_$httpを読み込む設定をすればよい．
+%また，HTTPパケットの最適化を行わないようにするには
+%\begin{cli}
+%AcceptFilter http none
+%AcceptFilter https none
+%\end{cli}
+%の2行をhttpd.confに追加する．
+%または，httpdに直接-DNOHTTPACCEPTオプションを付けて起動してもよい．
+%スクリプトに書かれている内容は同じである．
+%
+%\subsubsection{コンピュータ・ネットワーク単位でのアクセス制限}
+%Apache には，IPアドレスおよびネットマスク情報，またはホスト名やドメイン
+%名を用いたアクセス制限を行うことが可能である．
+%
+%IPアドレスによるアクセス制限はディレクトリ単位で行われる．制限を行いたい
+%ディレクトリにファイル .htpasswd を置いて設定する．
+%なお，ユーザが自分の公開用ディレクトリで .htaccess を編集することもでき
+%るが，デフォルトでは，システムの管理上，このようなセキュリティ設定を勝手
+%に変更することができないようになっている．このため，まず，httpd.conf の
+%\texttt{<Directory />} の \texttt{AllowOverride}の項目を下記のように設定
+%し，ディレクトリ毎にアクセス制限設定の許可を与える．
+%
+%\begin{center}
+%\begin{breakbox}
+%\begin{alltt}
+%#vi httpd.conf
+%      :
+%      :
+%<Directory />
+%    Options None  ← ここを None に変更
+%    AllowOverride Limit AuthConfig  ← ここに左記2項目追加
+%    Order deny,allow
+%    Deny from all
+%</Directory>
+%      :
+%      :
+%<Directory ``/usr/local/apache2/htdocs''>
+%      : 
+%    Options None  ← ここを None に変更
+%      : 
+%    AllowOverride Limit AuthConfig  ← ここに左記2項目追加
+%      : 
+%</Directory>
+%\end{alltt}
+%\end{breakbox}
+%\end{center}
+%
+%次に，制限を行うディレクトリに下記の内容で .htaccess ファイルを作成する．
+%
+%\begin{center}
+%\begin{breakbox}
+%\begin{alltt}
+%order deny, allow
+%Deny from all
+%Allow from IPアドレス (IPアドレス2, ..., ネットワークアドレス/ネットマス
+% ク)
+%\end{alltt}
+%\end{breakbox}
+%\end{center}
+%
+%一行目では，次に続く，Deny ディレクティブ，Allow ディレクティブの評価の
+%順序を指定する．後ろに書いたものが，先に評価される．
+%
+%上記の場合であれば，Allow の行を先に評価し，そこに書かれているネットワー
+%ク情報とアクセスしてきているクライアントのネットワーク情報の照合を行う．
+%もし，クライアントの IP アドレスが指定した IP アドレスであれば，Allow す
+%なわちアクセスを許可する．もし，この IP アドレスでなければ，次に Deny を
+%照合し，all とあるので，（Allow の行で照合できなかった）すべてのクライア
+%ントのアクセスを拒否する．
+%
+%\subsubsection{ユーザ名・パスワードでのアクセス制限}
+%
+%ID, Password によるユーザ認証を行うには，
+%まず，パスワードが記述されたファイルを作成する．
+%これは，Apache http サーバと一緒にインストールされた htpasswd コマンドによって作成できる．
+%
+%htpasswd コマンドをそのまま立ち上げると，下記のようなヘルプが出るので，
+%これを参考に行う．
+%\begin{center}
+%\begin{breakbox}
+%\begin{alltt}
+%# bin/htpasswd
+%Usage:
+%        htpasswd [-cmdpsD] passwordfile username
+%        htpasswd -b[cmdpsD] passwordfile username password
+%
+%        htpasswd -n[mdps] username
+%        htpasswd -nb[mdps] username password
+% -c  Create a new file.                     → 新規に作成する場合に指定
+% -n  Don't update file; display results on stdout.
+% -m  Force MD5 encryption of the password.
+% -d  Force CRYPT encryption of the password (default).
+% -p  Do not encrypt the password (plaintext).
+% -s  Force SHA encryption of the password.
+% -b  Use the password from the command line rather than prompting for
+% it.
+% -D  Delete the specified user.
+%On Windows, NetWare and TPF systems the '-m' flag is used by default.
+%On all other systems, the '-p' flag will probably not work.
+%#
+%\end{alltt}
+%\end{breakbox}
+%\end{center}
+%
+%このファイルを，Apache が公開するディレクトリとは別の場所に保存する．
+%
+%ユーザ名やパスワード変更する際は，-C オプションを付けずに実行する．
+%
+%次に，IPアドレスのでの接続制限と同様にディレクトリ毎にアクセス制限設定の許可を与え，
+%制限を行うディレクトリの .htaccessファイルに下記のような内容を記述する．
+%
+%\begin{center}
+%\begin{breakbox}
+%\begin{alltt}
+%AuthType Basic
+%AuthName UserCheck
+%AuthUserFile パスワードファイルのパス
+%require valid-user
+%\end{alltt}
+%\end{breakbox}
+%\end{center}
+%
+%\section{必要な情報}
+%\subsection*{Apacheの設定項目}
+%\noindent
+%{\bf ◆確認，または修正する項目}
+%\begin{center}
+%\begin{breakbox}
+%\begin{alltt}
+%ServerRoot \underline{"/usr/local/apache2" }
+%Listen \underline{80}  
+%ServerAdmin \underline{root@server11.info.kochi-tech.ac.jp}
+%Group \underline{daemon}
+%ServerName \underline{192.168.0.G1}   ← ここでは IP アドレスを指定
+%DocumentRoot \underline{"/usr/local/apache2/htdocs"}  
+%UserDir \underline{public\_html}
+%\end{alltt}
+%\end{breakbox}
+%\end{center}
+%
+%[項目の説明]
+%\begin{itemize}
+%\item{ServerRoot}\\
+%	システムがインストールされるディレクトリパスを指定する．このディ
+%     レクトリの下に，更にいくつかのディレクトリが作成され，設定ファイル
+%     やコンテンツファイル，サーバの実行ファイル，ログファイルなどが置かれる．
+%
+%\item{Listen}\\
+%	WWW サーバがリクエストを受け付けるポート番号を指定する．
+%	HTTP の標準的なポート番号は 80 番である．
+%
+%\item{ServerAdmin}\\
+%	WWWサーバ管理者への連絡用メールアドレスを指定．
+%	何らかのサーバ処理に問題が生じた場合は，クライアントへの HTTP メッセージ中に
+%	このアドレスが挿入される．ここでは仮のアドレスとして，root\@サー
+%     バ名を登録しておく．
+%
+%\item{Group}\\
+%    実行ユーザグループの指定．特に指定しない場合は``\texttt{nobody}''とする．
+%
+%\item{ServerName}\\
+%	WWW サーバがクライアントに返すホスト名を指定．
+%	ただし，このホスト名は DNS による名前解決が可能なホスト名である必要がある．
+%
+%\item{DocumentRoot}\\
+%	サーバのコンテンツの場所を指定．
+%
+%\item{UserDir}\\
+%	ユーザの WWW 公開フォルダを指定．
+%
+%\end{itemize}
+%
+%
+%
+%\section{WWWサーバの構築}
+%\subsection{Apacheのインストール}
+%Apache のパッケージ(\texttt{httpd-2.2.22.tar.gz}) を
+%メインサーバ(ftp://192.168.0.1/pub/sources)より取得後，解凍・展開する．その後インストールを行う．
+%
+%展開後には，まず，INSTALL ファイルを閲覧し，一通りのソースコードからのイ
+%ンストール手順などを確認する．ここには，事前の注意事項などが書かれている
+%場合もあり，慣れているソフトウェアを構築する際でも一度目を通すようにする
+%と良い．
+%
+%Apache は巨大なソフトウェアであり，多くの機能を持っている．このため，ソー
+%スコードからのコンパイルの際に指定できる機能の有無指定も多岐にわたる．
+%\texttt{./configure \-\-help} を実行することで，指定できる configure オプショ
+%ンを確認し，\texttt{\-\-enable(disable)=}オプションや，\texttt{\-\-with...=} 
+%オプションを用いて適切に追加機能の指定を行う．ここでは，最低限，今後必要
+%となる共有ライブラリ使用の機能(enable=so)オプションを有効にしておく．
+%
+%通常はApache の設定に必要なファイル群が \texttt{/usr/local/apache2} 以下
+%にインストールされる(このインストールされるディレクトリを変更したい場合は
+%configure の際に，\texttt{\-\-prefix=ディレクトリ名} を指定する)．
+%
+%インストールされたファイル群の構成を表~\ref{tab:09:apache}に示す．
+%
+%\begin{table}
+%\begin{center}
+%\caption{Apache のディレクトリ構成}
+%\label{tab:09:apache}
+%\vspace*{1zh}
+%\begin{tabular}{l|l} \Hline
+% \multicolumn{1}{c}{ディレクトリ名}& \multicolumn{1}{|c}{内容}\\\Hline
+% \texttt{/usr/local/apache2/bin/} & apachectl，htpasswd などの実行ファイル\\\hline
+% \texttt{/usr/local/apache2/cgi-bin/} & CGI データ \\ \hline
+% \texttt{/usr/local/apache2/conf/} & 設定ファイル  \\ \hline
+% \texttt{/usr/local/apache2/htdocs/} & コンテンツ保管 \\ \hline
+% \texttt{/usr/local/apache2/icons/} & アイコン画像 \\\hline
+% \texttt{/usr/local/apache2/include/} & 開発用ヘッダファイル\\ \hline
+% \texttt{/usr/local/apache2/libexec/} &  実行ライブラリ \\\hline
+% \texttt{/usr/local/apache2/logs/} & ログの保存ディレクトリ \\ \hline
+% \texttt{/usr/local/apache2/man/} & UNIX 用マニュアル \\ \hline
+% \texttt{/usr/local/apache2/proxy/} & Proxy 利用時のキャッシュ \\ \Hline
+%\end{tabular}
+%\end{center}
+%\end{table}
+%
+%\subsection{Apacheの基本的な設定}
+%ここでは，Apache の最小限の機能である HTML を表示させるだけの基本的な設定を行う．
+%Apache の動作を決定するファイルは \texttt{/usr/local/apache2/conf} に
+%置かれる \texttt{httpd.conf} ファイルである．
+%そこで \texttt{httpd.conf} ファイルの内容確認，または修正を適宜行う．
+%設定ファイルの修正後，ファイルの誤りチェックを用い設定ファイルの記述に間違いが無いか必ず確認を行う．
+%
+%\subsection{Apacheの起動と動作確認}
+%全ての設定を終了後，起動を行い，
+%クライアントコンピュータからブラウザを起動し，ホームページが表示できるか確認する．
+%URL は http://サーバのIPアドレス/ とする．
+%
+%\section{コンテンツ公開範囲の制限}
+%ApacheによるWebコンテンツ公開を，内容ごとに公開する範囲（ネットワーク，ユーザ）を制限する．
+%実験室内全体へ公開するコンテンツとしてグループのメンバーやプロフィールなどを書いたものなどを，
+%グループ内でのみ閲覧可能なページを別に用意し外部に公開したくない情報を作り制限を行う．
+%また，特定のユーザに対してのみ公開するページを用意し，ID, Passwordによる認証を行う．
+%
+%\section{動作確認}
+%自分たちが作成したhtmlファイルをapacheの公開フォルダに置き，正しくブラウザから閲覧ができるか確認する．
+%先に決めておいたコンテンツ公開の制限が正しく機能しているか他グループと協力し，確認する．
+%
+%\section{考慮すべき点}
+%\paragraph{WWWサーバの動作}
+%WWWサーバとブラウザソフトとの通信ではHTTP上で行われることは前述した．
+%HTTP上の通信でWWWサーバはどのような動作をするのか把握しておく必要がある．
+%
+%\paragraph{WWWサーバ用のソフトウェア}
+%今回は Apache を使用したが，WWWサーバを構築するのに他のソフトウェアには
+%どのようなものが存在するのか，それぞれどのような特徴があるのか把握して
+%おく．その上で，Apache を使用する理由を考える必要がある．
+%
+%\paragraph{コンテンツの公開制限}
+%IPアドレスやユーザ認証などによるWebコンテンツの制限は，どのような場合にどのような方法で行うべきか，
+%また，適切に制限を行わなかった場合に考えられるリスクを考慮せよ．

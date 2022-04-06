@@ -1,0 +1,54 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  make
+%% %% %%
+%% %% %%
+\label{cmd:make}
+\section{make}
+プログラムの依存関係をメンテナンスする\par
+
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+ %　make ターゲット
+\end{alltt}
+\end{screen}
+\end{center}
+
+{\bf ◆機能説明}
+　make は，複数のファイルからなるプログラムのコンパイルを支援する．実行すると，同一フォルダ内のmakefile か Makefile というファイルの生成とプログラムの依存関係を記したファイル（両方ある場合は最初に見つかったほう）を読み込み，最初にあるターゲットを読み込む．ターゲットを指定した場合，そのターゲットの内容を実行する．Makefile の内容を簡略的に以下に示す．\\
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+ 変数の設定
+ （まず， Makefile 内で使用する変数を定義する）
+
+ ターゲット１ : ファイル，ファイル．．．
+ 　　コマンド
+ 　　コマンド
+ （ターゲット１の依存関係を記述）
+
+ ターゲット２ : ファイル，ファイル．．．
+ 　　コマンド
+ 　　コマンド
+ （ターゲット２の依存関係を記述）
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+Makefile は，このような書式になっている． make がターゲットなしで実行された場合は，最初のターゲットであるターゲット１の内容に従って make が実行される．もしコマンド引数のターゲットにターゲット２を指定すると，ターゲット２の内容に従って make が実行される．\par
+
+{\bf ◆使用例}
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+ % \underline{make}  \keybox{Enter}
+\end{alltt}
+\end{breakbox}
+\end{center}
+\clearpage
+%% %% %%
+%% %% %% %%

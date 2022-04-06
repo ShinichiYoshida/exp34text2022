@@ -1,0 +1,28 @@
+\textbf{■ \texttt{/etc/named/localhost} ファイル（localhost データベース）}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+; file name: localhost
+; for gX.info.kochi-tech.ac.jp
+$TTL       1D
+@          IN      SOA     serverX.gX.info.kochi-tech.ac.jp. postmaster.gX.
+info.kochi-tech.ac.jp. (  （←前の行の続きで{\rm1}行で記述する）
+            2002081601  ;serial
+            3h          ;refresh
+            1h          ;retry
+            1w          ;expire
+            1h )        ;negative TTL
+           IN      NS      serverX.gX.info.kochi-tech.ac.jp.
+0          IN      PTR     loopback.gX.info.kochi-tech.ac.jp.
+1          IN      PTR     localhost.gX.info.kochi-tech.ac.jp.
+\end{alltt}%$
+\end{breakbox}
+\end{center}
+
+\noindent
+\textbf{◆ \texttt{/etc/namedb/localhost} ファイルの説明}
+
+\begin{itemize}
+\item ローカルホストに関するデータベース．
+\item ローカルホストが，自分自身に対して責任をもつために必要．
+\end{itemize}

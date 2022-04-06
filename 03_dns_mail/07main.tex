@@ -1,0 +1,506 @@
+\section{電子メールの送受信}
+電子メールは，ネットワーク上でテキスト情報をやりとりするアプリケーション
+である．電子メールは，差出人と宛先が明示され，差出人から宛先へと情報が転
+送される．宛先のアドレスが分かれば，誰でもその宛先人に対して情報を送るこ
+とができる．このように，電子メールサービスは，「メール（手紙）」の名の通
+り，ネットワーク上での郵便の手紙のようなものといえる．
+
+電子メールの配送は，差出人のコンピュータから，メールサーバをいくつか経
+由し，宛先のメールサーバまで配送される．宛先メールサーバでは，宛先人の
+メールスプールにメールを保存し，宛先人は自分のコンピュータからメールス
+プールへアクセスしメールを読み出す．
+
+電子メールサーバの役割は，電子メールの受信，電子メールの送信，電子メー
+ルのメールスプールへの保存の3つである．
+
+図\ref{fig:07:maildeliver}はあるユーザがメールを送信して相手がそのメー
+ルを読むまでのメールの動きを示している．
+
+ \begin{figure}[hbt]
+  \begin{center}
+   \includegraphics[height=4cm,clip]{\chapmail mail1.eps}   
+   \caption{メールの送受信}
+   \label{fig:07:maildeliver}
+  \end{center}
+ \end{figure}
+
+ユーザが作成したメールはメールソフト（MUA:Mail User Agent の略．
+UNIX の mail コマンドのようにユーザがメールの送受信を行うために
+使用しているソフトウェア）により
+メールサーバ（MTA:Mail Transfer Agent の略．
+電子メールシステムにおいて，メールの配送を担当する部分．）に送られる．
+MTA は送られてきたメールの宛先を見て，送信先のメールサーバを決定し配送
+するという処理を行う．送信先のメールサーバは受け取ったメールをメールス
+プールと呼ばれる保管場所に保管する．最後に，相手はメールソフトを用いて
+メールサーバにアクセスし，メールスプールに保管された自分宛のメールを取
+得する．
+このように，メールサーバの役割はメールサーバ間でのメールの配送と MUA との
+メールの送受信である．
+
+\section{実験内容 (2)}
+本章において必要となる作業は
+\begin{itemize}
+\item SMTPサーバの構築
+\item POPサーバの構築
+\item MUAを用いたメールの送受信
+\end{itemize}
+である．
+
+\section{必要となる情報}
+\subsection*{構成}
+グループ内のメールサービスを server にて構築する．
+
+具体的には，下記を提供する．
+
+\begin{itemize}
+ \item グループ内ユーザ全員のメールアカウント提供
+ \item グループ内端末からの送信用 SMTP サービス
+ \item グループ内端末への受信用に POP サービス
+ \item グループユーザ全員を登録した簡易メーリングリスト （エイリアスで構
+       築）
+\end{itemize}
+
+メールサーバである server は server に登録されているユーザ 
+\verb+<+username\verb+>+ 宛てのメール
+\texttt{username@gX.exp.info.kochi-tech.ac.jp} を受け取り，MUAがインストール
+されたクライアントとメールの送受信を行う．また，メールサーバである 
+server は他のグループ宛のメールをそれぞれのグループのメールサーバに配送
+する．
+
+送信用 SMTP サーバ名は，\texttt{smtp.gX.exp.info.kochi-tech.ac.jp}，受信用 
+POP サーバ名は，\texttt{pop.gX.exp.info.kochi-tech.ac.jp}とすること．
+
+\textbf{注意!： 今回，実験内でパスワードの平文（ひらぶん）が表示される場
+所があるので，サーバのログインパスワードは各自，普段の生活で用いていない
+実験だけでの捨てパスワードに passwd コマンドで設定しなおしておくこと．}
+
+\section{必要となる知識}
+
+\subsection*{メール配送とDNS}
+メールサーバはメールの宛先を見て送信先のメールサーバを決定する．ここで
+は，例えば，メールサーバが \texttt{foo@gX.exp.info.kochi-tech.ac.jp} 
+という宛先のメールを受け取ったとき，
+どのようにして相手のメールサーバを知るか説明する．
+
+メールサーバは，DNS を用いて相手のメールサーバを調べる．DNS には MX レ
+コードと呼ばれるドメインにおけるメールサーバのホスト名を示す値が登録さ
+れている．
+つまり，メールサーバは宛先メールアドレスから相手のドメインネームを取り
+出し（メールアドレスの@マーク以降の文字列），そのドメインの MX レコー
+ドを調べ，相手のメールサーバを知ることができる．例えば，メールサーバ
+は\texttt{foo@gX.exp.info.kochi-tech.\\ac.jp} のメールを配送する場
+合，\texttt{gX.exp.info.kochi-tech.ac.jp} ドメインの MX レコードを
+DNS で調べて，メールサーバのホスト名を取得し，そのホスト名から（Aレコー
+ドを調べることで），IP アドレスを取得し，その IP アドレス宛にメールを送
+るという動作をする．
+
+\subsection*{メールサーバ}
+メールサーバは 2 つのソフトウェアを使用してメールの配送と MUA との送受信を
+行っている．
+一つは MTA と呼ばれるソフトウェアである．
+MTA は SMTP\footnote{Simple Mail Transfer Protocol の略．
+SMTP は RFC5321 で規定されているプロトコルである．}
+というプロトコルを使用してメールの配送を行う．
+例えば，MTA は MUA からメールを受け取った時，
+まず，メールの宛先を見て自分が管理しているメールアドレスの
+メールであればマシン内のメールスプールに移し，
+管理していないメールアドレスのメールであれば，
+そのメールアドレスを管理しているメールサーバに配送するというような
+動作をする（図\ref{fig:07:mailserver.eps}）．
+
+MTA の代表的なソフトウェアには， sendmail や postfix ，qmail などがあり，
+世界中でもっとも使われているのは sendmail であるが，現在，採用が増加し
+ている MTA に postfix がある．本実験では，この postfix を用いて MTA の
+構築を行う．
+
+MTA により送受信され宛先メールサーバへ到着したメールは，メールサーバ上
+のメールスプールに保存される．ユーザは，メールサーバにアクセスし，メー
+ルスプール上に保存されたメールを読み出し MUA 上へ受信する．MUA への受信
+プロトコルには，POP \footnote{Post Office Protocolの略．RFC1939 に規定
+  されている．}が広く用いられており，メールサーバには，MTA の他
+に，POP サーバの機能が必要である．POP サーバの機能は，MUA から受信の接
+続を受け付け，ユーザ名とパスワードにより正当なメール受信者であるか認証
+を行った後，メールスプールからメールを読み出し MUA へ転送する．（
+図\ref{fig:07:mailserver.eps}）．
+% 
+% POPサーバには，QUALCOMM 社の Qpopper の他，Maildrop, Dovecot 等があ
+% る．本実験では，最も広く用いられている Qpopper にて POP サーバを構築する．
+ \begin{figure}[hbt]
+  \begin{center}
+   \includegraphics[height=5cm,clip]{\chapmail mailserver.eps}   
+   \caption{MTA と popper}
+   \label{fig:07:mailserver.eps}
+  \end{center}
+ \end{figure}
+
+
+\subsection*{エイリアス (aliases) ファイル}
+通常の電子メールサーバでは，特に設定をしない限り，メールアドレスは
+{\bf ユーザ名＠ドメイン名}のようになる．
+
+ドメイン名の部分は，DNS サーバの MX レコードで指定されるメールドメイン
+名や，A レコードで指定されるメールサーバのホスト名（FQDN）である．一方，
+ユーザ名の部分は，メールサーバ上のログインユーザ名である．しかし，メー
+ルサーバではメールアドレス1つにつき，必ずしもログインアカウントを作成す
+る必要はなく，必要に応じてメールアドレスを追加することができる（注意：
+メールスプールが個別に必要である場合は，ログインアカウントが必要である）．
+このような場合に，メールアドレスの別名を作成する仕組みがメールにおけるエ
+イリアスである．このエイリアスを用いることで，下記のようなものを実現する
+ことができる．
+
+\begin{itemize}
+\item メールアドレスの別名
+\item 別のメールアドレスへの転送
+\item 複数のメールアドレスへの配送 （同報アドレスなどと呼ばれる簡易的な
+      メーリングリスト）
+\item 外部ファイルに記述されたアドレス全てへの配送
+\item 外部プログラムを呼び出し，そのプログラムへメール内容を出力（フィル
+      タ動作等の処理）
+\end{itemize}
+
+エイリアスは，通常 /etc/aliases ファイルで記述され，書式の例を以下に示
+す．
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+
+     {\bf  aliases ファイルの例}
+     {\bf  （メールドメイン： mail.jp とする）}
+
+other:  real
+Family.Given:  real
+forward:  my-home@my.provider.address.com
+simple-ml:   boy-a, boy-b, girl-a
+process:  "|program"
+list: :include:/path/to/list-file
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+1行目の例は other@mail.jp という宛先のメールが real@mail.jp に配送される
+ことを示す．メールスプールは，ユーザ real のもの 1つであるが，2つのメールア
+ドレス other@mail.jp と real@mail.jp を使い分ける場合などに用いる例である．
+
+2行目の例は Family.Given@mail.jp という宛先のメールが同様に real@mail.jp 
+に配送されることを示す．Family.Given というログインユーザ名は，ピリオド
+が含まれる他，長すぎる点\footnote{伝統的な UNIX ではユーザ名は8文字}が問
+題となり，作成することができない OS もあるが，エイリアスに登録しておけば，
+メールアドレスとして用いることができるため，ユーザ名とメールアドレス名を
+変えたい場合などに用いる．
+
+3行目の例は forward@mail.jp という宛先のメールが，別のメールサーバ
+my-home@my.provider.address.com に転送される例である．大学から家に転送
+する場合などに用いることができる．この場合，このサーバにはメールスプール
+は存在しないので，このサーバにメールは保持されない．
+
+4行目の例は simple-ml@mail.jp という宛先のメールが boy-a@mail.jp,
+boy-b@mail.jp, girl-a@mail.jp の3つのメールアドレスに配送される例であ
+る．簡易的なメーリングリストや同報アドレスとして用いる．
+
+5行目の例は process@mail.jp という宛先のメールをメールサーバが受け取っ
+たら，program というプログラムを起動し，メールの内容を標準入力に渡し処
+理を行う．迷惑メールフィルタやウイルスチェックプログラムを利用したり，
+メーリングリストシステムのコマンド処理などに用いられる．
+
+6行目の例は，list@mail.jp のメールが，/path/to/list-file に記述された全
+てのメールアドレスに配送される例であり，高機能メーリングリストプログラム
+などで用いられる．
+
+注意点として，postfix を始めメールサーバプログラムは，/etc/aliases ファ
+イルを直接参照するわけではなく，ハッシュ化されたデータを持つ．このため，
+編集後は newaliases コマンドを実行し，このハッシュデータの更新する必要
+がある．
+
+%
+%   postfix の設定
+%        written by Shinichi Yoshida 2009.3.2
+%
+\section{postfixのインストール}
+MTA として最も歴史が古く，広く用いられているソフトウェアに sendmail が
+あるが，古いためにソフトウェアの構造，設定が複雑で，設計に古い部分もあ
+る．近年，MTA としての機能や性能の向上をはかった qmail や postfix など
+のソフトウェアが普及してきている．本実験では，sendmail との運用互換性が
+高い postfix を用いて MTA の構築を行う．
+
+
+postfix を aptからインストールする．
+
+\begin{cli}
+$ sudo su
+
+# apt update
+
+# apt install postfix
+（メニューにて）
+Internet Site [Enter]
+を選択
+
+mail name: には，英語で指示された通り（メールのドメイン名）を入力する．
+
+# vi /etc/postfix/main.cf
+  ■mynetworks に自ネットワークのセグメントを追加
+    （xxx.xxx.xxx.xxx/zz のようにネットワークアドレスと
+        プレフィックスによる表記で記述．192.168の場合は，/24全てで良い）
+  ■myhostname がサーバの FQDN を書く
+
+# systemctl restart postfix （もう動作しているため）
+
+\end{cli}
+
+%$
+
+以上の設定が問題なく終われば，下記の 3つのプロセスが動作していることを確認する．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# ps auxww | grep post
+root      8736  0.0  0.2  65408  ...19:06   0:00 /usr/lib/postfix/sbin/master
+postfix   8737  0.0  0.2  67476  ...19:06   0:00 pickup -l -t unix -u -c
+postfix   8738  0.0  0.2  67524  ...19:06   0:00 qmgr -l -t unix -u
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+これで，MTA の設定は終了である．
+%実際に動作をするかの確認を行う．
+SMTP プロトコルを用いて，実際に送受信の確認を行う．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# \underline{telnet 127.0.0.1 25}
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+220 server.gX.exp.info.kochi-tech.ac.jp ESMTP Postfix
+\underline{HELO server.gX.exp.info.kochi-tech.ac.jp}
+250 server.gX.exp.info.kochi-tech.ac.jp
+\underline{MAIL FROM: exp@gX.exp.info.kochi-tech.ac.jp}
+250 2.1.0 Ok
+  ↑SMTP の発信元アドレスを通知
+
+\underline{RCPT TO: postmaster@gX.exp.info.kochi-tech.ac.jp}
+250 2.1.5 Ok
+  ↑SMTP の宛先アドレスを通知（MTAはここへ配送）
+
+  ↓ここからメールの内容（ヘッダ＋本文）
+\underline{DATA}
+354 End data with <CR><LF>.<CR><LF>
+\underline{To: postmaster@gX.exp.info.kochi-tech.ac.jp}
+\underline{From: exp@gX.exp.info.kochi-tech.ac.jp}
+\underline{Subject: TITLE}
+\underline{(空行)}   ↑ここまでがヘッダ，空行を入れて↓以下が本文
+\underline{Honbun}
+\underline{.}
+250 2.0.0 Ok: queued as 29D7D1CC1F
+\underline{QUIT}
+221 2.0.0 Bye
+Connection closed by foreign host.
+serverX#
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+メールスプールは，\texttt{/var/mail} に設定されている．
+Postmaster 宛のメールは，root へ届くよう設定したので，root のメールスプー
+ル\texttt{/var/mail/root}の内容を less などのページャで確認する．
+下記のようにファイルの末尾にメッセージが書き込まれていれば，メールは届い
+ている．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+From yourname@your.mail.domain  Thu Jun 16 09:38:39 2011
+Return-Path: <yourname@your.mail.domain>
+X-Original-To: postmaster@gX.exp.info.kochi-tech.ac.jp
+Delivered-To: postmaster@gX.exp.info.kochi-tech.ac.jp
+Received: from myserver?name (localhost [127.0.0.1])
+        by server.gX.exp.info.kochi-tech.ac.jp (Postfix) with SMTP id
+	29D7D1CC1F
+        for <postmaster@gX.exp.info.kochi-tech.ac.jp>; Thu, 16 Jun 2011
+	09:37:39 +0900 (JST)
+To: postmaster@gX.exp.info.kochi-tech.ac.jp
+From: yourname@your.mail.domain
+Subject: TITLE
+Message-Id:
+<20110616003800.29D7D1CC1F@server.gX.exp.info.kochi-tech.ac.jp>
+Date: Thu, 16 Jun 2011 09:37:39 +0900 (JST)
+
+Honbun
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+冒頭の From は，SMTP の MAIL FROM: コマンドで入力したもの，2行目以降DATA 
+コマンドで入力したものに，配送途中の MTA が書き込んだ情報が追加されてい
+る．最初の空行までがヘッダ，それ以降，ファイルの末尾か，次の From で始ま
+る行までがメッセージの本文である．
+このようなメッセージのフォーマットは，RFC 5322 で規定されている．
+
+次に POP をインストールする．POP には dovecot を用いる．
+
+\begin{cli}
+# apt update
+（上記は，postfix の際に行っていれば不要）
+
+# apt install dovecot-pop3d
+\end{cli}
+
+デフォルトでは，生パスワードでの POP3認証が無効になっているため，下記ファイルを修正して有効にしてdovecotを再起動する．
+
+\begin{cli}
+# vi /etc/dovecot/conf.d/10-auth.conf
+disable_plaintext_auth = no
+
+# systemctl restart dovecot （もう動作しているため）
+\end{cli}
+
+POP についても同様に，telnet で動作を調べることができる．
+\begin{cli}
+server#telnet localhost 110
+USER ユーザ名
+PASS パスワード
++OK
+LIST
+QUIT
+\end{cli}
+%$
+\paragraph{注意} パスワードは生で画面表示されるので，差障りのある場合は
+passwd コマンドなどであらかじめ差障りのないものに変更しておくこと．
+
+PASS コマンドでパスワードを入力した後，ERR が出力されずに OK と出力され
+れば良い．ただし，root ユーザは認証に失敗するOSがある．
+
+\subsection{DNSの設定の追加}
+\subsubsection{MXレコードの追加}
+前述のようドメイン名によるメール配信を行うには，DNSにMXレコードが必要である．
+そこで，以下の設定を追加する．ただし，DNS にて既に設定済みの場合は必要な
+い．また，SMTP サーバ，POP サーバも CNAME にて別名設定しておく．
+
+\noindent
+{\bf ■ \texttt{/etc/bind/gX.zone} ファイル}
+\begin{cli}
+メールドメイン           IN      MX 10   メールサーバホスト名
+\end{cli}
+
+なお，メールドメインとメールサーバホスト名を FQDN 指定する場合は，最後の
+ピリオドの有無に気をつける．
+
+\subsubsection{CNAMEの設定}
+この設定の意味は，「server のマシンの別名として，pop という名前をつける」ことである．
+つまり，pop サーバ名として「\texttt{pop.gX.exp.info.kochi-tech.ac.jp}」を
+設定している（実体は server である）．同様に SMTP も CNAME として与える．
+DNS にて設定済みの場合は必要ない．
+
+\noindent
+{\bf ■ \texttt{/etc/bind/gX.zone} ファイル（正引きデータベース）}
+\begin{cli}
+pop       IN      CNAME   server
+smtp       IN      CNAME   server
+\end{cli}
+
+設定を変更した後に，BIND の再起動を行う必要がある．
+また，nslookup, dig，ping 等のコマンドを利用して，
+正常に動作しているかの確認も忘れないようにすること．
+% \begin{center}
+% \begin{breakbox}
+% \begin{alltt}
+% server# dig pop.gX.exp.info.kochi-tech.ac.jp
+% \end{alltt}
+% \end{breakbox}
+% \end{center}
+
+\section{MUA の設定，および，postfix，dovecotのテスト}
+% \subsubsection*{クライアントPCでメールを読む}
+クライアントの MUA の設定を行い，メール送受信のテストを行う．
+
+Cent OS，Windows には，メールクライアントが付属していないため，
+GNU Public License でフリーの使用ができる Thunderbird を
+Mozilla\footnote{Mozilla はオープンソースのブラウザ，メールクライアント
+等を開発している団体} のサイト（下記 URI）からインストールする
+（言語や環境別になっている）．
+
+\begin{center}
+https://www.mozilla.org/en-US/thunderbird/all/ 
+\end{center}
+
+CentOS は，Applications → System Tools → Software から，Mozilla
+Thunderbird mail/newsgroup client をインストールすれば良い．メニューの 
+Internet の中に Thunderbird が表示される．
+
+MacOS X の切手のアイコンの MUA は，OSインストール時にデフォルトでインス
+トールされる MUA であるので，これを用いても良いし，Thunderbird を別途イ
+ンストールしても良い．
+
+なお，Thunderbird は，拡張子が .exe のものが Windows 版インストーラ，.
+dmg は Mac 版，.  tar.bz2 は Linux 用である．
+
+また，Server 用 MUA として通常の UNIX では mail コマンドがあるが，Ubuntu 
+では，apt install mailutils としてインストールする必要がある（今回の実験
+では，mail コマンドが無くても実験できるが，必要と判断すればインストール
+するのは構わない）．
+
+\subsection*{その他の MUA の設定}
+
+MUA 設定は下記のようにユーザアカウントの設定を行う．
+
+\begin{center}
+\begin{breakbox}
+\begin{tabular}{ccl}
+名前&：&適当で良いがローマ字が無難\\
+電子メールアドレス&：&\texttt{ユーザ名@gX.exp.info.kochi-tech.ac.jp}\\
+送信メール&：&\texttt{smtp.gX.exp.info.kochi-tech.ac.jp}\\
+受信メール&：&\texttt{pop.gX.exp.info.kochi-tech.ac.jp}\\
+POP3アカウント&：&\texttt{ユーザ名}\\
+パスワード&：&（server で設定したユーザのパスワード）
+\end{tabular}
+\end{breakbox}
+\end{center}
+
+以上の設定を行った後，クライアント端末の MUA を使って，ユーザ間でメール
+を送信し，お互いにメールが受信できるか確認する．
+
+送信/受信できなかった場合は，設定内容や DNS, postfix が起動しているかを
+確認する．\texttt{/var/log/} ディレクトリの syslog, maillog ファイルに
+ログが記録されるので，これを利用して原因を調べる．
+
+\subsection*{Thunderbirdの設定（参考）}
+
+\begin{cli}
+新しいアカウントを設定する → メール → メールアカウントを設定する
+(New Message → Existing Mail Account..)
+
+（ダイアログ：メールアカウント設定）
+  (Mail Account Setup)
+あなたのお名前：ローマ字名等（適当に）
+メールアドレス：exp@gX.exp.info.kochi-tech.ac.jp
+パスワード： （記録させる場合は入力．毎回入力してもよい）
+
+（入力ができたら）「続ける」
+
+自動で進められる場合は警告の画面の設定に進む
+
+自動的に設定が完了したら危険性についての警告を理解したうえで進める，とすると設定が完了する
+\end{cli}
+
+\begin{itemize}
+\item 主な設定内容の確認ファイル一覧
+\end{itemize}
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+postfix   ：  /etc/postfix/main.conf
+              /etc/aliases
+DNS       ：  /etc/bind/gX.zone
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+\section{考慮すべき点}
+今回の実験を行うにあたり，以下のようなことについて考慮する必要がある．
+\paragraph{宛先} 電子メールはどのようにして届け先を判別するのか．
+\paragraph{メールサーバ} メールサーバは電子メールを送受信する上でどのような働きをするのか．
+%\paragraph{サーバソフトウェア} メールサーバを構築するのに他のソフトウェアにはどのようなものが存在し，どのような特徴があるのか．
+

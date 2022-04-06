@@ -1,0 +1,225 @@
+%//////////////////////////////////////////////////////////////////////
+% 2013年度 情報学群実験第３Ｃ・第４Ｃ テキスト
+%                                       高知工科大学情報学群
+%//////////////////////////////////////////////////////////////////////
+\documentclass[10pt]{text2002}
+\usepackage{eclbkbox}
+\usepackage{alltt}
+\usepackage{ascmac}
+\usepackage[dvipdfm]{graphicx}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{fancybox}
+\usepackage{jumoline}
+
+\newcommand{\ttt}[1]{\texttt{#1}}
+
+% \makeatletter
+%      \def\sloppy{%
+%        \tolerance 9999%
+%        \emergencystretch 3em%
+%        \hfuzz .5\p@
+%        \vfuzz\hfuzz}
+% \makeatother
+
+%	enumerate 環境の変更
+\renewcommand{\labelenumi}{(\theenumi)}
+
+%	keybox（ascmac.sty の \keytop の中身をタイプライタ体に変更）
+\def\keybox#1{{\keytop{\tt#1}}}
+
+%	taskbar（文字列を囲む枠）
+\def\taskbar#1{\setlength{\fboxrule}{0.5pt}\fbox{#1}}
+
+%	Hline（tabular 環境内の \hline よりも太い横線）
+%		from IEICE LaTeX Macro
+\def\Hline{\noalign{\hrule height 0.4mm}}
+%	enumerate 環境の変更
+\renewcommand{\labelenumi}{(\theenumi)}
+
+%	Gcenter（tabular 環境内の縦方向のセンタリング）
+%		written by Otobe Yoshiki
+\newcommand{\Gcenter}[2]{
+    \dimen0 = \ht\strutbox
+    \advance\dimen0\dp\strutbox
+    \multiply\dimen0 by#1
+    \divide\dimen0 by2
+    \advance\dimen0 by-.5\normalbaselineskip
+    \raisebox{-\dimen0}[0pt][0pt]{#2}}
+
+  \makeatletter
+    \newenvironment{cli}%
+    {\VerbatimEnvironment
+     \begin{center}
+     \begin{breakbox}
+     \begin{Verbatim}
+        }%
+    {%
+     \end{Verbatim}
+     \end{breakbox}
+     \end{center}
+     }
+  \makeatother
+
+  \makeatletter
+    \newenvironment{cli-tex}%
+    {\begin{center}
+     \begin{breakbox}
+     \begin{alltt}
+        }%
+    {%
+     \end{alltt}
+     \end{breakbox}
+     \end{center}
+     }
+  \makeatother
+
+\newif\ifTA
+\TAfalse
+
+\title{}
+\author{}
+\date{}
+
+\begin{document}
+\sloppy
+\maketitle
+%----------------------------------------------------------------------- 目次
+\pagenumbering{roman}
+%   目次はローマ数字
+\chapter*{序~~論}\label{chapter:introduction}
+\input{intro.tex}
+\clearpage
+\chapter*{レポートについて}\label{chapter:report}
+\input{report.tex}
+%  目次を出力
+ \tableofcontents
+\clearpage
+%----------------------------------------------------------------------- 本文
+%   本文のページ番号はアラビア数字
+\pagenumbering{arabic}
+
+
+%===================================================================== 第一部
+\part{情報学群実験第3C}\label{part:1}
+
+\chapter{オペレーティングシステム}\label{ch:os}
+\input{./01_os/01main.tex}
+% OS install
+% Windows7, Linux, Macintosh, Laptop
+
+\chapter{ネットワークの設定}\label{ch:nwconfig}
+\input{./02_network/02main.tex}
+% Cable, PC network settings, Router/Switch
+% IP address (netmask, gateway)
+% Network printer
+
+\chapter{セキュリティアップデート}\label{ch:patch}
+\input{./03_patch/03main.tex}
+
+\chapter{OS管理}\label{ch:osadmin}
+\input{./04_admin/04main.tex}
+
+\chapter{DNS}\label{ch:dns}
+\input{./05_dns/05main.tex}
+
+\chapter{DNSセカンダリサーバ}\label{ch:dns2nd}
+\input{./06_sdns/06main.tex}
+
+\chapter{メールサーバ}\label{ch:mail}
+\input{./07_mail/07main.tex}
+
+\chapter{メーリングリストサーバ}\label{ch:ml}
+\input{./08_ml/08main.tex}
+
+\chapter{WWW:HTTPサービスの構築}\label{ch:www}
+\input{./09_www/09main.tex}
+
+\chapter{動的コンテンツ}\label{ch:dynamic}
+\input{./10_dynamic_contents/10main.tex}
+
+\chapter{ファイル共有}\label{ch:share}
+\input{./11_share_files/11main.tex}
+
+\chapter{RAID}
+\input{./12_raid/12main.tex}
+
+\chapter{バックアップ}
+\input{./13_backup/13main.tex}
+
+\chapter{レストア}
+\input{./14_restore/14main.tex}
+
+\chapter{引き継ぎ}
+\input{./15_handover/15main.tex}
+
+%===================================================================== 第二部
+\part{情報学群実験第4C}\label{part:2}
+
+\chapter{L3ネットワーク分割}\label{ch:l3}
+\input{./16_l3/16main.tex}
+
+\chapter{ダイナミックルーティング}\label{ch:drouting}
+\input{./17_dynamic_routing/17main.tex}
+
+\chapter{L2ネットワーク分割}\label{ch:l2}
+\input{./18_l2/18main.tex}
+
+\chapter{L2リンク集約}\label{ch:lag}
+\input{./19_l2_2/19main.tex}
+
+\chapter{暗号通信}\label{ch:crypt}
+\input{./20_crypt/20main.tex}
+
+\chapter{リモートアクセス}\label{ch:remote}
+\input{./21_remote/21main.tex}
+
+\chapter{webシステム}\label{ch:websystem}
+\input{./22_web_system/22main.tex}
+
+\chapter{証明書}\label{ch:cert}
+\input{./23_certificate/23main.tex}
+
+\chapter{モバイル環境の構築}\label{ch:mobile}
+\input{./24_connection/24main.tex}
+
+\chapter{NAT}\label{ch:nat}
+\input{./25_nat/25main.tex}
+
+\chapter{ネットワークセキュリティ}\label{ch:security}
+\input{./26_security/26main.tex}
+
+\chapter{VPN}\label{ch:vpn}
+\input{./27_vpn/27main.tex}
+
+\chapter{最終課題}\label{ch:final}
+\input{./28_final/28main.tex}
+
+%===================================================================== 第三部
+\part{付~~録~~編}\label{part:appendix}
+\appendix
+\chapter{viエディタの使い方}\label{etc:vi}
+\input{./etc/vieditor.tex}
+
+% %
+\chapter{UNIXコマンド集}\label{etc:unixcmd}
+\input{./etc/command.tex}
+% %
+%\chapter{BIND設定ファイル例}\label{app:bind}
+%\input{./16_dns/named.conf.tex}
+%\input{./16_dns/gx.zone.tex}
+%\input{./16_dns/localhost.tex}
+% %
+\chapter{Cisco IOSコマンド集}\label{etc:ioscmd}
+\input{./etc/cisco.tex}
+
+%\chapter{備品リスト}\label{app:list}
+%\input{./etc/list.tex}
+
+%\chapter{実験仕様書}\label{app:spec}
+%\input{./etc/spec.tex}
+
+%------------------------------------------------------------------- 参考文献
+%\input{reference.tex}
+
+\end{document}

@@ -1,0 +1,49 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  tail
+%% %% %%
+%% %% %%
+
+\section{tail}
+ファイルの最後の部分を表示する\par
+\label{cmd:tail}
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+% tail ファイル名
+\end{alltt}
+\end{screen}
+\end{center}
+
+\noindent
+{\bf ◆機能説明}
+
+ファイルの最後の数行を表示する．
+ログあるいはファイルなどで最後の方にあるデータだけを
+調べたいときに便利．\par
+
+\noindent
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# \underline{tail setuid.today} (← setsid.today の最後の数行を表示する)
+-r-sr-xr--  1 root  network  222240 Sep 17 08:46:54 1999 /usr/sbin/ppp
+-r-sr-xr-x  1 root  wheel     85504 Sep 17 08:47:04 1999 /usr/sbin/pppd
+-r-xr-sr-x  2 root  kmem      13184 Sep 17 07:48:20 1999 /usr/sbin/pstat
+-r-sr-xr-x  5 root  wheel    290288 Sep 17 07:48:37 1999 /usr/sbin/purgestat
+-r-sr-xr-x  5 root  wheel    290288 Sep 17 07:48:37 1999 /usr/sbin/sendmail
+-r-sr-x---  1 root  network    9768 Sep 17 07:48:24 1999 /usr/sbin/sliplogin
+-r-xr-sr-x  2 root  kmem      13184 Sep 17 07:48:20 1999 /usr/sbin/swapinfo
+-r-sr-xr-x  1 root  wheel     13440 Sep 17 07:48:28 1999 /usr/sbin/timedc
+-r-sr-xr-x  1 root  wheel     11232 Sep 17 07:48:29 1999 /usr/sbin/traceroute
+-r-xr-sr-x  1 root  kmem       7036 Sep 17 07:48:29 1999 /usr/sbin/trpt
+#
+\end{alltt}
+\end{breakbox}
+\end{center}
+\clearpage
+%% %% %%
+%% %% %% %%

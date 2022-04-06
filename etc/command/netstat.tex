@@ -1,0 +1,44 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  netstat
+%% %% %%
+%% %% %%
+\label{cmd:netstat}
+\section{netstat（NETSTATus）}
+ネットワークの状態を表示する\par
+
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+ % netstat [-rn]
+ 　　r　:　ルーティングテーブルを表示する
+ 　　n　:　ネットワークアドレスの表示を数字で行う．
+\end{alltt}
+\end{screen}
+\end{center}
+
+{\bf ◆機能説明}
+
+　netstat は，ネットワークに関連したさまざまな情報を表示するプログラムである．ここで説明するのはネットワークインタフェースのパケットトラフィックに関するルーティングテーブルをひょうじする r オプションに関してのみであるが，他にもアクティブソケットの一覧や他のネットワークの状態等オプションによって用途に適した情報が得られるので，他の機能を利用したい場合はマニュアルを読んで欲しい．\par
+　また，通常 netstat はできる限り IP アドレスをホスト名で表示しようとするが， n オプションをつけることによりアドレスを数字で表示する．\par
+
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+ % \underline{netstat -r}  \keybox{Enter}
+ Routing Table:
+   Destination           Gateway           Flags  Ref   Use   Interface
+ -------------------- -------------------- ----- ----- ------ ---------
+ 172.21.54.0          test                  U        3  47873  hme0
+ BASE-ADDRESS.NET     test                  U        3      0  hme0
+ default              dss.kochi-tech.ac.jp  UG       0 208343  
+ localhost            localhost             UH       02753237  lo0
+ %
+\end{alltt}
+\end{breakbox}
+\end{center}
+\clearpage
+%% %% %%
+%% %% %% %%

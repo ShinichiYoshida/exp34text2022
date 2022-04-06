@@ -1,0 +1,129 @@
+BINDに必要な設定ファイルは，図~\ref{fig:05:dns-bind-conf-files} に示すものである．
+もし該当するディレクトリが存在しい場合には，mkdir コマンドでディレクトリをあらたに作成する必要がある．
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=.5\linewidth,bb=10 600 426 813,clip]{\chapdns dns-bind-conf-files.eps}
+\vspace*{1zh}
+\caption{DNS の設定ファイル}
+\label{fig:05:dns-bind-conf-files}
+\end{center}
+\end{figure}
+
+\subsubsection*{named.conf}
+
+BIND の設定ファイルである \ttt{named.conf} は，デフォルトでは \ttt{/etc} 
+に置かれる．このファイルには，このネームサーバのドメイン名，ゾーンファイ
+ルの位置，ルートサーバ情報のファイル，挙動（キャッシュサーバ動作の有無，
+問い合わせ元のアクセス制限，セカンダリへの情報提供の有無）などを記述する．
+
+書式は，下記の通りである．主に options パートと，zone パートに分かれてお
+り，options は BIND 全体の挙動の設定，zone は個々のゾーン設定である．書
+く文は，セミコロンで終わる．// で始まる部分は，コメントである．
+
+書き入れる情報については，必要となる情報の項の通りとすること．
+
+\begin{cli}
+// Setting of Named
+options {
+        directory       ゾーンファイル等を置くディレクトリ;
+        pid-file        プロセスIDを保持するファイル;
+};
+
+↓以下で書いている zone の設定の仕方は，ネームサーバの種類によって
+  異なるので，必要なサーバのものだけを書くこと
+
+// Setting of root zone
+zone "." { type hint; file "ルートサーバを記した named.root のパス"; };
+ ↑
+ ルートサーバの IP が書かれたファイル（これがないとルートサーバ
+  に問い合わせができない）
+
+
+ ↓マスター（プライマリ）サーバ用の設定（ゾーンファイルのファイル名を書く）
+zone "ドメイン" {
+        type master;
+        file "ゾーンファイル";
+};
+
+ ↓スレーブ（セカンダリ）サーバ用の設定（マスターのIPが必要）
+zone "ドメイン" {
+        type slave;
+        file "ゾーンファイル";
+        // slave のゾーンファイルはシステムが一時的に保存する
+        // ファイルで編集はしない
+        masters {
+                マスターサーバのIP;
+        };      
+};
+
+// type には，hint：ヒントファイルを参照，master：マスター（プライマリ）
+// 動作，slave：スレーブ（セカンダリ）動作などを指定する．
+// それぞれ file 文でヒントファイル，ゾーンファイルを
+// 指定し，slave の場合は，さらに masters の項で，サーバを指定する．
+\end{cli}
+
+\subsubsection*{ゾーンファイル}
+
+ゾーンファイルは \ttt{/etc/named} に置くので，このディレクトリを作成しゾー
+ンファイルを作成する．
+
+ドメインは，正引き用ドメインのみを作成する．逆引きについては，サブネット
+との関係から今回は作成しなくて良い．ルートゾーンの named.root は，メイン
+サーバから別途入手する．
+
+--
+
+次に，以下のコマンドを用い bind がプロセス ID を記述する空のファイルを作成する
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# touch /var/run/named.pid (空のファイルを作成)
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+また，本書の通りに設定を進めていった場合にエラーログに
+\begin{cli}
+none:0: open: /etc/rndc.key: file not found
+couldn't add command channel 127.0.0.1#953: file not found
+\end{cli}といったエラーが出力されるがこれは暗号化やデバッグの設定にかかわる箇所なので
+今回は無視してよいものとする.
+%まじで?
+
+設定ファイルを修正した場合は，DNS サーバの再起動を行い，設定ファイルの再読み込みをすること．
+bind の再起動を行うには一度現在動いている bind を停止させ再起動させる必要がある.
+% \begin{center}
+% \begin{breakbox}
+% \begin{alltt}
+% # ps aux | grep named   （現在動いているbindのプロセスIDを調べる）
+% 	root	xxxxx	1	aa:bb:cc ?	0:00 /usr/local/sbin/named
+% # kill -9 xxxxx             (プロセスIDxxxxxのbindを停止)
+% # /usr/local/sbin/named　(bindの起動)
+% \end{alltt}
+% \end{breakbox}
+% \end{center}
+起動はしているが異常動作（正引き・逆引きができない等）を起こしている場合には,
+現在動作している bind プロセスを一旦終了する．そして，bind をデバッグモードで起動させる.
+すると bind の動作を記録したログファイル（\texttt{/etc/named.run}）が出力されるので,これを
+もとに原因を追求することができる.
+\begin{cli}
+# /usr/local/sbin/named -d1   (デバッグモードでbindを起動)
+# less /etc/named.run         (デバッグモードで作成されたログを見る)
+\end{cli}
+
+\subsection{DNS サーバの実行制御スクリプトへの登録}
+最後に，サーバの起動時に DNS サーバが自動的に起動するように設定する．
+
+\texttt{/etc/rc.local} ファイルに起動コマンドを書けば，システム起動時に
+実行されるようになっている．
+
+\noindent
+\textbf{■ \texttt{/etc/rc.local} ファイル に下記を追加}
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+/usr/local/sbin/named
+\end{alltt}
+\end{breakbox}
+\end{center}

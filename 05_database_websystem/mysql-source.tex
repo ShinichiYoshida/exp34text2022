@@ -1,0 +1,71 @@
+\section{MySQL インストールの補足}
+
+\subsection{インストール}
+
+ここでは，\texttt{mysql-5-5-22} のインストールについて記す．
+
+ソースコードからのインストール手順についての詳細は，
+\texttt{mysql-5.5.22.tar.gz} に付属の \texttt{INSTALL-Source} にあるが，
+冒頭の「4. Install the distribution」に書いてあるように，特に，Section
+2.9 （より具体的な手順は 2.9.2）（less でサーチする時は，スラッシュ ``/'' キー
+の後，``\textasciicircum 2.9''と打ち込み Enter キーをタイプするとその箇
+所がすぐに表示される\footnote{「\textasciicircum」は行頭の意味の正規表現}）
+に従って進める．
+
+まず，make を行うための Makefile を作成するため，cmake をインストールす
+る\footnote{通常のソフトウェアでは，configure スクリプト(シェル /bin/sh
+で動作するスクリプト)で Makefile を作成することが多いが，cmake は OS 依
+存のより少ない Makefile 作成（環境にあったコンパイル手順作成）ソフトウェ
+アである．}．
+
+\begin{cli}
+1. cmake-2.8.7.tar.Z をダウンロード・展開
+2. 展開後のディレクトリで，configure，コンパイル，インストール
+\end{cli}
+（cmake の拡張子は .Z であるが，これは UNIX 初期からの圧縮形式である
+compress 形式である\footnote{最も初期からあるものが，compress ``.Z'', 次
+が gzip ``.gz'' で圧縮率が向上し, その後特許問題の回避や圧縮率のさらなる
+向上を達成した bzip2 ``.bz2'' が開発され，現在最も新しいものは，XZ
+``.xz'' 形式であり，最近の UNIX の tar コマンドであればどの形式でも自動
+的に認識して伸長できる．古いものほど圧縮率は低いが，互換性が高く，計算
+機の性能が低くても動作する．make や tar, gzip プログラムなど，それ自身が
+ソフトウェアを構築するソフトの場合は，開発環境がまだ整備されていない環境
+向けに，古い compress 系式で配布されることも多い（gzip がないから gzip 
+をインストールしたいのに，.gz 系式で配布されたらどうしようもない）．}
+
+次に，\texttt{mysql-5.5.22} をダウンロード・展開し，そのディレクトリ下で
+\texttt{INSTALL-SOURCE} の Section 2.9.2 の ``Preconfiguration Setup''
+からの操作を行う（groupadd, useradd のオプションが Linux 用のため，
+FreeBSD ではやや異なるので下記を参照）．
+
+\begin{cli}
+# pw groupadd mysql
+# pw useradd -g mysql -n mysql
+\end{cli}
+
+ここから先は，2.9.2 ``Preconfiguration Setup'' の通りで良い．
+
+\textbf{注意!} make install の際，/usr/local/mysql 以下にインストールさ
+れていることを確認する．
+
+起動時に自動的に mysqld を実行させるためのスクリプト
+\texttt{support-files/mysql.server} は，FreeBSD の場合，
+\texttt{/etc/init.d/mysql.server}ではなく，
+/texttt{/etc/rc.d/mysql.server} におく（テキスト p.122）．
+
+また，(14) にあるPATH の設定は，下記のようにする．
+\begin{cli}
+# setenv PATH /usr/local/mysql/bin:$PATH
+ （↑exit するまで有効）
+# vi ~/.cshrc
+最下行の上記の setenv PATH の一文を追加しておくことで，
+次回ログイン時にも自動で PATH が設定される．
+\end{cli}
+%$
+なお，テキスト p.122 (13) のパスワードの設定は，「2.10.2. Securing the
+Initial MySQL Accounts」の「Assigning root Account Passwords」にあるよう
+に mysqld が起動している環境で下記のコマンドを発行すれば良い．
+
+\begin{cli}
+# mysqladmin -u root password "パスワード"
+\end{cli}

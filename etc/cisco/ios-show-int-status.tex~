@@ -1,0 +1,80 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  ip route
+%% %% %%
+%% %% %%
+\section{show interface status}
+\label{cmd:ios-show-int-status}
+Cisco IOS上で，スイッチのポート(インターフェース)の状況を確認する．
+
+静的 VLAN, ポートの up/down (有効・無効，接続有り/無し)などが分かる．
+
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+Switch>show int status
+
+Port      Name               Status       Vlan       Duplex  Speed Type
+Fa0/1                        connected    1          a-full  a-100 10/100BaseTX
+Fa0/2                        notconnect   1            auto   auto 10/100BaseTX
+Fa0/3                        connected    1          a-full  a-100 10/100BaseTX
+Fa0/4                        notconnect   1            auto   auto 10/100BaseTX
+Fa0/5                        connected    1          a-full  a-100 10/100BaseTX
+Fa0/6                        notconnect   1            auto   auto 10/100BaseTX
+Fa0/7                        notconnect   1            auto   auto 10/100BaseTX
+Fa0/8                        notconnect   1            auto   auto 10/100BaseTX
+Fa0/9                        connected    1          a-full  a-100 10/100BaseTX
+Fa0/10                       notconnect   1            auto   auto 10/100BaseTX
+Fa0/11                       notconnect   1            auto   auto 10/100BaseTX
+Fa0/12                       notconnect   1            auto   auto 10/100BaseTX
+Fa0/13                       notconnect   1            auto   auto 10/100BaseTX
+Fa0/14                       notconnect   1            auto   auto 10/100BaseTX
+Fa0/15                       notconnect   1            auto   auto 10/100BaseTX
+Fa0/16                       notconnect   1            auto   auto 10/100BaseTX
+Fa0/17                       notconnect   1            auto   auto 10/100BaseTX
+Fa0/18                       notconnect   1            auto   auto 10/100BaseTX
+Fa0/19                       notconnect   1            auto   auto 10/100BaseTX
+Fa0/20                       notconnect   1            auto   auto 10/100BaseTX
+Fa0/21                       notconnect   1            auto   auto 10/100BaseTX
+Fa0/22                       notconnect   1            auto   auto 10/100BaseTX
+Fa0/23                       notconnect   1            auto   auto 10/100BaseTX
+Fa0/24                       notconnect   1            auto   auto 10/100BaseTX
+
+connected は端末が接続中であり，a-full, a100 は automatic
+(自動認識)で全二重，100M で接続中であることを示す．
+not connected は接続されていない，あるいは
+電源が入っていないことを示す．
+VLAN は全て 1 である．
+
+\end{alltt}
+\end{screen}
+\end{center}
+
+
+{\bf ◆機能説明}
+
+どのポートが，どの VLAN に所属しているかを確認する．
+
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+Switch>show vlan
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+7    VLAN0007                         active
+9    group09                          active    Fa0/18, Fa0/19
+12   group12                          active    Fa0/20, Fa0/24
+13   teststp                          active
+
+ポート1-4 が VLAN 1 (デフォルト)，18,19 が VLAN 9，
+20, 24 が VLAN 12 である．
+\end{alltt}
+\end{breakbox}
+\end{center}
+                
+

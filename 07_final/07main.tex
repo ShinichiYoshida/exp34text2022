@@ -1,0 +1,192 @@
+
+最終課題では，AWS上で Wordpress を運用できるネットワークサービスを構築する．
+
+\section{目的}
+
+クラウドサービス大手のアマゾン社が提供するクラウドサービス「Amazon Web Service」(AWS)を使った Wordpress によるWebサービスの運用を行う．AWS では，数多くのネットワーク・Webサービスが提供されているが，そのうち，Elastic Computing Cloud (EC2) と呼ばれる仮想マシンサービスによりサーバの構築を行う．
+
+クラウドサービスに対して，オンプレミス型のサービスがあり，これはハードウェアを設置してオペレーティングをインストールしネットワーク構築を全て行った上で必要なサービスを導入するものであるが，これらのものではハードウェアの性能は最初の導入時に決まり，後から性能を大きくしたい（スケールアップ，スケールアウト）場合でも，容易には行えない．また逆にコストの面から利用にあった性能にスケールダウンすることも難しい．クラウドサービスを使うことにより，ハードウェアを利用時間単位で，必要な性能．量を必要なだけ使用し，その分だけコストを支払うことができる．
+Elastic には柔軟で伸び縮みできるという意味があり，こうした利用形態が可能である．
+また，障害やアクセス集中などに対する耐性も，大手のクラウドを用いる方が対処しやすことも多く，こうしたこともクラウドを利用する利点になる．
+
+\section{内容}
+
+Amazon Web Service 社の Elastic Computing Cloud にて，Linux, Apache2, MySQL, PHP を使った， SSL/TLS による Wordpress サービスを構築するために，下記を行う．
+
+\begin{enumerate}
+    \item AWS EC2 に Linux OS による仮想マシンインスタンスを用意
+    \item EC2 のパケットフィルタファイアウォールによるセキュリティポリシーの設定で，SSH, HTTP, HTTPS, DNS によるアクセスを許可
+    \item インスタンスにWebサーバ，データベース，Webアプリケーション用実行環境 LAMP (Linux, Apache2, MySQL, PHP) を導入
+    \item Apache2 にて SSL/TLS を行うモジュールの導入
+    \item AWS上にDNS サービスの構築
+    \item Let's Encrypt サービスによる SSL/TLS 接続用証明書の取得
+    \item データベース上に Wordpress 用のデータベースとアクセス用ユーザを作成し，ユーザに適切にアクセス許可を設定
+    \item Wordpress の初期設定を行い，Webコンテンツ公開用ディレクトリにファイル群を配置し，ファイルのオーナ，アクセス許可を設定
+\end{enumerate}
+
+SSL/TLS による HTTPS 接続のためには，DNS による正式なドメイン名のあるホスト名が必要であり，DNS と Apache を用いたドメイン認証サービス (Domain Validation) であるLet's Encrypt サービスによる証明書の署名・交付を受ける．
+
+DNS の設定には，上位DNSサーバへの設定が必要となるため，実験スタッフに上位DNS設定に必要な情報（ドメイン名，DNSサーバ名，DNSサーバIPアドレス）を伝える．
+
+\section{実験内容（３回分）}
+
+構築は，以下の使用，手順で行う．
+
+\subsection{仕様}
+
+\begin{itemize}
+    \item AWS EC2 は，教育機関用サービス AWSEducate (awseducate.com) から情報学群実験4Cを選択して AWS にログイン．
+    \item 用いるインスタンスは，t2.micro (その他のものでは追加課金となる場合がある)．
+    \item 用いる OS は，Amazon Linux 2 (AML2)
+    \item AML2 が用意する LAMP 導入手順を用いる．
+    \begin{itemize}
+        \item この場合，MySQL の代わりに派生版の MariaDB がインストールされるので，これを使う．使い方はMySQLと同一である．
+    \end{itemize}
+    \item DNSサービスを BIND にて構築する．
+    \begin{itemize}
+        \item ドメイン名(グループXの場合): aX.exp.info.kochi-tech.ac.jp
+        \item DNSサーバ名(グループXの場合): server.aX.exp.info.kochi-tech.ac.jp
+        \item DNSサーバIPアドレス: AWS EC2 から割り当てられて IPv4 パブリックアドレス
+        \item Webサーバ名(グループXの場合): www.aX.exp.info.kochi-tech.ac.jp
+        \item BINDインストールは，1台目のサーバだけで良い(Webサーバを2台以上作成する場合)
+    \end{itemize}    
+    \item SSL/TLS用証明書は，Let's Encrypt サービスを使う．
+    \item Wordpress URL(グループXの場合): https://www.aX.exp.info.kochi-tech.ac.jp/
+    \begin{itemize}
+        \item 2台目以降を構築する場合は，https://www2.aX.exp.info.kochi-tech.ac.jp/ と，wwwの後に番号を付与する．
+    \end{itemize}
+\end{itemize}
+
+\subsection{AWS EC2 インスタンスの準備}
+
+既に，各グループで用意済みの t2.micro, AML2 のインスタンスを使う（第1章第3回実験参照）．
+
+\subsection{AWS EC2 インスタンスにログイン}
+
+秘密鍵 (*.pem ファイル) を使ってインスタンスにログインする．
+
+\begin{cli}
+UNIX系(Linux, Mac) の場合
+$ ssh -i 秘密鍵ファイル ec2-user@IPアドレス
+(IPアドレスはインスタンスのもの)
+
+Windows の場合は，下記を参考に，PuTTY から接続．
+「PuTTY を使用した Windows から Linux インスタンスへの接続」
+https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/putty.html
+\end{cli}
+
+\subsection{パスワード等の注意}
+
+パブリックなインターネットスペースでのサーバ構築は，常にセキュリティ侵害のリスクに晒されるため，下記のような注意をし，セキュリティリスクを可能な限り避けること．
+
+\begin{itemize}
+    \item パスワード等は，安易なもの，辞書にあるもの，短いものとせず，パスワード生成器で生成されるような強固なものを用い，メンバーが限られたSNSスペース(slack)などで適宜共有する．
+    \item phpinfo() 等のテストプログラムも弱点などを提供し脅威となるため，テスト後は削除する．
+    \item セキュリティグループでのファイアウォール設定もなるべく最小限とすること．
+\end{itemize}
+
+特に，東京オリンピック等のイベント開催時には，セキュリティ侵害攻撃が急拡大する傾向にあるため，日ごろから常に注意をする．
+
+\subsection{LAMPのインストール}
+
+基本的には，AWS 公式チュートリアル「Amazon Linux 2 に LAMP ウェブサーバーをインストールする」に沿って構築する．
+
+\url{https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/ec2-lamp-amazon-linux-2.html}
+
+別紙に用意する通り，
+
+\subsection{セキュリティ（ファイアウォール）の設定}
+
+DNSとWebサービスを行うにあたり，DNS, HTTP, HTTPSアクセスを許可するファイアウォール（パケットフィルタ）設定を AWS に行う．
+
+\begin{itemize}
+    \item AWS Educate にサインイン
+    \item My Classrooms で情報学群実験第4Cを選択(Go to classroom)
+    \item Workarea → AWS Console (ここで残金が10ドルを切っている場合は教員まで報告を)
+    \item 最近アクセスしたサービス等で ec2 選択
+    \item インスタンス下の「セキュリティ」タブからセキュリティグループ (sg-.....) を確認，クリック
+    \item Edit Inbound rules で SSH が許可となっているので，これに下記を追加，ルールを保存する
+    \begin{itemize}
+        \item HTTP
+        \item HTTPS
+        \item DNS(TCP)
+        \item DNS(UDP)
+        \item 全て，ソースは，Anywhere-IPv4 (0.0.0.0/0) を選択
+    \end{itemize}
+\end{itemize}
+
+\subsection{DNSサーバの設定}
+
+BIND をインストールし，ドメイン「aX.exp.info.kochi-tech.ac.jp」のゾーンファイルを作成しホストする
+
+\begin{cli}
+$ sudo su
+# yum update
+# yum install bind
+
+/etc/named.conf がDNS設定ファイル
+
+# vi /etc/named.conf
+
+下記2行をコメントアウト
+(デフォルトはセキュリティ対策で自アドレスのみアクセス可になっているため)
+      listen-on port 53 { 127.0.0.1; };
+      listen-on-v6 port 53 { ::1; };
+↓
+//      listen-on port 53 { 127.0.0.1; };
+//      listen-on-v6 port 53 { ::1; };
+
+下記を書き換え
+(デフォルトはセキュリティ対策で自分のみクエリ可になっているため)
+        allow-query     { localhost; };
+↓
+        allow-query     { any; };
+
+下記を書き換え
+(セキュリティ上再帰検索を禁止するため)
+        recursion no;
+↓
+        recursion yes;
+
+(DNSセキュリティ詳細については，Web等の「オープンリゾルバ対策」を参考にすること)
+
+下記ゾーンを追加する
+（Xはグループ名)
+
+zone "aX.exp.info.kochi-tech.ac.jp" {
+    type master;
+    file "zone.aX";
+};
+\end{cli}
+
+次にゾーンファイルを作成する
+\begin{cli}
+ゾーンファイルは，/var/named に作成
+
+# vi /var/named/zone.aX (X:グループ名)
+$TTL    100
+@       IN      SOA     aX.exp.info.kochi-tech.ac.jp. postmaster.aX.exp.info.kochi-tec
+h.ac.jp. (
+                001
+                100
+                100
+                100
+                100 )
+        IN      NS      server.aX.exp.info.kochi-tech.ac.jp.
+server  IN      A       AWS EC2のパブリックIPv4アドレス
+www     IN      CNAME   server
+\end{cli}
+
+DNSサーバを再起動する．
+\begin{cli}
+# systemctl restart named
+
+(AML2 (RedHat系Linux) では，named がサービス名)
+\end{cli}
+
+以上でDNSサーバの作成は完了する．
+
+\subsection{LAMP設定の続きとWordPress}
+
+以降，LAMP設定の続き，SSL/TLS 設定と，WordPress のインストールを別紙（チュートリアル）を元に行っていく．
+

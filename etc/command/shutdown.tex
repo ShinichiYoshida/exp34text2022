@@ -1,0 +1,84 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  shutdown
+%% %% %%
+%% %% %%
+\label{cmd:shutdown}
+\section{shutdown(SHUTDOWN)}
+
+指定時刻にシステムを停止する\par
+
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+(Linux, FreeBSD)
+ % shutdown [-h | -r | -k] 停止時間 警告メッセージ
+ 　　h　:　システムを停止する
+ 　　r　:　システムを再起動する
+ 　　k　:　全ユーザを追い出す
+\end{alltt}
+\end{screen}
+\end{center}
+
+◆機能説明\par
+ shutdown コマンドはスーパーユーザーでないと行うことはできない．
+
+ shutdown は，オプションの指定によって終了方法が異なる．\par
+　停止時間は hh:tt 時間表記（12:10 → 12 時 10 分）や　+m 表記（ +5 → 5 分後）といった指定ができ， now とすると +0 の意味をなし，その場で停止しようとする．停止時間は必ず指定しなければならないが，警告メッセージは書かなくても良い．\par
+　k オプションを指定した時は，実際にはシステムは停止せずにログイン中のユーザにユーザをログアウトさせるメッセージを送り，それ以後システム停止までログインをできなくさせるので,その間にバックアップを取るなどの手段を取ることができる．\par
+　システムの停止をするとユーザに不便な思いをさせるので乱発は控え，本当に停止すべき状況かどうかを考えてから停止をしたほうが良い．「シャットダウン癖をつくらない」ほうが良い．\par
+　また， p オプションで電源を切るにはハードウエア側で対応していないと意味がないので注意が必要である．\par
+
+{\bf ◆使用例   システムを停止する(Linux, FreeBSD)}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+ % \underline{shutdown -h now}  \keybox{Enter}
+ *** FINAL System shutdown message from root@test@info.kochi-tech.ac.jp ***
+ Shutting down demon process
+ ・
+ ・
+ ・
+ （メッセージが流れる）
+ ・
+ The operating system has halted.
+ Please press any key to reboot.　（←電源を切れる状態になった）
+\end{alltt}
+\end{breakbox}
+\end{center}
+電源を切れる状態になったことをメッセージで確認してから電源を切る．また，メッセージにもあるように何かキーを押すと再起動が始まる．\\
+
+{\bf ◆使用例（ 2 ）全ユーザを追い出す(Linux)}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+ % \underline{shutdown -k now}  \keybox{Enter}
+ *** FINAL System shutdown message from root@test@info.kochi-tech.ac.jp ***
+ System going down IMMEDIATELY
+
+ Feb 28 17:46:33 test@info shutdown:shutdown by root
+
+ System shutdown time has arrived
+ but you'll have to do it yourself  \keybox{enter}
+ % 
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+以後，一般ユーザは一端ログアウトしてしまうとログインしようとしても以下のようになメッセージが出るだけでログインができなくなる．\\
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+ login: \underline{user}  \keybox{Enter}\\
+ Password: \keybox{パスワードを入力して enter}\\
+
+
+ NO LOGINS: System going down at 17:46\\
+\end{alltt}
+\end{breakbox}
+\end{center}
+\clearpage
+
+%% %% %%
+%% %% %% %%

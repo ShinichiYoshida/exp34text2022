@@ -1,0 +1,47 @@
+\section{第2回 バックボーンの構築とネットワークの設定}
+
+ネットワーク内で，メールの送受信やWWWページの閲覧といった機
+能\footnote{このような機能をサービスと呼ぶ．}を提供するためには，ハブや
+ルータ，サーバ/クライアントなどといったものが必要である．しかし，それら
+の機器があるだけではネットワークとして機能しない．本実験では，それらの
+機器を\textbf{\Underline{ネットワークとして機能するように接続}}し，機器
+同士が\textbf{\Underline{TCP/IPで通信できるような環境}}を構築する．
+
+まず，各機器を接続する Ethernet ケーブルとして，カテゴリ5 の UTP ケーブ
+ルを作成し，\textbf{\Underline{各機器を接続する}}．その後で，ネットワー
+ク内で機器同士が通信できるようにするため，IPアドレスやゲートウェイなど
+を設定する．
+
+\subsubsection*{ネットワークの構成機器}
+本実験で構築するネットワークの構成機器とその役割との対応を表\ref{sp2:tab:network}に示す．
+
+\begin{table}[htbp]
+\begin{center}
+\caption{ネットワーク機器とその役割}
+\label{sp2:tab:network}
+\begin{tabular}{|l|c|}
+\hline
+ネットワーク機器 & 役割 \\ \hline
+Cisco Systems CISCO2611XM & ルータ \\ \hline
+ASUS RS-100 & サーバ \\ \hline
+DOS/V (Linux) & クライアント \\ \hline
+DOS/V (WindowsXP) & クライアント \\ \hline
+Acer Aspire One & クライアント \\ \hline
+Allied Telesis centrecom8216XL2 & スイッチングハブ \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\subsubsection*{考慮すべき点}
+今回の実験を行うにあたり，以下のようなことについて考慮する必要がある．
+\begin{itemize}
+{\bf \item{ネットワーク機器の種類}}\\
+OSと同様に，ネットワーク機器にもさまざまな種類があり，それぞれの用途や特徴が異なっている．
+どのようなネットワーク機器がどのような動きをするのか把握し，目的に応じて正しいネットワーク構築をする必要がある．
+
+{\bf \item{ネットワークを構成するための情報}}
+
+どのようなネットワークを構築するかで，それぞれのネットワーク機器に設定する情報は全く違ってくる．
+構築したいネットワークを意識し，入力すべき情報を考える必要がある．
+\end{itemize}

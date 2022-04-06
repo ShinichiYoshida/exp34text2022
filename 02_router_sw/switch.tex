@@ -1,0 +1,432 @@
+\section{スイッチを用いる目的}
+
+Ethernet による LAN を分割するには，物理的に異なるネットワーク機器および
+ケーブルを用いる方法がある．例えば，プロジェクトごとに異なる目的でネット
+ワークを利用し，互いの通信を制限させたい場合などは，A チーム用の LAN と 
+B チーム用の LAN を，全く異なるスイッチによるネットワークを構成し，A チームの端末は A チーム用のスイッチに A チームのケーブルを用いて接続し，B チー
+ムは，B チーム用のスイッチに B チームのケーブルを用いて接続することで，
+それぞれのチームの端末が互いにチーム内では通信を行い，チーム外との通信は行えなくなる．2つの異なる LAN を接続するためには，Layer 3 の機器であるルータを用いる．
+
+Layer 2 において，物理的な分割でなく Layer 2 のプロトコルにおいて分割す
+る方法が，Virtual LAN (VLAN) である．VLAN は，主にスイッチにおいて用いら
+れている技術で，1つのスイッチに複数の異なる LAN の通信環境を実現したり，
+1本のケーブル上に複数の異なる LAN のパケットを送受信する技術である．本来
+1 台のスイッチやネットワークケーブルは，1つの LAN の通信に用いられるが，
+VLAN を用いることで，複数の異なる LAN で，機器やケーブルを共用することが
+できる．
+
+現在は，中規模以上のネットワークでは VLAN が広く使用されており，ルータや
+サーバ用コンピュータなどの端末も，VLAN の使用が可能なものが多い．
+VLAN を用いることで，管理する LAN の数が増加しても，機器の費用，設置場所，
+電気等のランニングコスト，ネットワークケーブルの敷設本数，管理の手間や保
+守のコストなどを抑えることが可能になる．
+
+VLAN が行っていることは，ブロードキャストドメインの分割である．ブロード
+キャストドメインとは，イーサネットのブロードキャストフレームが到達する範
+囲である．通常，リピータやブリッジ，スイッチはブロードキャストフレームを
+全てのポートに転送し，LAN 内の全ての機器に送信する．このようにすることで，
+ARP などの宛先を探索するフレームを確実に全ホストに転送する．ブロードキャ
+ストの届かない端末は，他の端末から探索されなくなるため，必然的に通信が行
+えなくなり，隔離される．
+
+VLAN に対応したスイッチ・ルータは，各ポートで受信したフレームがどのLAN 
+に所属するのかを判断し，その LAN に所属するポートのみに対して転送を行う．
+異なる LAN に所属するポートには，ブロードキャストも含め，いかなる別の 
+LAN のフレームも送信しない．このようにすることで，1つのスイッチ内で，LAN 
+を分割する．これはあたかも複数のスイッチを設置した環境と同じような環境で
+ある．
+
+図\ref{fig:22:static}は，ポートVLANを用いて LAN A，LAN B，LAN C の3つの
+LAN を実現する図である．VLAN を用いない場合は左のように，3つのスイッチを
+用意する必要があるが，VLAN を用いることで1台のスイッチで Layer 2 のレベ
+ルでネットワークを分割することができる．
+
+\begin{figure}[htb]
+  \begin{center}
+   \includegraphics[width=15cm,bb=0 0 720 540,clip]{\chapsw vlan1.pdf}
+   \caption{静的VLAN}
+   \label{fig:22:static}
+  \end{center}
+\end{figure}
+
+\begin{figure}[htb]
+  \begin{center}
+   \includegraphics[width=15cm,bb=0 0 720 540,clip]{\chapsw vlan2.pdf}
+   \caption{VLANを用いない場合}
+   \label{fig:22:no-vlan}
+  \end{center}
+\end{figure}
+
+\begin{figure}[htb]
+  \begin{center}
+   \includegraphics[width=15cm,bb=0 0 720 540,clip]{\chapsw vlan3.pdf}   
+   \caption{静的VLANとタグVLAN を用いる場合}
+   \label{fig:22:vlan}
+  \end{center}
+\end{figure}
+
+図\ref{fig:22:no-vlan}，図\ref{fig:22:vlan}は，3つの LAN を異なる場所で
+接続できるようする図である．図\ref{fig:22:no-vlan}の VLAN を用いない場合
+は，それぞれ3つのスイッチを準備し，さらにそれらの間を3本のネットワークケー
+ブルで接続する必要があるが，図\ref{fig:22:vlan}のように，ポートVLANとタ
+グVLANを用いることで，それらをまとめることができる．
+
+\section{VLAN の種類}
+
+VLAN では，受信したフレームがどの LAN に所属するかを判断する情報として，
+以下のようなものに分けられる．
+
+\begin{description}
+\item[静的VLAN] スイッチの各ポートが，どの LAN に所属するかを管理者が手
+  動で設定する VLAN．スイッチの物理ポート毎に所属する LAN を決めるため，
+  しばしば，\textbf{ポートベース VLAN，ポート VLAN} とも呼ばれる．管理者が一度設定すると設定
+  を変更するまでそのポートを送受信するフレームの所属する LAN は固定され
+  る．このため静的 VLAN （Static VLAN）と呼ばれる．また，末端のPCのアクセスには後述のタグVLANha
+  使わないため，\textbf{アクセス VLAN} とも呼ばれる．
+
+\item[動的VLAN] スイッチで受信されたフレームのMacアドレスや IP アドレス
+  （サブネット），プロトコル(IP か Appletalk かなど）で，所属す
+  る LAN を決める方法．フレームに含まれる情報のみから，所属する LAN を
+  決めるので，受信するポートには依存することなく LAN が決める．このため，
+  動的 VLAN と呼ばれる．VLANが意図せずに変わることもあるので，セキュリティなど考慮すべきことは多い．
+
+\item[タグVLAN] スイッチで受信されたフレームにあらかじめ所属する LAN の
+  情報が含まれており，この情報を元に所属する LAN を判断する方法．この情
+  報を，VLAN ID と呼ぶ．VLAN ID の含め方により，Cisco ISL VLAN と IEEE
+  802.1q VLAN に分けられるが，現在では，ほとんど 802.1q が用いられる．略して，dot1q，ドットイチキューなども呼ばれる．スイッチでは，このタグVLAN (tagged VLAN) のことを，\textbf{VLAN トランキング (trunking)，トランク VLAN}などと呼ぶ．1つのポート（ケーブル）に複数のVLANを収容することからこのように呼ばれる．タグ VLAN のポートのことを，トランクポート (trunk port) と呼ぶ．
+
+
+\end{description}
+
+
+\section{実験内容 (2)}
+本章において必要となる作業は，下記の通りである．
+\begin{itemize}
+\item 現在のスイッチの状況を確認
+    \begin{itemize}
+    \item 設定情報
+    \item ポート（インターフェース）の状態
+    \item VLANの状態
+    \end{itemize}
+    
+\item スイッチの初期設定
+    \begin{itemize}
+    \item ログ表示と設定中の文字とが混在しないようにする
+    \item DNSルックアップを無効にする
+    \end{itemize}
+    
+\item スイッチに，自グループ用の VLAN と，バックボーン用のVLANを定義する．
+    \begin{itemize}
+        \item 自グループの VLAN IDは，グループ番号 + 10．
+        \item バックボーン用の VLAN ID は，999．
+    \end{itemize}
+    
+\item ポートVLAN (静的VLAN, アクセスVLAN) を設定
+    \begin{itemize}
+        \item 1〜16番ポートは自グループのPC用のアクセス VLAN 用にポート VLAN (静的VLAN) を設定．
+        \item 17〜22番ポートはバックボーン用の VLAN をポートVLANで設定．
+    \end{itemize}
+\item リモートログインの設定
+    \begin{itemize}
+        \item 自グループVLANにIPを設定する
+    \end{itemize}
+\item タグVLAN (トランクVLAN) を設定（実験 4Cのみ．実験3iでは必要ない）
+    \begin{itemize}
+        \item 23, 24番ポートには，自グループの VLAN とバックボーンの VLAN の両方を，IEEE 802.1q タグVLANで接続できるよう設定する（実験 4Cのみ．実験3iでは必要ない）．
+    \end{itemize}
+
+\item ケーブル接続変更    
+    \begin{itemize}
+        \item バックボーンからのケーブルをスイッチのバックボーン用ポートに接続
+    \item ルータのバックボーン側インターフェースとスイッチのバックボーン用ポートを接続
+    \item ルータの自グループLAN側インターフェースとスイッチの自グループ用ポートを接続
+    \item 有線LAN接続のPC，サーバを適切に接続
+    \end{itemize}
+    
+\item ポート接続設定
+    \begin{itemize}
+    \item 23番ポートは接続できないよう，shutdownする（実験 4Cのみ．実験3iでは必要ない）．
+    \item 1～16番ポートは，スパニングツリーを無効にする（実験 4Cのみ．実験3iでは必要ない）．
+    \end{itemize}
+    
+\item 設定後のスイッチの状況を確認
+    \begin{itemize}
+    \item 設定情報
+    \item ポート（インターフェース）の状態
+    \item VLANの状態
+    \item MAC アドレステーブルの状態
+    \end{itemize}
+\end{itemize}
+
+\section{設定に必要な情報}
+
+\begin{itemize}
+ \item VLAN 番号
+       \begin{itemize}
+	\item 自グループ用 VLAN：グループ番号 + 10
+	\item バックボーン VLAN：999
+       \end{itemize}
+ \item スイッチの設定
+       \begin{itemize}
+	\item ポート1〜16：自グループ用 ポートVLAN
+	\item ポート17〜22：バックボーン用 ポートVLAN
+	\item ポート23〜24：自グループ・バックボーンのタグ VLAN（3iで
+	      は必要無し）
+       \end{itemize}
+ \item スイッチ遠隔用IPアドレス
+    \begin{itemize}
+        \item VLANは自グループに設定
+        \item IPアドレス：自グループサブネットで一番大きいIPアドレス（ブロードキャストを使わないこと）
+    \end{itemize}
+\end{itemize}
+
+\section{作業内容}
+
+\subsection{スイッチの設定}
+
+スイッチの現状を確認する．
+
+\subsubsection{設定確認}
+
+\begin{cli}
+Switch>enable  (または en)
+Password:
+Switch#show running-config  (省略形 show run, sh run,)
+       ↑現在の設定の確認．スイッチ設定が表示される
+      "?" キーでのコマンド説明や[TAB] 補完も活用できる．
+
+Switch#show interface status (ポート確認)
+Port      Name               Status       Vlan       Duplex  Speed Type
+Fa0/1                        notconnect   1            auto   auto
+ 10/100BaseTX
+
+（ポートFa0/1 は VLAN 1(デフォルト) VLAN で未接続）
+             :
+             :
+Fa0/6                        connected    1          a-full  a-100
+ 10/100BaseTX
+
+ポートFa0/1 は VLAN 1(デフォルト VLAN) で 自動認識(auto negotiation=オートネゴシエーション)の結果 全二重(full duplex)，100Mで接続されている
+
+
+###VLAN状態
+kut192-168-0-176#show vlan
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/19, Fa0/20, Fa0/21, Fa0/22, Fa0/23
+, Fa0/24
+12   group12                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4, Fa0/5,
+Fa0/6, Fa0/7, Fa0/8, Fa0/9, Fa0/10, Fa0/11, Fa0/12, Fa0/13
+                                                Fa0/14, Fa0/15, Fa0/16, Fa0/17, Fa0/18
+1002 fddi-default                     act/unsup
+1003 token-ring-default               act/unsup
+1004 fddinet-default                  act/unsup
+1005 trnet-default                    act/unsup
+
+↑どのVLANがポートに設定されているか分かる
+
+\end{cli}
+
+\subsubsection{初期設定}
+
+パスワード設定，リモートログイン(telnet)，ログ出力制御，DNSルックアップなどの設定をする．
+
+\begin{cli}
+...> enable
+
+...# configure terminal
+
+### スイッチホスト名の設定
+...(config)# hostname switch12
+
+### ユーザ名 exp，パスワードの設定
+switch12(config)# username exp password 0 root00
+
+### 管理者パスワード
+switch12(config)#enable password 0 root00
+
+### パスワードの暗号化
+switch12(config)#service password-encryption
+
+### DNSルックアップ無効化
+switch12(config)#no ip domain-lookup
+
+### コンソール設定
+switch12(config)#line con 0
+
+### コンソールでログで文字が流れないように
+switch12(config-line)#logging synchronous
+
+switch12(config-line)#exit
+
+\end{cli}
+
+\subsubsection{VLAN定義}
+
+\begin{cli}
+switch12#configure terminal
+
+###自グループVLANを定義
+
+switch12(config)#vlan XXX
+                 ↑vlan 作成．XXX はグループ番号+10
+switch12(config-vlan)#name groupXXX
+                 ↑分かりやすく名前を付ける(XXXグループ番号)
+switch12(config-vlan)#exit
+
+###バックボーンVLAN (YYYの値は本文参照) を定義
+
+switch12(config)#vlan YYY
+switch12(config-vlan)#name backbone
+switch12(config-vlan)#exit
+
+
+###次に interface コマンドでポートのアクセスVLAN設定
+
+### interface で range を使い，多くのポートを一度に設定
+
+switch12(config)#int range fa0/1-16
+  (range 記述 fa0/1-16 をまとめて指定)
+
+switch12(config-if-range)#switchport mode access
+  (ポートVLAN用にポートに設定)
+
+switch12(config-if-range)#switchport access vlan XXX
+  (VLAN XXX (XXXは自グループ用VLAN)  に設定)
+
+switch12(config-if-range)#exit
+
+###次にバックボーン用ポートVLANの設定．
+
+switch12(config)#int range fa0/17-22
+
+switch12(config-if-range)#switchport mode access
+
+switch12(config-if-range)#switchport access vlan YYY
+  (VLAN YYY バックボーン用VLAN)
+
+switch12(config-if-range)#exit
+\end{cli}
+
+\subsubsection{リモートログイン設定}
+
+VLAN設定が終わり遠隔ログインが設定可能になったので設定する．
+
+\begin{cli}
+
+### スイッチに遠隔ログイン用 IP アドレスを設定
+
+switch12(config)#interface vlanXX (XXは自グループVLAN番号)
+switch12(config-if)#ip address  X.Y.Z.W  255.255.255.0
+
+　(255.255.255.0はネットマスクであり異なる場合は
+　適切なものにすること)
+
+switch12(config-if)#exit
+
+### telnet 許可設定
+
+switch12(config)line vty 0 4
+  # 5人まで同時ログイン
+
+switch12(config-line)password 0 root00
+  # 遠隔用パスワード
+
+switch12(config-line)login
+  # ログイン許可
+  
+switch12(config-line)#logging synchronous
+  # コンソールと同様，ログで文字が流れないように
+
+switch12(config-line)#exit
+
+サーバ，Linux Desktop, Windows Putty などからスイッチにtelnet接続できるか確認
+
+\end{cli}
+
+\subsubsection{接続}
+
+図\ref{fig:22:static}を参考に物理接続を変更する．
+
+\begin{itemize}
+\item 自グループの機器（ルータを含む）は，自グループのスイッチの自グループ VLANへ接続
+\item バックボーンのケーブル，ルータバックボーン側はバックボーンVLANへ接続
+\end{itemize}
+
+\begin{figure}[htb]
+  \begin{center}
+   \includegraphics[width=15cm,]{\chapsw switch.pdf}
+   \caption{接続図}
+   \label{fig:22:static}
+  \end{center}
+\end{figure}
+
+
+\subsubsection{スイッチの設定確認}
+
+\begin{cli}
+下記各コマンドで，設定を確認する
+
+show running-config
+
+show vlan
+
+show interface status
+
+show mac address-table
+\end{cli}
+
+\subsection{トランクVLAN (4Cのみ)}
+
+\begin{cli}
+最後に他グループのスイッチ間を接続するトランクポートを設定
+自グループと他グループの VLAN をタグ VLAN として設定する
+（行か否かは各グループで判断）
+
+switch12(config)#int range fa0/23-24
+
+switch12(config-if-range)#switchport mode trunk
+  (VLANトランクポートに設定)
+
+switch12(config-if-range)#switchport trunk allowed vlan XXX,YYY
+  (自グループ用 VLAN XXX とバックボーン用 VLAN XXX を設定)
+
+switch12(config-if-range)#exit
+
+23のインターフェースを安全のためシャットダウンさせる．
+(24は有効にする)
+
+switch12(config)#int range fa0/23
+switch12(config-if-range)#shutdown
+switch12(config)#int range fa0/24
+switch12(config-if-range)#no shutdown
+
+\end{cli}
+
+\subsection{Spanning Tree 無効化 (4Cのみ)}
+
+Cisco 社のWeb「CatalystスイッチのポートでSTPを無効にする」を参考に設定する．
+
+ポートの抜き差しを行い，差し直したときに，オレンジ色のSTP学習中の状態が50秒続かずに，すぐにグリーンのリンクアップ状態になることを確認する．
+
+また，ループを作ると，サブネット内で通信障害起こることも確認する．
+
+
+
+\section{動作確認}
+
+\begin{itemize}
+ \item 自グループ用ポート同士で通信可能
+ \item 自グループのWindows PCをバックボーン用ポート
+       に接続すると通信不可能
+ \item 以上を相互に ping や tracerouteで確認する．
+ \item シャットダウンポートには，何を接続してもリンクアップしないことを確認(4C)．
+\end{itemize}
+
+\section{考慮すべき点}
+
+\begin{itemize}
+ \item VLANを設定することで，どのようなメリットがあるか．
+ \item VLAN を用いても効果が無い場合や，VLAN では機能が不足している点
+\end{itemize}

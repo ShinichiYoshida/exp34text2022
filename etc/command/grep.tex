@@ -1,0 +1,39 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  grep
+%% %% %%
+%% %% %%
+
+\section{grep（Global Regular Expression Print）}
+パターンにマッチする行を表示する\par
+\label{cmd:grep}
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+% grep 文字列 [ファイル名]
+\end{alltt}
+\end{screen}
+\end{center}
+
+\noindent
+{\bf ◆機能説明}
+
+ファイルの中身から引数に指定された文字列を含む行を表示する．文字列の指定には正規表現を用いる事ができる．\par
+また，ファイルを指定しない場合は標準入力から読み込むので，下の例のように出力が多い処理の出力を grep に向ける事により，必要な情報のみを抜き出して表示する事ができる．
+
+\noindent
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+% \underline{ls /dev | grep console}   （←/devの中からconsoleという文字列があれば表示する）
+console
+%
+\end{alltt}
+\end{breakbox}
+\end{center}
+\clearpage
+%% %% %%
+%% %% %% %%

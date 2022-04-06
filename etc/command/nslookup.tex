@@ -1,0 +1,58 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  nslookup
+%% %% %%
+%% %% %%
+\section{nslookup}
+ネームサーバに対話的に問い合わせを行う\\
+\label{cmd:nslookup}
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+% nslookup
+\end{alltt}
+\end{screen}
+\end{center}
+
+\noindent
+{\bf ◆機能説明}
+
+nslookup は IP アドレスとホスト名の対応を調べる．
+nslookup を実行して，その後に調べたいホスト名あるいは 
+IP アドレスを入力する．終わるときは exit と入力する．
+設定した DNS サーバで正しくホスト名と %
+IP アドレスの変換が行われているか調べるときに使う．
+
+\noindent
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+% \underline{nslookup}
+Default Server:  dns.xxx.yyy.zzz
+Address:  192.168.1.3
+
+> \underline{192.168.1.1}  （←IPアドレス192.167.1.1のホスト名を調べる）
+Server:  dns.xxx.yyy.zzz
+Address:  192.168.1.3
+
+Name:    machine1.xxx.yyy.zzz (←ホスト名の情報)
+Address:  192.168.1.1
+
+> \underline{machine1.xxx.yyy.zzz}  （←ホスト名machine1のIPアドレスを調べる）
+Server:  dns.xxx.yyy.zzz
+Address:  192.168.1.3
+
+Name:    machine1.xxx.yyy.zzz
+Address:  192.168.1.1
+
+> \underline{exit}   (← nslookup を終了する)
+%
+\end{alltt}
+\end{breakbox}
+\end{center}
+\clearpage
+%% %% %%
+%% %% %% %%

@@ -1,0 +1,273 @@
+\contentsline {part}{第I部\hspace {1em}情報学群実験第3i・第4C}{1}% 
+\contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 1\hfill }\nobreakspace {}章}\hspace {0.5cm}オペレーティングシステムの導入とネットワーク設定}{3}% 
+\contentsline {section}{\numberline {1.1}目的}{3}% 
+\contentsline {section}{\numberline {1.2}実験内容の概要}{3}% 
+\contentsline {section}{\numberline {1.3}OSの基本的機能}{4}% 
+\contentsline {section}{\numberline {1.4}OSの種類}{5}% 
+\contentsline {section}{\numberline {1.5}実験内容(1)}{7}% 
+\contentsline {section}{\numberline {1.6}必要となる知識}{8}% 
+\contentsline {subsection}{\numberline {1.6.1}ハードウェア}{8}% 
+\contentsline {subsection}{\numberline {1.6.2}キーボード・マウス接続}{9}% 
+\contentsline {subsection}{\numberline {1.6.3}キーボードの配列}{10}% 
+\contentsline {subsection}{\numberline {1.6.4}ディスプレイインターフェース}{10}% 
+\contentsline {subsection}{\numberline {1.6.5}ユーザID・グループID}{10}% 
+\contentsline {subsection}{\numberline {1.6.6}デバイスファイル}{11}% 
+\contentsline {subsection}{\numberline {1.6.7}パーティション}{11}% 
+\contentsline {subsection}{\numberline {1.6.8}サーバOSの操作に必要なコマンド}{12}% 
+\contentsline {subsection}{\numberline {1.6.9}ユーザアカウントの作成とパスワードの設定}{13}% 
+\contentsline {section}{\numberline {1.7}必要な情報}{14}% 
+\contentsline {subsection}{\numberline {1.7.1}サーバOS}{14}% 
+\contentsline {subsection}{\numberline {1.7.2}クライアントOS}{14}% 
+\contentsline {section}{\numberline {1.8}OSのインストール手順}{14}% 
+\contentsline {subsection}{\numberline {1.8.1}Ubuntu}{15}% 
+\contentsline {subsection}{\numberline {1.8.2}CentOS}{17}% 
+\contentsline {subsection}{\numberline {1.8.3}MacOS X}{18}% 
+\contentsline {paragraph}{インストール先のディスクがない場合}{18}% 
+\contentsline {subsection}{\numberline {1.8.4}Windows 10 (Desktop)}{19}% 
+\contentsline {subsection}{\numberline {1.8.5}Windows 7(Note)}{20}% 
+\contentsline {section}{\numberline {1.9}動作確認}{20}% 
+\contentsline {section}{\numberline {1.10}考慮すべき点}{20}% 
+\contentsline {paragraph}{OSの必要性}{20}% 
+\contentsline {paragraph}{ユーザ権限}{20}% 
+\contentsline {section}{\numberline {1.11}実験内容 (2)}{21}% 
+\contentsline {section}{\numberline {1.12}LANの構成機器}{21}% 
+\contentsline {section}{\numberline {1.13}必要となる知識}{23}% 
+\contentsline {subsubsection}{\numberline {(1)}ケーブルの準備}{24}% 
+\contentsline {subsubsection}{\numberline {(2)}ケーブルとモジュラジャックの圧着}{24}% 
+\contentsline {section}{\numberline {1.14}必要となる情報}{30}% 
+\contentsline {section}{\numberline {1.15}動作確認}{30}% 
+\contentsline {section}{\numberline {1.16}考慮すべき点}{31}% 
+\contentsline {paragraph}{イーサネット規格}{31}% 
+\contentsline {paragraph}{ネットワーク機器の種類}{31}% 
+\contentsline {paragraph}{ネットワークを構成するための情報}{31}% 
+\contentsline {paragraph}{構築時・障害時の注意}{31}% 
+\contentsline {section}{\numberline {1.17}実験内容 (3)}{32}% 
+\contentsline {section}{\numberline {1.18}各OSのアップデートの方法}{32}% 
+\contentsline {section}{\numberline {1.19}考慮すべき点}{35}% 
+\contentsline {paragraph}{OS のアップデートの適用可否}{35}% 
+\contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 2\hfill }\nobreakspace {}章}\hspace {0.5cm}ルータ・スイッチ}{37}% 
+\contentsline {section}{\numberline {2.1}目的}{37}% 
+\contentsline {section}{\numberline {2.2}TCP/IPネットワークのルーティング}{37}% 
+\contentsline {subsection}{\numberline {2.2.1}クラスフルルーティング}{38}% 
+\contentsline {subsection}{\numberline {2.2.2}クラスレスルーティング}{40}% 
+\contentsline {subsection}{\numberline {2.2.3}ルーティングテーブルの構築の種類}{40}% 
+\contentsline {section}{\numberline {2.3}実験内容 (1)}{41}% 
+\contentsline {section}{\numberline {2.4}必要となる知識}{42}% 
+\contentsline {subsection}{\numberline {2.4.1}コンソール}{42}% 
+\contentsline {subsection}{\numberline {2.4.2}Cisco ルータ，スイッチへの接続}{43}% 
+\contentsline {subsection}{\numberline {2.4.3}Cisco IOS ルータの設定方法}{43}% 
+\contentsline {subsection}{\numberline {2.4.4}ルーティングテーブルの登録}{47}% 
+\contentsline {section}{\numberline {2.5}必要な情報}{47}% 
+\contentsline {subsection}{\numberline {2.5.1}ターミナルエミュレータ（端末）のインストール}{47}% 
+\contentsline {subsection}{\numberline {2.5.2}USB--シリアルコネクタのデバイスインストール}{48}% 
+\contentsline {subsection}{\numberline {2.5.3}ルータの設定}{48}% 
+\contentsline {section}{\numberline {2.6}ルーティングの設定}{49}% 
+\contentsline {subsection}{\numberline {2.6.1}コンピュータのネットワーク設定の変更}{49}% 
+\contentsline {section}{\numberline {2.7}動作確認}{49}% 
+\contentsline {paragraph}{Destination Unreachable エラーの場合}{49}% 
+\contentsline {paragraph}{エラーメッセージが出ない場合}{50}% 
+\contentsline {section}{\numberline {2.8}考慮すべき点}{50}% 
+\contentsline {paragraph}{ルーティング}{50}% 
+\contentsline {paragraph}{サブネット化}{50}% 
+\contentsline {section}{\numberline {2.9}スイッチを用いる目的}{51}% 
+\contentsline {section}{\numberline {2.10}VLAN の種類}{51}% 
+\contentsline {section}{\numberline {2.11}実験内容 (2)}{52}% 
+\contentsline {section}{\numberline {2.12}設定に必要な情報}{53}% 
+\contentsline {section}{\numberline {2.13}作業内容}{54}% 
+\contentsline {subsection}{\numberline {2.13.1}ケーブルの作成}{54}% 
+\contentsline {subsection}{\numberline {2.13.2}スイッチの設定}{54}% 
+\contentsline {subsection}{\numberline {2.13.3}接続}{56}% 
+\contentsline {section}{\numberline {2.14}動作確認}{56}% 
+\contentsline {section}{\numberline {2.15}考慮すべき点}{56}% 
+\contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 3\hfill }\nobreakspace {}章}\hspace {0.5cm}DNS・メールサービス}{59}% 
+\contentsline {section}{\numberline {3.1}目的}{59}% 
+\contentsline {section}{\numberline {3.2}DNS とは}{59}% 
+\contentsline {section}{\numberline {3.3}実験内容 (1)}{59}% 
+\contentsline {section}{\numberline {3.4}必要となる情報}{60}% 
+\contentsline {section}{\numberline {3.5}必要となる知識}{61}% 
+\contentsline {section}{\numberline {3.6}DNSサービスの構築の手順}{65}% 
+\contentsline {subsection}{\numberline {3.6.1}BINDのインストール}{65}% 
+\contentsline {subsection}{\numberline {3.6.2}DNSの設定項目の詳細}{68}% 
+\contentsline {subsection}{\numberline {3.6.3}DNSサーバの起動と動作確認}{69}% 
+\contentsline {subsection}{\numberline {3.6.4}サーバOSでの参照先DNSサーバ(リゾルバ)設定}{70}% 
+\contentsline {subsection}{\numberline {3.6.5}クライアントOSのリゾルバ設定}{70}% 
+\contentsline {section}{\numberline {3.7}動作確認}{71}% 
+\contentsline {section}{\numberline {3.8}考慮すべき点}{71}% 
+\contentsline {paragraph}{名前の解決方法}{71}% 
+\contentsline {paragraph}{DNSによる名前解決の仕組み}{71}% 
+\contentsline {paragraph}{管理外ホストの名前解決}{71}% 
+\contentsline {paragraph}{DNSサーバ}{71}% 
+\contentsline {section}{\numberline {3.9}電子メールの送受信}{72}% 
+\contentsline {section}{\numberline {3.10}実験内容 (2)}{72}% 
+\contentsline {section}{\numberline {3.11}必要となる情報}{73}% 
+\contentsline {section}{\numberline {3.12}必要となる知識}{73}% 
+\contentsline {section}{\numberline {3.13}postfixのインストール}{75}% 
+\contentsline {paragraph}{注意}{78}% 
+\contentsline {subsection}{\numberline {3.13.1}DNSの設定の追加}{78}% 
+\contentsline {subsubsection}{\numberline {(1)}MXレコードの追加}{78}% 
+\contentsline {subsubsection}{\numberline {(2)}CNAMEの設定}{78}% 
+\contentsline {section}{\numberline {3.14}MUA の設定，および，postfix，dovecotのテスト}{79}% 
+\contentsline {section}{\numberline {3.15}考慮すべき点}{80}% 
+\contentsline {paragraph}{宛先}{80}% 
+\contentsline {paragraph}{メールサーバ}{80}% 
+\contentsline {paragraph}{サーバソフトウェア}{80}% 
+\contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 4\hfill }\nobreakspace {}章}\hspace {0.5cm}WWW システムと認証および暗号化}{81}% 
+\contentsline {section}{\numberline {4.1}WWW システム}{81}% 
+\contentsline {subsection}{\numberline {4.1.1}HTML}{82}% 
+\contentsline {subsection}{\numberline {4.1.2}HTTP}{82}% 
+\contentsline {subsection}{\numberline {4.1.3}URI}{82}% 
+\contentsline {subsection}{\numberline {4.1.4}HTTP におけるリクエストとレスポンス}{83}% 
+\contentsline {subsection}{\numberline {4.1.5}Web サーバの種類}{84}% 
+\contentsline {section}{\numberline {4.2}WWW における認証と暗号化}{85}% 
+\contentsline {subsection}{\numberline {4.2.1}Basic 認証と Digest 認証}{86}% 
+\contentsline {subsection}{\numberline {4.2.2}接続元による認証}{86}% 
+\contentsline {subsection}{\numberline {4.2.3}SSL および TLS}{86}% 
+\contentsline {section}{\numberline {4.3}暗号方式}{86}% 
+\contentsline {subsection}{\numberline {4.3.1}共通鍵暗号}{87}% 
+\contentsline {subsection}{\numberline {4.3.2}公開鍵暗号}{88}% 
+\contentsline {section}{\numberline {4.4}認証手法}{88}% 
+\contentsline {subsection}{\numberline {4.4.1}電子署名}{88}% 
+\contentsline {subsection}{\numberline {4.4.2}証明書と認証局}{90}% 
+\contentsline {section}{\numberline {4.5}実験内容(1)}{91}% 
+\contentsline {section}{\numberline {4.6}実験内容(2)}{92}% 
+\contentsline {section}{\numberline {4.7}必要となる知識}{93}% 
+\contentsline {subsection}{\numberline {4.7.1}Apache のインストール}{93}% 
+\contentsline {subsection}{\numberline {4.7.2}Apache の設定}{94}% 
+\contentsline {subsection}{\numberline {4.7.3}コンテンツの公開}{94}% 
+\contentsline {subsection}{\numberline {4.7.4}HTTP認証(Basic)の設定}{95}% 
+\contentsline {subsection}{\numberline {4.7.5}IPアドレスによるアクセス制限の設定}{95}% 
+\contentsline {subsection}{\numberline {4.7.6}HTTPS による暗号通信設定 (modssl)}{96}% 
+\contentsline {section}{\numberline {4.8}認証局の作成，証明書の作成，証明書への署名}{97}% 
+\contentsline {subsection}{\numberline {4.8.1}認証局の作成}{97}% 
+\contentsline {subsubsection}{\numberline {(1)}CAのディレクトリを作成}{97}% 
+\contentsline {subsubsection}{\numberline {(2)}CA用証明書と秘密鍵の生成}{98}% 
+\contentsline {subsection}{\numberline {4.8.2}Apache のサーバ証明書の作成}{99}% 
+\contentsline {section}{\numberline {4.9}動作確認}{99}% 
+\contentsline {section}{\numberline {4.10}考慮すべき点}{100}% 
+\contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 5\hfill }\nobreakspace {}章}\hspace {0.5cm}データベース・Web システム}{103}% 
+\contentsline {section}{\numberline {5.1}データベース}{103}% 
+\contentsline {subsection}{\numberline {5.1.1}データ形式}{103}% 
+\contentsline {subsection}{\numberline {5.1.2}ハッシュ (Hash)}{104}% 
+\contentsline {subsection}{\numberline {5.1.3}リレーショナルデータベース(RDB)}{104}% 
+\contentsline {subsection}{\numberline {5.1.4}SQL}{104}% 
+\contentsline {subsection}{\numberline {5.1.5}代表的な RDBMS}{105}% 
+\contentsline {section}{\numberline {5.2}Webシステム}{106}% 
+\contentsline {subsection}{\numberline {5.2.1}動的コンテンツ}{106}% 
+\contentsline {subsection}{\numberline {5.2.2}Wiki}{107}% 
+\contentsline {subsection}{\numberline {5.2.3}ブログ}{107}% 
+\contentsline {subsection}{\numberline {5.2.4}CMS (Content Management System)}{107}% 
+\contentsline {subsection}{\numberline {5.2.5}SNS (Social Networking System)}{108}% 
+\contentsline {section}{\numberline {5.3}実験内容(1)}{108}% 
+\contentsline {section}{\numberline {5.4}必要な知識}{109}% 
+\contentsline {subsection}{\numberline {5.4.1}文字コード・改行コードの種類}{109}% 
+\contentsline {paragraph}{日本語コード変換フィルタ NKF の使い方}{110}% 
+\contentsline {subsection}{\numberline {5.4.2}日本語文字コードに対応させる手順}{110}% 
+\contentsline {subsection}{\numberline {5.4.3}インストール}{111}% 
+\contentsline {subsection}{\numberline {5.4.4}MySQL インストール}{111}% 
+\contentsline {subsection}{\numberline {5.4.5}データベース構築の手順}{112}% 
+\contentsline {section}{\numberline {5.5}実験内容(2)}{117}% 
+\contentsline {section}{\numberline {5.6}必要となる知識}{118}% 
+\contentsline {subsection}{\numberline {5.6.1}SHELL の環境変数による言語設定}{118}% 
+\contentsline {subsection}{\numberline {5.6.2}PukiWiki のインストール}{118}% 
+\contentsline {subsection}{\numberline {5.6.3}CGIの設定}{119}% 
+\contentsline {subsection}{\numberline {5.6.4}SSIの設定}{119}% 
+\contentsline {subsection}{\numberline {5.6.5}PHPの設定}{120}% 
+\contentsline {subsection}{\numberline {5.6.6}時間表示・カウンタプログラム}{120}% 
+\contentsline {subsection}{\numberline {5.6.7}MediaWiki のインストール}{121}% 
+\contentsline {subsection}{\numberline {5.6.8}WordPress のインストール}{121}% 
+\contentsline {section}{\numberline {5.7}動作確認}{122}% 
+\contentsline {section}{\numberline {5.8}考慮すべき点}{122}% 
+\contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 6\hfill }\nobreakspace {}章}\hspace {0.5cm}ネットワークセキュリティ}{125}% 
+\contentsline {section}{\numberline {6.1}ネットワークセキュリティ}{125}% 
+\contentsline {subsection}{\numberline {6.1.1}ファイアウォール}{125}% 
+\contentsline {subsection}{\numberline {6.1.2}NAT}{127}% 
+\contentsline {section}{\numberline {6.2}実験内容(1)}{130}% 
+\contentsline {section}{\numberline {6.3}実験内容(2)}{130}% 
+\contentsline {section}{\numberline {6.4}必要となる知識}{131}% 
+\contentsline {subsection}{\numberline {6.4.1}IOS によるパケットフィルタリング}{131}% 
+\contentsline {section}{\numberline {6.5}動作確認}{136}% 
+\contentsline {section}{\numberline {6.6}考慮すべき点}{136}% 
+\contentsline {chapter}{\numberline {\nobreakspace {}第 \hbox to0.4cm{\hfill 7\hfill }\nobreakspace {}章}\hspace {0.5cm}ストレージ・サーバ運用管理}{137}% 
+\contentsline {section}{\numberline {7.1}ストレージ}{137}% 
+\contentsline {subsection}{\numberline {7.1.1}ストレージデバイスの種類}{137}% 
+\contentsline {subsection}{\numberline {7.1.2}ストレージのネットワーク上での利用}{139}% 
+\contentsline {section}{\numberline {7.2}サーバ運用・管理}{142}% 
+\contentsline {subsection}{\numberline {7.2.1}バックアップ}{142}% 
+\contentsline {subsection}{\numberline {7.2.2}レストア}{142}% 
+\contentsline {subsection}{\numberline {7.2.3}機器の廃棄}{142}% 
+\contentsline {section}{\numberline {7.3}実験内容(1)}{143}% 
+\contentsline {section}{\numberline {7.4}実験内容(2)}{144}% 
+\contentsline {section}{\numberline {7.5}必要となる知識}{145}% 
+\contentsline {subsection}{\numberline {7.5.1}SambaによるUNIX--Windows間のファイル共有}{145}% 
+\contentsline {subsection}{\numberline {7.5.2}コマンドによるバックアップ}{147}% 
+\contentsline {subsection}{\numberline {7.5.3}各設備ごとの初期化手順}{147}% 
+\contentsline {paragraph}{注意!}{147}% 
+\contentsline {paragraph}{注意!}{148}% 
+\contentsline {section}{\numberline {7.6}必要な情報}{149}% 
+\contentsline {section}{\numberline {7.7}動作確認}{150}% 
+\contentsline {section}{\numberline {7.8}考慮すべき点}{150}% 
+\contentsline {part}{第II部\hspace {1em}付\nobreakspace {}\nobreakspace {}録\nobreakspace {}\nobreakspace {}編}{153}% 
+\contentsline {chapter}{\numberline {\nobreakspace {}付録 \hbox to0.4cm{\hfill A\hfill }\nobreakspace {}章}\hspace {0.5cm}viエディタの使い方}{155}% 
+\contentsline {section}{\numberline {A.1}vi の起動}{155}% 
+\contentsline {section}{\numberline {A.2}vi のモード}{155}% 
+\contentsline {section}{\numberline {A.3}コマンドモード}{155}% 
+\contentsline {subsection}{\numberline {A.3.1}カーソルの移動}{155}% 
+\contentsline {subsection}{\numberline {A.3.2}削除，複写，移動}{156}% 
+\contentsline {subsection}{\numberline {A.3.3}検索，置換}{156}% 
+\contentsline {subsection}{\numberline {A.3.4}コマンドの取り消しと再実行}{157}% 
+\contentsline {subsection}{\numberline {A.3.5}ファイルの読み書き}{157}% 
+\contentsline {subsection}{\numberline {A.3.6}vi の終了}{157}% 
+\contentsline {section}{\numberline {A.4}モードの切替え}{157}% 
+\contentsline {chapter}{\numberline {\nobreakspace {}付録 \hbox to0.4cm{\hfill B\hfill }\nobreakspace {}章}\hspace {0.5cm}UNIXコマンド集}{159}% 
+\contentsline {section}{\numberline {B.1}chgrp（CHange GRouP）}{159}% 
+\contentsline {paragraph}{ファイル管理}{159}% 
+\contentsline {section}{\numberline {B.2}chmod（CHange MODe）}{160}% 
+\contentsline {paragraph}{ファイル管理}{160}% 
+\contentsline {section}{\numberline {B.3}chown（CHange OWNer）}{161}% 
+\contentsline {paragraph}{ファイル管理}{161}% 
+\contentsline {section}{\numberline {B.4}df（Disk Free）/ du（Disk Usage）}{162}% 
+\contentsline {paragraph}{ファイル管理}{162}% 
+\contentsline {section}{\numberline {B.5}grep（Global Regular Expression Print）}{163}% 
+\contentsline {paragraph}{テキスト処理}{163}% 
+\contentsline {section}{\numberline {B.6}more}{164}% 
+\contentsline {paragraph}{テキスト処理}{164}% 
+\contentsline {section}{\numberline {B.7}tail}{165}% 
+\contentsline {paragraph}{テキスト処理}{165}% 
+\contentsline {section}{\numberline {B.8}ifconfig（InterFace Configration）, ipconfig}{166}% 
+\contentsline {paragraph}{ネットワーク関連}{166}% 
+\contentsline {section}{\numberline {B.9}netstat（NETSTATus）}{167}% 
+\contentsline {paragraph}{ネットワーク関連}{167}% 
+\contentsline {section}{\numberline {B.10}nslookup}{168}% 
+\contentsline {paragraph}{ネットワーク関連}{168}% 
+\contentsline {section}{\numberline {B.11}dig}{169}% 
+\contentsline {paragraph}{ネットワーク関連}{169}% 
+\contentsline {section}{\numberline {B.12}ping}{172}% 
+\contentsline {paragraph}{ネットワーク関連}{172}% 
+\contentsline {section}{\numberline {B.13}traceroute, tracert}{173}% 
+\contentsline {paragraph}{ネットワーク関連}{173}% 
+\contentsline {section}{\numberline {B.14}route(ROUTE)}{174}% 
+\contentsline {paragraph}{ネットワーク関連}{174}% 
+\contentsline {section}{\numberline {B.15}shutdown(SHUTDOWN)}{175}% 
+\contentsline {paragraph}{プロセス管理}{175}% 
+\contentsline {section}{\numberline {B.16}kill}{177}% 
+\contentsline {paragraph}{プロセス管理}{177}% 
+\contentsline {section}{\numberline {B.17}ps（Process Status）}{178}% 
+\contentsline {paragraph}{プロセス管理}{178}% 
+\contentsline {section}{\numberline {B.18}mail}{180}% 
+\contentsline {paragraph}{サービス利用}{180}% 
+\contentsline {section}{\numberline {B.19}man}{182}% 
+\contentsline {paragraph}{サービス利用}{182}% 
+\contentsline {section}{\numberline {B.20}telnet}{183}% 
+\contentsline {paragraph}{サービス利用}{183}% 
+\contentsline {section}{\numberline {B.21}tar（Tape ARchive）}{184}% 
+\contentsline {paragraph}{ソフトウェア管理}{184}% 
+\contentsline {section}{\numberline {B.22}make}{185}% 
+\contentsline {paragraph}{ソフトウェア管理}{185}% 
+\contentsline {section}{\numberline {B.23}patch}{186}% 
+\contentsline {paragraph}{ソフトウェア管理}{186}% 
+\contentsline {section}{\numberline {B.24}su(Switch User)}{187}% 
+\contentsline {paragraph}{その他}{187}% 
+\contentsline {chapter}{\numberline {\nobreakspace {}付録 \hbox to0.4cm{\hfill C\hfill }\nobreakspace {}章}\hspace {0.5cm}Cisco IOSコマンド集}{189}% 
+\contentsline {section}{\numberline {C.1}IOS の基本操作}{189}% 
+\contentsline {section}{\numberline {C.2}ip route}{194}% 
+\contentsline {section}{\numberline {C.3}show ip route}{195}% 

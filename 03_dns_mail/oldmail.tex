@@ -1,0 +1,343 @@
+\subsection*{qpopperのコンパイルオプション}
+FreeBSDではPAM を経由した認証を行っている\footnote{PAMについては，
+ここでは触れないが，Linux など多くの UNIX系OS で標準採用されている認証モ
+ジュールであり，多様な認証手段を提供できる仕組みである．興味があれば調べ
+てみよ．}ので，configure のオプションとして \texttt{--with-pam=pop3} を
+用いる．
+
+
+
+Server では OS に標準で付属する sendmail が自動的に動作しているので，
+これを停止し，またブート時に自動的に動作を開始しないようにする．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# ps aux | grep sendmail
+root    785  0.0  0.2  6072  3444  ??  Ss   23Mar10   0:09.62 sendmail: accepti
+smmsp   789  0.0  0.2  6072  3388  ??  Is   23Mar10   0:00.19 sendmail: Queue r
+# kill -9 785 789 (← 上の ps コマンドで確認したプロセス番号(左
+                               から2カラム目の番号))
+
+# \underline{vi /etc/rc.conf}
+sendmail_enable="NONE"     (←この行を追加)
+
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+
+\paragraph{注意} Postfix は FreeBSD 9.0-RELEASE への対応が
+遅れているので，最新版 postfix-2.9.3.tar.gz の他に，
+パッチ postfix-2.9.3.1.patch も同じ場所から取得して，postfix-2.9.3 を展
+開した後，patch コマンドで patch をあててからコンパイルする．
+
+まず，postfix のプロセスのための専用アカウントを作成する．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+#pw useradd -n postfix
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+ここで，INSTALL ファイルの 6.2 にあるように，このアカウントは通常ユーザ
+のようにログインができるとまずいので，passwd ファイルを vipw コマンドで
+編集し，パスワードの欄は '*', ホームディレクトリは '/no/where'，ログイン
+シェルは '/no/shell' として存在しない情報を書き込んでおく．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+#vipw
+    …
+postfix:*:1003:1003::0:0:User \&:/no/where:/no/shell
+    …
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+さらに，postdrop グループを作成する．
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+#pw groupadd -n postdrop
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+\texttt{/etc/group} に postfix, postdrop の2つのグループができていること
+を確認する．
+
+次にビルドを行う．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+#make
+…
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+コンパイルが終わった後，インストールの前に現在の OS にデフォルトでイン
+ストールされていた sendmail 関連のプログラムを退避す
+る．postfix は，sendmail，newaliases，mailq の名前で互換コマンドを上書
+きインストールするため，これらのファイル名を変更しておく．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# \underline{mv /usr/sbin/sendmail /usr/sbin/sendmail.OFF}
+# \underline{mv /usr/bin/newaliases /usr/bin/newaliases.OFF}
+# \underline{mv /usr/bin/mailq /usr/bin/mailq.OFF}
+…
+#
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+インストールを行う．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# \underline{make install}
+…
+
+Please specify the prefix for installed file names. Specify this ONLY
+if you are building ready-to-install packages for distribution to other
+machines.
+install_root: [/]  \underline{[ENTER]}
+
+Please specify a directory for scratch files while installing Postfix.
+You must have write permission in this directory.
+tempdir: [/展開ディレクトリ]  \underline{[ENTER]}
+
+Please specify the final destination directory for installed Postfix
+configuration files.
+config_directory: [/etc/postfix]  \underline{[ENTER]}
+
+Please specify the final destination directory for installed Postfix
+administrative commands. This directory should be in the command search
+path of adminstrative users.
+command_directory: [/usr/sbin]  \underline{[ENTER]}
+
+Please specify the final destination directory for installed Postfix
+daemon programs. This directory should not be in the command search
+path of any users.
+daemon_directory: [/usr/libexec/postfix]  \underline{[ENTER]}
+
+Please specify the final destination directory for Postfix-writable
+data files such as caches or random numbers. This directory should not
+be shared with non-Postfix software.
+data_directory: [/var/lib/postfix]  \underline{[ENTER]}
+
+Please specify the destination directory for the Postfix HTML files.
+Specify ``no'' if you do not want to install these files.
+html_directory: [no]  \underline{[ENTER]}
+
+Please specify the owner of the Postfix queue. Specify an account with
+numerical user ID and group ID values that are not used by any other
+accounts on the system.
+mail_owner: [postfix]  \underline{[ENTER]}
+
+Please specify the final destination pathname for the installed Postfix
+mailq command. This is the Sendmail-compatible mail queue listing
+command.
+mailq_path: [/usr/bin/mailq]  \underline{[ENTER]}
+
+Please specify the destination directory for the Postfix on-line manual
+pages. You can no longer specify ``no'' here.
+manpage_directory: [/usr/local/man]  \underline{[ENTER]}
+
+Please specify the final destination pathname for the installed Postfix
+newaliases command. This is the Sendmail-compatible command to build
+alias databases for the Postfix local delivery agent.
+newaliases_path: [/usr/bin/newaliases]  \underline{[ENTER]}
+
+Please specify the final destination directory for Postfix queues.
+queue_directory: [/var/spool/postfix]  \underline{[ENTER]}
+
+Please specify the destination directory for the Postfix README files.
+Specify ``no'' if you do not want to install these files.
+readme_directory: [no]  \underline{[ENTER]}
+
+Please specify the final destination pathname for the installed Postfix
+sendmail command. This is the Sendmail-compatible mail posting
+interface.
+sendmail_path: [/usr/sbin/sendmail]  \underline{[ENTER]}
+
+Please specify the group for mail submission and for queue management
+commands. Specify a group name with a numerical group ID that is not
+shared with other accounts, not even with the Postfix mail_owner
+account. You can no longer specify ``no'' here.
+setgid_group: [postdrop]  \underline{[ENTER]}
+
+        …
+
+    Warning: you still need to edit myorigin/mydestination/mynetworks
+    parameter settings in /etc/postfix/main.cf.
+
+    See also http://www.postfix.org/STANDARD_CONFIGURATION_README.html
+    for information about dialup sites or about sites inside a
+    firewalled network.
+
+    BTW: Check your /etc/aliases file and be sure to set up aliases
+    that send mail for root and postmaster to a real person, then
+    run /usr/bin/newaliases.
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+INSTALL 終了後のメッセージにもある通り，\texttt{/etc/postfix/main.cf} が
+設定ファイルであるので，この設定ファイルにある，メールサーバのホスト名と
+ドメイン名の設定を正しいものに変更する．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+#myhostname = host.domain.tld
+        ↓
+myhostname = server.gX.info.kochi-tech.ac.jp
+
+#myorigin = $mydomain
+        ↓
+myorigin = $mydomain
+
+#mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+        ↓
+mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+postfix を停止したい場合は postfix stop，設定ファイルを修正
+し postfix に反映させたい場合は postfix reload コマンドを用いる．
+
+次に，postmaster 宛のメールを root で受け取れるように設定を行う．
+/etc/aliases ファイルにて，下記の行があれば良い．
+（デフォルトで既に設定されているので，記述されていることを確認すれば良い）
+
+postmaster は通常メールサーバの管理者が受け取るよう設定されているもので，
+複数の管理者がいる場合は，そのアカウントをコンマで区切って全て書いておく
+(root ユーザでなくともメールを受け取れるユーザであれば良い)．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+postmaster: root
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+aliases ファイルを書き換えたら，newaliases コマンドを実行しデータベースファ
+イルを再構築し，現在動作している postfix にそのデータベースを読み込ませ
+る．alias 情報は，実行中の postfix デーモンが検索する際の効率を上げるた
+めに，ハッシュ化されているのでnewaliases コマンドでハッシュ情報を更新す
+る．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+#newaliases  （←エイリアス・ファイルを再構築）
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+OS 起動時に自動的に postfix が起動するよう，/etc/rc.local に登録する．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+#vi /etc/rc.local
+/usr/sbin/postfix start
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+%
+%   qpopperの設定
+%        written by Takuji Nakahira and Hiroyuki Kobayashi
+%       modified by Takahiko Mendori
+%
+\section{qpopperの設定}
+qpopper をメールサーバである server にインストールして POP サーバを構築する．
+
+\subsection{qpopperの取得とインストール}
+qpopper は，メインサーバの \texttt{/pub/sources} に qpopper のソースコードがある
+ので，ftp を用いて取得し，解凍・展開を行ったのちインストールを行う．
+
+POP サーバは，クライアント(MUA)からのメールメッセージ読み込み要求に対し
+て，要求を処理する前にユーザ認証を行い，認証されたユーザであるか否かを判
+定する．
+% 
+% \begin{center}
+% \begin{breakbox}
+% \begin{alltt}
+% 解凍・展開
+% …
+% # \underline{./configure --with-pam=pop3}
+% …
+% コンパイル・インストール
+% \end{alltt}
+% \end{breakbox}
+% \end{center}
+
+\subsection{qpopperの設定}
+qpopper は，自らは通常状態ではデーモンとしては起動せず，別のデーモンが
+POP のポート接続を受けた際に，プロセスが起動されて制御が渡される．この別
+のデーモンのことをスーパーデーモンと呼ぶ．このサーバではスーパーデーモン
+として，インターネットデーモン inetd が動作しているので，inetd の設定ファ
+イル \texttt{/etc/inetd.conf} の pop の箇所に，qpopper を登録する．
+
+具体的には，inetd\footnote{インターネットソケットを監視するデーモン
+（daemon）．ソケット（socket）に対して接続要求が出されると，そのソケット
+に対応したサービスを判定し，サービスを提供するプログラムを起動する．} の
+設定ファイル \texttt{/etc/inetd.conf} ファイル（サービス名，ソケットタイ
+プ，実行するプログラムを記述）に次の一行を追加する．
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# vi /etc/inetd.conf
+   …
+pop3    stream  tcp     nowait  root    /usr/local/sbin/popper -s
+   …
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+もし，\texttt{/etc/services} に pop3 というプロトコルが書き込まれていな
+ければ，下記のように TCP 110 番ポートであることを記述する．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+pop3    110/tcp
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+ps コマンドで，inetd が存在するか確認し，無ければ起動する．
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+#inetd
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+必要があれば，\texttt{/etc/rc.conf} に \texttt{inetd\_enable= "YES"}
+を設定しておき，サーバ起動時に自動起動するよう設定しておく．
+
+もし存在していれば，変更した\texttt{/etc/inetd.conf}ファイルを再読み込み
+するために，inetd に HUP シグナルを送る．
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# kill -HUP X  （←XはプロセスID）
+\end{alltt}
+\end{breakbox}
+\end{center}

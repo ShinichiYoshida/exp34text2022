@@ -1,0 +1,50 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  telnet
+%% %% %%
+%% %% %%
+
+\section{telnet}
+TELNET プロトコルで通信を行う\par
+\label{cmd:telnet}
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+% telnet [ホスト名 or IPアドレス] [ ポート番号 ]
+\end{alltt}
+\end{screen}
+\end{center}
+
+\noindent
+{\bf ◆機能説明}
+
+telnet は TELNET プロトコルを用いてネットワーク上の他の端末にアクセスする時に使う．\par
+引数として，ホスト名または IP アドレスを指定する．通常はディフォルトの telnet ポート(ポート番号 23 )を叩くが、ポート番号を指定する事で telnet が叩く TCP ポート番号を指定する事ができる.また，接続先のマシンにアカウントがないと接続できないので注意が必要である．
+自分が使っているマシンから遠隔地にある他のマシンに接続するときによく使う．
+
+\noindent
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+% \underline{telnet sun}
+Trying 192.168.1.1...
+Connected to sun.a360.kochi-tech.ac.jp.
+Escape character is '^]'.
+
+SunOS 5.6
+
+login: \underline{omori}
+passwd: \underline{ohji}
+
+Last login: Thu Mar 23 16:26:22 from omori.star.space
+Sun Microsystems Inc.   SunOS 5.6       Generic August 1997
+% 
+\end{alltt}
+\end{breakbox}
+\end{center}
+\clearpage
+%% %% %%
+%% %% %% %%

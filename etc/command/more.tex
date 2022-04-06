@@ -1,0 +1,87 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  more
+%% %% %%
+%% %% %%
+
+\section{more, less, lv}
+ファイルの中身を表示する\par
+\label{cmd:more}
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+% more ファイル名
+(less, lv も同じ)
+\end{alltt}
+\end{screen}
+\end{center}
+
+\noindent
+{\bf ◆機能説明}
+
+指定したファイルのデータを 1 画面ずつ表示する．
+1 画面に入らない時はスペースで次の部分を表示する．
+最後まで表示したら自動的に終了する．
+more より高機能なツールに less がある．
+
+{\bf ◆lessのオプション，使い方}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+less ファイル名
+  Space: 次画面
+  b : 前画面へバック
+  C-n: 1行下
+  C-p: 1行上
+  q: 終了
+  / : 検索
+    n : 次の検索ワード位置
+  M-< または 1 G : 最初の画面
+  M-> または G : 最後の画面
+  F : 追記データを待つ (C-c で待機終了)
+
+オプション
+　-i : 検索時に大文字小文字を区別しない
+　-X : 終了時に画面をクリアしない
+\end{alltt}
+\end{screen}
+\end{center}
+
+
+
+\noindent
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# \underline{more asppp.log}
+11:49:19 parse_config_file: Errors in configuration file /etc/asppp.cf
+11:49:19 Link manager (135) exited 03/24/99
+12:02:44 Link manager (103) started 03/24/99
+12:02:44 parse_config_file: no paths defined in /etc/asppp.cf
+12:02:44 parse_config_file: Errors in configuration file /etc/asppp.cf
+12:02:44 Link manager (103) exited 03/24/99
+12:07:05 Link manager (102) started 03/24/99
+12:07:05 parse_config_file: no paths defined in /etc/asppp.cf
+12:07:05 parse_config_file: Errors in configuration file /etc/asppp.cf
+12:07:05 Link manager (102) exited 03/24/99
+10:38:04 Link manager (90) started 04/12/99
+10:38:04 parse_config_file: no paths defined in /etc/asppp.cf
+10:38:04 parse_config_file: Errors in configuration file /etc/asppp.cf
+10:38:04 Link manager (90) exited 04/12/99
+11:51:20 Link manager (92) started 04/12/99
+11:51:20 parse_config_file: no paths defined in /etc/asppp.cf
+11:51:20 parse_config_file: Errors in configuration file /etc/asppp.cf
+11:51:20 Link manager (92) exited 04/12/99
+16:53:04 Link manager (92) started 04/12/99
+16:53:04 parse_config_file: no paths defined in /etc/asppp.cf
+-- 継続 --(22%)  (←継続と出ている場合，space キーを押せば続きを見る事ができる)
+#
+\end{alltt}
+\end{breakbox}
+\end{center}
+\clearpage
+%% %% %%
+%% %% %% %%

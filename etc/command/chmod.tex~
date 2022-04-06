@@ -1,0 +1,63 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  chmod
+%% %% %%
+%% %% %%
+
+\section{chmod（CHange MODe）}
+ファイルのパーミッションを変更する\par
+\label{cmd:chmod}
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+% chmod パーミッション ファイル名
+\end{alltt}
+\end{screen}
+\end{center}
+
+\noindent
+{\bf ◆機能説明}
+
+ファイルのディレクトリのパーミッションを変更する．
+引数として，パーミッションと変更したいファイルを指定する．
+パーミッションの指定には，数字で指定する方法と文字列で
+指定する方法の 2 通りある．\par
+文字表記において，r は読み込み，w は書き込み， x は実行の権利を示す．\par
+数字で指定する場合，引数のパーミッション部にパーミッションに対応した数列を指定して変更を行う．\par
+パーミッションの指定は，3 桁の数列で指定をする．その３桁の数列は，左から作成ユーザ，グループ，その他のユーザに対してのパーミッションを示しており，読み込みを許可する場合は 4 ，書き込みを許可する場合は 2 ，実行を許可する場合は 1 の値をプラスする．\par
+下の例のモード 754 は，
+\begin{itemize}
+\item 左の桁が 7 なので，作成ユーザに対して読み込み(4)と書き込み(2)と実行(1)を許可する(4+2+1=7)．
+\item 中の桁が 5 なので，所属グループのメンバに対して読み込み(4)と実行(1)を許可する(4+1=5)．
+\item 右の桁が 4 なので，その他のユーザに対して読み込み(4)を許可する(4=4)．
+\end{itemize}
+
+\noindent
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+% \underline{ls -l file}  （←fileの詳細な情報を表示する）
+-rwxr-xr-x   1 user1   group2  2058 Sep 18 15:33 file
+
+% \underline{chmod 754 file}  （←fileのモードを754に変更）
+
+% \underline{ls -l file}  （←fileの詳細な情報を表示する）
+-rwxr-xr--   1 user1   group2  2058 Sep 18 15:33 file
+
+% \underline{ls -l file}  （←fileの詳細な情報を表示する）
+-rwxr-xr-x   1 user1   group2  2058 Sep 18 15:33 file
+
+% \underline{chmod o-r file}  （←その他のユーザの読み込みを不許可にするにはo-rとする）
+
+% \underline{ls -l file}  （←fileの詳細な情報を表示する）
+-rwxr-x--x   1 user1   group2  2058 Sep 18 15:33 file
+%
+\end{alltt}
+\end{breakbox}
+\end{center}
+\clearpage
+%% %% %%
+%% %% %% %%

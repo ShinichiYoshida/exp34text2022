@@ -1,0 +1,63 @@
+\section{第12回 TCP/IPネットワークのルーティング 応用課題}
+
+前回は，管理者による静的ルーティングの設定を行った．今回は，動的ルーティ
+ングを行う．動的ルーティングには様々なプロトコルがあるが下記の3つがよく
+用いられ，それぞれ使われる場面が異なる．
+
+\begin{itemize}
+\item RIP (Routing Information Protocol)
+\item OSPF (Open Shortest Path First)
+\item BGP (Border gateway protocol)
+\end{itemize}
+
+今回は，\textbf{\Underline{RIPが用いられるため}} ルータに，RIP の機能を
+動作させる．
+
+\subsection*{静的経路の削除}
+
+まず，前回手動で設定した経路の削除を行う．Cisco 社の IOS システムでは，
+アドミニストレイティブ・ディスタンス（Administrative Distance）という距
+離が表\ref{sp12:tab:ad-distance}のように決まっていて，この距離が短い方が，経
+路として優先される．
+\begin{table}[h]
+ \caption{アドミニストレイティブ・ディスタンス}% {}内に表題を書く
+ \label{sp12:tab:ad-distance}
+ \begin{center}
+  \begin{tabular}{|l|l|}
+    \hline
+    ルーティングプロトコル & デフォルトディスタンス値\\
+    \hline \hline
+    Direct route(connected route) & 0\\
+    \hline
+    Static route & 1\\
+    \hline
+    External Border Gateway Protocol (BGP) & 20\\
+    \hline
+    OSPF & 110\\
+    \hline
+    Routing Information Protocol (RIP) & 120\\
+    \hline
+  \end{tabular}
+ \end{center}
+\end{table}
+
+静的経路は，どの動的経路よりも優先されるため，この経路が存在している状
+態では，RIPv2 が正しく動作しない．そこでまず，前回 route コマンドで入力
+した静的経路の削除を行う．削除は，ip route コマンドを削除すればよい．
+
+\subsection*{RIP version 2 の導入}
+
+RIP には，version 1 と version 2 がある．version 1 は，ネットワークアド
+レスの情報のみしか近隣ルータに広報することができず，サブネットマスク情
+報を伝えることができない．このため，異なったサブネットマスクを利用する
+ネットワークが1つでもある場面では，誤った経路を学習することがあり，用い
+ることができない．ネットワークアドレスとそのサブネットマスクの両方を近
+隣ルータに伝えられるよう改良したプロトコルが RIP version 2 である．
+
+今回はこの RIPv2 の導入を行う．RIP の導入は，第\ref{ch:nwconfig}章と同様
+に行えば良いが，router rip コマンドの後，network コマンドの他に，
+``version 2'' というコマンドを入力する．
+
+以上で RIP version 2 の設定は終了である．show ip route で正しいルーティ
+ングテーブルが構成されているか確認すること．また，ping で各グループへの
+通信が確保されていることを確認すること．

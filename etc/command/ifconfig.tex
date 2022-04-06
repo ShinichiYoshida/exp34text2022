@@ -1,0 +1,70 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  ifconfig
+%% %% %%
+%% %% %%
+\label{cmd:ifconfig}
+\section{ip, ifconfig（InterFace Configration）, ipconfig}
+ネットワークインタフェースのパラメータ設定及び確認を行う\par
+
+{\bf ◆書式}
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+ インタフェース（IF）にパラメータを振る
+ % ifconfig IF名 [inet IPアドレス] [netmask ネットマスク] [broadcast ブロードキャストアドレス]
+ インタフェースのパラメータを表示する
+ % ifconfig -a
+ % ip address (ip a と省略可)
+ インタフェース IF の有効化
+ % ifconfig IF名 up
+ インタフェース IF の無効化
+ % ifconfig IF名 down
+ インタフェース IF に2つ目の IP アドレスの付与
+ % ifconfig IF名 alias IP アドレス netmask ネットマスク
+ インタフェース IF の2つ目の IP アドレスの削除
+ % ifconfig IF名 -alias IP アドレス netmask ネットマスク
+\end{alltt}
+\end{screen}
+\end{center}
+
+broadcast は省略することができる．省略した場合は，ホスト部のビットが全て
+1 のアドレスがブロードキャストアドレスとして使われる（All 1 broadcast）．
+
+{\bf ◆機能説明}
+
+　ifconfig はネットワークインタフェースにパラメータ（ IP アドレスやネットマスク，ブロードキャストアドレス）を割り振ったり，ネットワークインタフェースに割り振られたパラメータを見たりする場合に利用する．ネットワークインタフェースの設定は，スーパーユーザのみしか行えないので注意が必要である．\par
+
+{\bf ◆使用例（ 1 ）ネットワークインタフェースにパラメータを割り振る}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+ % \underline{ifconfig bge0 inet 192.168.0.151 netmask 255.255.255.0 up}  \keybox{Enter}
+ % ここでは，IPアドレス割り当てと同時にインターフェースの有効化を行って
+ % いる．
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+これにより，ネットワークインタフェース fxp0 にIP アドレス 172.21.20.15 ， 24 ビットのネットマスクが割り振られ，172.21.20.191にブロードキャストするよう設定された．\par
+
+{\bf ◆使用例（ 2 ）ネットワークインタフェースのパラメータを参照する}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+ % \underline{ifconfig -a}  \keybox{Enter}
+ lo0: flags=849<UP,LOOPBACK,RUNNING,MULTICAST> mtu 8232
+         inet 127.0.0.1 netmask ff000000 
+ hme0: flags=863<UP,BROADCAST,NOTRAILERS,RUNNING,MULTICAST> mtu 1500
+         inet 172.21.30.10 netmask ffffff00 broadcast 172.21.30.255
+
+\end{alltt}
+\end{breakbox}
+\end{center}
+ネットワークインタフェースに関する情報が表示された．\par
+
+windows では ipconfig となっている．
+\clearpage
+%% %% %%
+%% %% %% %%

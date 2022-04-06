@@ -1,0 +1,37 @@
+%% %% %%
+%% %% %%  patch
+%% %% %%
+%% %% %%
+\label{cmd:patch}
+\section{patch}
+パッチをあてる\par
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+ % patch < パッチファイル
+\end{alltt}
+\end{screen}
+\end{center}
+
+{\bf ◆機能説明}
+
+diff プログラムにより作成された差分ファイル（ diff ファイルルをオリジナルのファイルに適応する．\par
+パッチは，何というファイルの差分かという情報はパッチの中に含んでいる．\par
+
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+ % \underline{patch < patchfile.patch}  \keybox{Enter}
+ patching file `file.txt'
+ %
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+patchfile.patch に含まれる file.txt の差分を file.txt に追加した．\
+\clearpage
+
+%% %% %%
+%% %% %% %%

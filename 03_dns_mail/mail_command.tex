@@ -1,0 +1,73 @@
+\subsection*{mailコマンドによるメール送信}
+UNIX系OSにはメール送信を行うmailコマンドが標準で存在する．
+user1 と user2 という名前のアカウントを作ったとして，
+ユーザ user1 から user2 にメールを送る場合は
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# \underline{su - user1}  （←ユーザを変更．パスワードの入力を求められるときがある）
+$ \underline{mail user2@gX.info.kochi-tech.ac.jp}
+                           （↑{\rm mailコマンドでuser2宛てにメールを出す}）
+Subject: タイトルを入力
+本文
+…
+（メールを送信するには\keybox{Ctrl}を押しながら\keybox{d}を入力するか，.を入力して\keybox{Enter}）
+$
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+となる．送られたメールは user2 のメールスプールに蓄えられる．
+user2はpopなどを用い，このメールを読むことができる
+\footnote{サーバ上で読む場合は，
+su コマンドで user2 になった後に，mail コマンドをそのまま立ち上げると，
+メールのリストが表示され，メール番号を入力すると，本文が読める．}.
+
+UNIX 系 OS では，MUA として mail コマンドがある．これは，SMTP, POP など
+のネットワークプロトコルを用いず，スプールのファイルから直接メッセージを
+読み出し，ユーザディレクトリの mbox ファイルにメールを保存する．送信時は，
+sendmail コマンド（本サーバの環境では，実体は postfix）を直接呼び出しメッ
+セージを送信する．これも操作してみると良い．具体的には，下記の例のように
+メッセージの送受信を行う．
+
+\begin{cli}
+%mail             ← mail コマンド
+
+Mail version 8.1 6/6/93.  Type ? for help.
+"/var/mail/shin": 1 message 1 new
+>N  1 shin@phenom           Wed May 30 08:03  23/792   "Cron
+>N  2 shin@phenom           Wed May 30 08:03  23/792   "Cron
+>N  3 shin@phenom           Wed May 30 08:03  23/792   "Cron
+
+   ↑メッセージの一覧が表示される
+
+& 1    ← プロンプト：「1」を入力すると1つ目のメッセージを閲覧する
+
+Message 1:
+From shin@phenom Wed May 30 08:03:00 2012
+Date: Wed, 30 May 2012 08:03:00 +0900 (JST)
+From: shin@phenom (Cron Daemon)
+To: shin@phenom
+Subject: Cron <shin@phenom> /usr/home/shin/bin/check-ssh.sh
+
+Hello! My name is who!
+
+    ↑以上がメッセージ 1 の内容
+      最初 From の行から，最初の空行までがヘッダ
+      それ以降が本文である．
+
+& x   ← 「x」で終了
+
+送信は，以下の通りである．
+
+%mail dareka@sdsadas.dsadsa.jp  ← 送信先アドレスを引数で
+                                指定して mail コマンド実行
+Subject: test  ← タイトル
+sss           ←本文1行目
+sss
+ss
+.             ←本文が終了したら「.」を入力
+
+以上で送信される．
+\end{cli}

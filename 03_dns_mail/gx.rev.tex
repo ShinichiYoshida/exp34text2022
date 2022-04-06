@@ -1,0 +1,37 @@
+\noindent
+\textbf{■ \texttt{/etc/namedb/gX.rev} ファイル（逆引きデータベース）}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+; file name: gX.rev
+; for 1X.21.172.in-addr.arpa.
+$TTL    1H
+@       IN      SOA    serverX.gX.info.kochi-tech.ac.jp. postmaster.gX.info.
+kochi-tech.ac.jp. (   （←前の行の続きで{\rm1}行で記述する）
+                  2002081601	      ; serial number
+                  3h			; refresh after an hour
+                  1h			; retry after 30 minutes
+                  1w			; expire after a week
+                  1w )			; minimum TTL
+     IN      NS     serverX.gX.info.kochi-tech.ac.jp.
+1     IN      PTR    ciscoX.gX.info.kochi-tech.ac.jp.
+2     IN      PTR    serverX.gX.info.kochi-tech.ac.jp.
+3     IN      PTR    xpX.gX.info.kochi-tech.ac.jp.
+4     IN      PTR    linuxX.gX.info.kochi-tech.ac.jp.
+5     IN      PTR    printerX.gX.info.kochi-tech.ac.jp.
+10    IN      PTR    hubX.gX.info.kochi-tech.ac.jp.
+\end{alltt}%$
+\end{breakbox}
+\end{center}
+
+\noindent
+\textbf{◆ \texttt{/etc/namedb/gX.rev} ファイルの説明}
+
+\begin{itemize}
+\item IP アドレスからホスト名を検索するためのデータベース．
+\item ``\verb|@|''は 1X.21.172.in-addr.arpa の省略形．また，省略形のア
+ドレスには 1X.21.172.in-addr-arpa ドメインが付加される．
+\item 3$\sim$10 行目は zone ファイルと同じ意味．
+\item PTR レコードで IP アドレスとホスト名の対応づけを行う．zone ファイ
+ルと矛盾のないようにする．
+\end{itemize}

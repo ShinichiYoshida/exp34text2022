@@ -1,0 +1,25 @@
+root@server12:/etc/bind# telnet 127.0.0.1 25
+Trying 127.0.0.1...
+Connected to 127.0.0.1.
+Escape character is '^]'.
+220 server.g12.info.kochi-tech.ac.jp ESMTP Postfix (Ubuntu)
+HELO server.g12.info.kochi-tech.ac.jp
+250 server.g12.info.kochi-tech.ac.jp
+MAIL FROM: exp@g12.info.kochi-tech.ac.jp
+250 2.1.0 Ok
+RCPT TO: exp@g12.info.kochi-tech.ac.jp
+250 2.1.5 Ok
+DATA
+354 End data with <CR><LF>.<CR><LF>
+To: exp@g12.info.kochi-tech.ac.jp
+From exp@g12.info.kochi-tech.ac.jp
+Subject: TITLE
+
+Honbn
+/
+.
+250 2.0.0 Ok: queued as AAE2A2C0713
+QUIT
+221 2.0.0 Bye
+Connection closed by foreign host.
+root@server12:/etc/bind#

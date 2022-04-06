@@ -1,0 +1,66 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  ip route
+%% %% %%
+%% %% %%
+\section{show ip nat translations, ip nat}
+\label{cmd:ios-show-int-status}
+Cisco IOS上で，NAT (NAPT, IP masquerading) の設定，および，NATテーブル確認を行う．
+
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+静的 NAT の設定
+Router(config)#ip nat inside source static tcp 172.21.22.100 80 222.229.69.3 8080
+
+内側(inside) の(送信元)IPアドレス 172.21.22.100, TCP ポート 80 を，
+外側(outside, インターネット側) に対して，222.229.69.3 TCP ポート 8080 で
+公開する．
+
+NATテーブルの確認
+Router#show ip nat translations
+Pro Inside global         Inside local          Outside local         Outside global
+tcp 222.229.69.3:8080     172.21.22.100:80      ---                   ---
+
+静的 NAT の設定削除
+Router(config)#no ip nat inside source static tcp 172.21.22.100 80 222.229.69.3 8080
+
+NATテーブルから削除
+Router#clear ip nat translations *
+
+\end{alltt}
+\end{screen}
+\end{center}
+
+
+{\bf ◆機能説明}
+
+どのポートが，どの VLAN に所属しているかを確認する．
+
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+静的 NAT の設定
+Router(config)#ip nat inside source static tcp 172.21.22.100 80 222.229.69.3 8080
+
+内側(inside) の(送信元)IPアドレス 172.21.22.100, TCP ポート 80 を，
+外側(outside, インターネット側) に対して，222.229.69.3 TCP ポート 8080 で
+公開する．
+
+すなわち外から，222.229.69.3 TCP ポート 8080 へのアクセスがあれば，
+内側のサーバ 172.21.22.100, TCP ポート 80 へ転送
+(ポートフォワーディング)する．
+
+Router#show ip nat translations
+Pro Inside global         Inside local          Outside local         Outside global
+tcp 222.229.69.3:8080     172.21.22.100:80      ---                   ---
+
+NAT 設定の確認
+\end{alltt}
+\end{breakbox}
+\end{center}
+                
+

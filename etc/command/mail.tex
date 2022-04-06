@@ -1,0 +1,85 @@
+%% %% %% %%
+%% %% %%    
+%% %% %%  mail  
+%% %% %%
+%% %% %%
+
+\section{mail}
+メールの送信と受信を行う\par
+\label{cmd:mail}
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+% mail [-s] [-c mailaccount] [アドレス]
+
+    s: subjectをコマンドラインから入力する．
+    c: Carbon Copiesで送信する．
+\end{alltt}
+\end{screen}
+\end{center}
+
+\noindent
+{\bf ◆機能説明}
+
+mail コマンドはメールの送受信を行う．引数に送り先の
+メールアドレスを指定すると送信モードになり，
+引数をつけないとメール受信モードになる．
+
+メールを送信するにはメール送信モードに入り，Subject と内容を書き込む．
+
+メール受信モードでは \texttt{\&} プロンプトが表示されるので読みたい
+メールの番号を打つ．メールを消す場合には，{\textgreater} を消したいメールに
+移動させてから \keybox{d} と打つ．受信メールがない場合には，
+\texttt{You hove no mail.} と表示される．メール受信モードを終了させるには %
+\texttt{\&} プロンプトが表示されているときに \keybox{q} と打つ．
+読み終ったメールは終了する時に mbox というファイルに保管される．
+
+{\bf ◆使用例(1)〜メール送信}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+% \underline{mail xxx@ugs.kochi-tech.ac.jp} \keybox{Enter} （←メール送信の例）
+Subject: \underline{test mail} \keybox{Enter}  （←Subjectを入力）
+This is test mail.  （←メールの内容を入力）
+
+%
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+{\bf ◆使用例(2)〜メール受信}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+% \underline{mail}  \keybox{Enter}  （←メール受信の例）
+Mail version 5.3 2/18/88.  Type ? for help.
+"/usr/spool/mail/username": 6 messages
+>   1 admrn@abcdef.com  Mon Mar 13 02:24 355/22876 "RECRUIT NAVI Mailing "
+    2 aaa@ugs.kochi-te  Mon Mar 13 18:17  50/1666 "=?ISO-2022-JP?B?GyRCJW"
+    3 bbb@info.kochi-t  Mon Mar 13 18:40  37/1395 "Re: =?ISO-2022-JP?B?Gy"
+    4 ccc@ugs.kochi-te  Mon Mar 13 23:25  37/1438 "[admin,00131] =?iso-20"
+    5 ddd@ugs.kochi-te  Tue Mar 14 10:04  51/1879 "[admin,00132] Re: =?is"
+    6 fff@ugs.kochi-te  Tue Mar 14 11:43  43/1497 "Re: [admin,00131]    22=?"
+& \underline{1}  \keybox{Enter}  （←1番のメール読む）
+Message 2:
+
+test mail.
+
+& \underline{d}  \keybox{Enter}  （←1番のメールを削除する）
+
+>   2 aaa@ugs.kochi-te  Mon Mar 13 18:17  50/1666 "=?ISO-2022-JP?B?GyRCJW"
+    3 bbb@info.kochi-t  Mon Mar 13 18:40  37/1395 "Re: =?ISO-2022-JP?B?Gy"
+    4 ccc@ugs.kochi-te  Mon Mar 13 23:25  37/1438 "[admin,00131] =?iso-20"
+    5 ddd@ugs.kochi-te  Tue Mar 14 10:04  51/1879 "[admin,00132] Re: =?is"
+    6 fff@ugs.kochi-te  Tue Mar 14 11:43  43/1497 "Re: [admin,00131]    22=?"
+
+& \underline{q}  \keybox{Enter}  （←受信メールモードを終了する）
+%
+\end{alltt}
+\end{breakbox}
+\end{center}
+\clearpage
+%% %% %%
+%% %% %% %%

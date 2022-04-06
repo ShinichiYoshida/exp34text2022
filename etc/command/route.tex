@@ -1,0 +1,57 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  route
+%% %% %%
+%% %% %%
+\label{cmd:route}
+\section{route(ROUTE)}
+手作業でルーティングテーブルを操作する\par
+
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+ テーブルを追加／削除
+ % route [add | delete] [-net | -host ] 宛先 中継点 [netmask] ネットマスク
+ 宛先へのルートを検索して表示する
+ % route get 宛先
+\end{alltt}
+\end{screen}
+\end{center}
+
+{\bf ◆機能説明}
+
+　route はルーティングテーブルを手動で追加や削除する際に用いるユーティリティである．route で指定したテーブルはすぐに有効になるので新たな経路を作成している時にいちいち「 rc.conf を書き換えて再起動をする」といった手段を踏まなくても経路を模索することがで
+きるので便利である．\par
+　テーブルの追加や削除，検索等は第 １ 引数を切り替えで行う（ add の場合テーブルの追加， delete の場合テーブルの削除， get の場合ルートの検索）．また，第 2 引数の切り替えでネットワークに対してのテーブルか（ -net ），ホストに対してのテーブルか（ -host ）を選べる．\par
+　ルーティングテーブルを追加した際には， netstat 等で確認を行うことができる．\par
+
+{\bf ◆使用例（ 1 ）ルーティングテーブルの追加}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+ % \underline{route add -net 172.21.44172.21.43.21 -netmask 255.255.255.0}  \keybox{Enter}
+ add net 172.21.44:gateway 172.21.43.21
+ %
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+新たなルーティングテーブルが追加された．（ 172.21.44/24 のネットワークへの中継点は 172.21.43.21 である）\par
+
+{\bf ◆使用例（ 2 ）ルーティングテーブルの削除}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+ % \underline{route delete -net 172.21.44172.21.43.21 -netmask 255.255.255.0}  \keybox{Enter}
+ delete net 172.21.44:gateway 172.21.43.21
+ %
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+使用例（ 1 ）で作成したルーティングテーブルを削除した．\par
+
+\clearpage
+%% %% %%
+%% %% %% %%

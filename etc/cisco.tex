@@ -1,0 +1,317 @@
+\section{IOS の基本操作}
+
+\subsection*{基本オペレーション}
+
+　
+
+後述するモードからコマンドを実行する．
+
+? ヘルプ，タブ補完，省略形を用いて素早い操作ができる．
+
+\subsubsection*{? ヘルプ}
+? キーをタイプすることで，コマンド一覧と簡単な説明が表示される．
+
+\subsubsection*{? ヘルプ(2)}
+途中までキータイプしてから ? キーをタイプすると，そこで実行可能なコマン
+ド一覧が表示される．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#show ip r?
+redirects  rip  route  rpf  rsvp
+rtp
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsubsection*{タブ補完}
+
+コマンドを途中までキータイプし，そのコマンドのみが補完可能なコマンドで
+あれば，タブを入力することで補完される．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#conf[TAB] term[TAB]
+       ↓
+cisco#configure terminal
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsubsection*{省略形}
+
+コマンドを途中までキータイプし，そのコマンドのみが補完可能なコマンドで
+あれば，補完することなく Enter をすれば，そのコマンドが実行できる．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#en
+       ↓
+    enableが実行される
+
+cisco#conf t
+       ↓
+   configure terminal が実行される
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsection*{モード}
+
+Cisco IOS にはいくつかのモードがあり，それぞれのモードで必要な設定を行
+うモーダルなシステムである．設定ファイルの概念はなく，設定はコマンドを
+実行するごとに内部コンフィグファイル追加されていく．
+
+各モードから，\textbf{前のモードに戻るには，``exit'' コマンドを実行する．}
+
+\subsection*{一般ユーザモード}
+
+ログインしてすぐに入るモード．ごく限られたコマンドしか使えない．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+User Access Verification
+Password: Kerberos:     No default realm defined for Kerberos!
+Password:
+cisco>
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsection*{特権モード}
+
+一般ユーザモードから，``enable'' コマンドで特権モードに遷移する．プロン
+プトが \# に変わり，多くのシステム閲覧コマンド ( show xxxx ... )が使えるよ
+うになる．設定変更は行えない．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco>enable
+Password:
+cisco#
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsection*{コンフィグモード}
+
+設定変更を行うモード．特権モードから `` configure terminal'' コマンドで
+遷移する．ルーティングやアクセスコントロールリスト等，様々なシステム全
+体に及ぶ設定変更コマンドが使える．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+cisco(config)#
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsection*{インターフェイスモード}
+
+各インターフェイスの設定変更を行うモード．コンフィグモードから
+``interface インターフェイス名'' コマンドで遷移する．
+
+IP アドレスやネットマスクの変更，アクセスコントロールリストのインターフェ
+イスへの適用が行える．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco(config)#interface fastEthernet 0/0
+cisco(config-if)#
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsection*{ルータモード}
+
+ルーティングの設定変更を行うモード．コンフィグモードから
+``router ルーティングプロトコル'' コマンドで遷移する．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco(config)#router rip
+cisco(config-router)#
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsection*{インターフェイスの確認:show interface (sh int)}
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#show interfaces
+FastEthernet0/0 is up, line protocol is up
+  Hardware is AmdFE, address is 000f.2309.a620 (bia 000f.2309.a620)
+  Internet address is 172.21.10.11/24
+        :
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsection*{インターフェイスの確認2:show ip interface brief (sh ip int br)}
+
+\textbf{インターフェースに線が接続されているか，有効か無効か，IP アドレスは何か}などの基本的な情報を得ることができる．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#show ip interface brief
+Interface                  IP-Address      OK? Method Status                Protocol
+FastEthernet0/0            172.21.10.11    YES NVRAM  up                    up
+FastEthernet0/1            172.21.11.1     YES NVRAM  up                    up
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsection*{IPアドレスの設定：ip address コマンド}
+インターフェイスモードから行う．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#conf t
+cisco(config)#int fa0/0
+cisco(config-if)#ip address 192.168.1.2 255.255.255.0
+                              (IP)        (netmask)
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsection*{IPアドレスの変更や設定取り消し}
+IP アドレスの変更は，そのまま別の IP を設定すれば，上書きされる．
+
+IP アドレスの無効化は，取り消したいコマンドに \texttt{no} を付けて実行する．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#conf t
+cisco(config)#int fa0/0
+cisco(config-if)#no ip address 192.168.1.2 255.255.255.0
+                    (先に設定したコマンド)
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsection*{インターフェイスの無効化：shutdown コマンド}
+インターフェイスを無効化（down）させたい場合に用いる．
+
+Cisco ルータでは，デフォルトでインターフェイスは down になっているの
+で，使用時には後述の``no'' を付けた ``no shutdown'' コマンドを実行し，
+インターフェイスを有効化する．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#conf t
+cisco(config)#int fa0/0
+cisco(config-if)#shutdown         ( ← down）
+cisco(config-if)#no shutdown      ( ← up）
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsection*{現在の設定の閲覧}
+現在の設定 running-config を表示する．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#show running-config   (show run)
+\end{alltt}
+\end{screen}
+\end{center}
+
+古いOS の場合
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#write term
+\end{alltt}
+\end{screen}
+\end{center}
+
+
+\subsection*{起動設定の閲覧}
+再起動時に読み込まれる設定ファイルを表示する．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#show startup-config   (show start = show conf)
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsection*{現在の設定の保存}
+現在の設定を，再起動時に読み込まれる設定ファイルに保存する．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#copy running-config startup-config    (copy run start)
+\end{alltt}
+\end{screen}
+\end{center}
+
+古いOS の場合
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#write memory    (wr)
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsection*{設定の削除 （1行単位）}
+設定の削除は，削除したい行のコマンドの行頭に ``no'' を付けたコマンドを実行する．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+#cisco(config-if)#no shutdown
+   (shutdown されているインターフェイスを up させる)
+\end{alltt}
+\end{screen}
+\end{center}
+
+\subsection*{起動設定の全削除}
+設定の全部削除し工場出荷時に戻すには，startup-config を削除する．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+#erase startup-config
+\end{alltt}
+\end{screen}
+\end{center}
+
+
+\clearpage
+\input{./etc/cisco/ios-route.tex}
+\clearpage
+\input{./etc/cisco/ios-show-ip-route.tex}
+\clearpage
+\input{./etc/cisco/ios-mac-address.tex}
+\clearpage
+\input{./etc/cisco/ios-show-arp.tex}
+\clearpage
+\input{./etc/cisco/ios-show-vlan.tex}
+\clearpage
+\input{./etc/cisco/ios-show-int-status.tex}
+\clearpage
+\input{./etc/cisco/ios-nat.tex}
+\clearpage

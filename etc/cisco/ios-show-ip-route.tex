@@ -1,0 +1,97 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  route
+%% %% %%
+%% %% %%
+\section{show ip route}
+\label{cmd:show-ip-route}
+Cisco IOS上で，ルーティングテーブルを閲覧する\par
+
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+ #show ip route
+\end{alltt}
+\end{screen}
+\end{center}
+
+{\bf ◆機能説明}
+
+Cisco IOS 上で，ルーティングテーブルの情報を表示する．ルーティングテー
+ブルは，宛先ネットワークのネットワークアドレス，次ホップルータのアドレ
+ス，接続インターフェースの情報等が表示される．
+
+{\bf ◆使用例    ルーティングテーブルの追加}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+cisco1>show ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       * - candidate default, U - per-user static route, o - ODR
+       P - periodic downloaded static route
+
+Gateway of last resort is not set
+                （↑該当する経路が設定されていない場合にデフォルトでパケットを
+                    転送する先）
+     172.21.0.0/24 is subnetted, 10 subnets
+                （↑クラスB 172.21.0.0 は /24 でサブネット化されていることを示す
+                    VLSM の場合は，Variably subnetted，サブネット化されていない
+                    場合は，表示されない）
+R       172.21.17.0 [120/1] via 172.21.10.17, 00:00:27, FastEthernet0/0
+                （↑172.21.17.0/24 の次ホップは 172.21.10.17 であることを示す．
+                    R は RIP で動的に学習した経路であることを示す）
+S       172.21.22.0 [1/0] via 172.21.10.19
+                （↑172.21.22.0/24 の次ホップは 172.21.10.19 であることを示す．
+                    S は ip route コマンドで管理者が手動で設定した経路であることを示す）
+C       172.21.11.0 is directly connected, FastEthernet0/1
+                （↑172.21.11.0/24 は，このルータの FastEthernet0/1 インターフェースに
+                    直接接続されていることを示す．IP アドレスを付与したインターフェースが
+                    アップしていれば自動的に追加される）
+C       172.21.10.0 is directly connected, FastEthernet0/0
+                （↑172.21.10.0/24 は，このルータの FastEthernet0/1 インターフェースに
+                    直接接続されていることを示す．IP アドレスを付与したインターフェースが
+                    アップしていれば自動的に追加される）
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+{\bf ルーティングテーブルの経路表示情報}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+R       172.21.17.0 [120/1] via 172.21.10.17, 00:00:27, FastEthernet0/0
+↑          ↑       ↑ ↑           ↑          ↑          ↑
+(1)         (2)     (3) (4)          (5)         (6)         (7)
+
+(1) : 経路の学習方式の意味
+          C: 直接接続された経路   S: 静的経路  R: RIPで学習した経路
+          O: OSPFで学習した経路   B: BGPで学習した経路
+(2) : 宛先ネットワークのネットワークアドレス
+          VLSM などの場合は，172.21.15.0/26 等のようにサブネットマスク情報も
+          prefix 表記で表示される．
+(3) : Administrative Distance
+          経路の管理距離（学習する方式によって決まる）
+          同一宛先について複数経路がある場合は値が小さいものが優先される
+(4) : メトリック
+          経路の距離
+          同一宛先について複数経路があり，(3) の値が等しい場合は，
+          メトリック値が小さいものが優先される
+(5) : 次ホップルータの IP アドレス
+          パケットを次に転送するべきルータの IP アドレス
+(6) : 動的ルーティングで学習した経路の経過時間
+          動的ルーティングで経路を学習してから経過した時間
+(7) : 次ホップルータのインターフェース
+          次ホップルータが接続されているインターフェース
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+\clearpage
+%% %% %%
+%% %% %% %%

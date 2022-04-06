@@ -1,0 +1,45 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  chown
+%% %% %%
+%% %% %%
+
+\section{chown（CHange OWNer）}
+指定したファイルの所有者およびグループを変更する\par
+\label{cmd:chown}
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+# chown [-R] ユーザー名[:グループ名] ファイル名
+
+    R:ディレクトリに対して変更内容を再帰的に処理する
+\end{alltt}
+\end{screen}
+\end{center}
+
+\noindent
+{\bf ◆機能説明}
+
+chown は引数にユーザとファイル名を指定してファイルの所有者を
+変更する．このコマンドはスーパーユーザしか実行できない．
+
+\noindent
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+% \underline{ls -l file}  （←fileの詳細な情報を表示する）
+-rw-r--r--   1 user1   group1  2058 Sep 18 15:33 file
+
+# \underline{chown user2 file}  （←fileの持ち主をuser2に変更する）
+% \underline{ls -l file}
+-rw-r--r--   1 user2   group1  2058 Sep 18 15:33 file
+%
+\end{alltt}
+\end{breakbox}
+\end{center}
+\clearpage
+%% %% %%
+%% %% %% %%

@@ -1,0 +1,46 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  ip route
+%% %% %%
+%% %% %%
+\section{show vlan}
+\label{cmd:ios-vlan}
+Cisco IOS上で，ルータ・スイッチの VLAN 設定状況を確認する．
+
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+Switch>show arp
+
+\end{alltt}
+\end{screen}
+\end{center}
+
+
+{\bf ◆機能説明}
+
+どのポートが，どの VLAN に所属しているかを確認する．
+
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+Switch>show vlan
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+7    VLAN0007                         active
+9    group09                          active    Fa0/18, Fa0/19
+12   group12                          active    Fa0/20, Fa0/24
+13   teststp                          active
+
+ポート1-4 が VLAN 1 (デフォルト)，18,19 が VLAN 9，
+20, 24 が VLAN 12 である．
+\end{alltt}
+\end{breakbox}
+\end{center}
+                
+

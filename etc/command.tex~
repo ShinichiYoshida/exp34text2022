@@ -1,0 +1,62 @@
+%% UNIX Command
+%% 1999 Sekizi Funahashi
+%% 2001 Shuhei Toyoshima 
+この章では、サーバの管理上よく使われるコマンドを取り上げてその機能を紹介する．\par
+この章で紹介するコマンドは，ここで紹介する機能以外も持ち合わせているものもある．各コマンドについて詳しく知りたい場合はオンラインマニュアル等を利用して自分で調べて欲しい．\par
+この章で紹介するコマンド以外にも有用なコマンドは沢山あるので，色々と調べてみて欲しい．\par
+
+%% ファイル管理
+\paragraph{ファイル管理}
+\input{./etc/command/chgrp.tex}
+\paragraph{ファイル管理}
+\input{./etc/command/chmod.tex}
+\paragraph{ファイル管理}
+\input{./etc/command/chown.tex}
+\paragraph{ファイル管理}
+\input{./etc/command/df_du.tex}
+%% テキスト処理
+\paragraph{テキスト処理}
+\input{./etc/command/grep.tex}
+\paragraph{テキスト処理}
+\input{./etc/command/more.tex}
+\paragraph{テキスト処理}
+\input{./etc/command/tail.tex}
+%% ネットワーク関連
+\paragraph{ネットワーク関連}
+\input{./etc/command/ifconfig.tex}
+\paragraph{ネットワーク関連}
+\input{./etc/command/netstat.tex}
+\paragraph{ネットワーク関連}
+\input{./etc/command/nslookup.tex}
+\paragraph{ネットワーク関連}
+\input{./etc/command/dig.tex}
+\paragraph{ネットワーク関連}
+\input{./etc/command/ping.tex}
+\paragraph{ネットワーク関連}
+\input{./etc/command/traceroute.tex}
+\paragraph{ネットワーク関連}
+\input{./etc/command/route.tex}
+%% プロセス管理
+\paragraph{プロセス管理}
+\input{./etc/command/shutdown.tex}
+\paragraph{プロセス管理}
+\input{./etc/command/kill.tex}
+\paragraph{プロセス管理}
+\input{./etc/command/ps.tex}
+%% サービス利用
+\paragraph{サービス利用}
+\input{./etc/command/mail.tex}
+\paragraph{サービス利用}
+\input{./etc/command/man.tex}
+\paragraph{サービス利用}
+\input{./etc/command/telnet.tex}
+%% ソフトウェア管理
+\paragraph{ソフトウェア管理}
+\input{./etc/command/tar.tex}
+\paragraph{ソフトウェア管理}
+\input{./etc/command/make.tex}
+\paragraph{ソフトウェア管理}
+\input{./etc/command/patch.tex}
+%% その他
+\paragraph{その他}
+\input{./etc/command/su.tex}

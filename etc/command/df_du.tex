@@ -1,0 +1,59 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  df / du
+%% %% %%
+%% %% %%
+
+\section{df（Disk Free）/ du（Disk Usage）}
+ディスクの状態を表示する\par
+\label{cmd:dfdu}
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+% df [-k] ファイルシステム
+% du [-k] ディレクトリ名
+
+    k:kbytes単位で表示
+\end{alltt}
+\end{screen}
+\end{center}
+
+\noindent
+{\bf ◆機能説明}
+
+df は，指定したファイルシステムの使用可能な容量を表示する．また，全体の容量と使用済み容量も表示してくれる．\par
+du は，あるディレクリ中の全ファイルが使用している領域を計算し，ファイルのなかにディレクトリがあれば，再帰的にその中の領域を計算する．\par
+
+\noindent
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+% \underline{df -k}  （←各パーティションの容量の情報を1kバイト単位で表示する）
+Filesystem            kbytes    used   avail capacity  Mounted on
+/dev/dsk/c0t0d0s0      96975   17785   69493    21%    /
+/dev/dsk/c0t0d0s6     770943  619640   97337    87%    /usr
+/proc                      0       0       0     0%    /proc
+fd                         0       0       0     0%    /dev/fd
+/dev/dsk/c0t0d0s5      96975   21743   65535    25%    /var
+/dev/dsk/c0t0d0s7  14332795 3420514 10768954    25%    /export/home
+/dev/dsk/c0t0d0s4    1018191  143243  813857    15%    /opt
+swap                 1091416      64 1091352     1%    /tmp
+% \underline{du}  （←カレンントディレクトリにあるファイルの容量をみる）
+488     ./.netscape
+1       ./nsmail
+1       ./Mail/inbox
+1       ./Mail/draft
+1       ./Mail/trash
+4       ./Mail
+2       ./.ssh
+1493    .
+%
+\end{alltt}
+\end{breakbox}
+\end{center}
+\clearpage
+%% %% %%
+%% %% %% %%

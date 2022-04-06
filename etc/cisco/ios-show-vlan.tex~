@@ -1,0 +1,49 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  ip route
+%% %% %%
+%% %% %%
+\section{show arp}
+\label{cmd:ios-arp}
+Cisco IOS上で，ルータの ARP テーブルを確認する．
+
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+Router>show arp
+
+\end{alltt}
+\end{screen}
+\end{center}
+
+
+{\bf ◆機能説明}
+
+どの IP アドレスが，どの MAC アドレスかを確認する．
+
+ただし，ARP (Address Resolution Protocol) でこれまで確認できたものか，
+もしくは静的に arp コマンドで管理者が設定したもののみ確認できる．
+
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+Router>show arp
+Protocol  Address          Age (min)  Hardware Addr   Type   Interface
+Internet  172.21.22.2           103   e0cb.4e7a.af48  ARPA   FastEthernet1
+Internet  172.21.22.9             -   e05f.b90d.47b5  ARPA   FastEthernet1
+Internet  172.21.22.10            3   04c5.a47e.a140  ARPA   FastEthernet1
+Internet  192.168.0.1            14   0015.17ee.73a0  ARPA   FastEthernet0
+Internet  192.168.0.189           -   e05f.b90d.47b4  ARPA   FastEthernet0
+Internet  192.168.0.225          13   106f.3f04.2fd0  ARPA   FastEthernet0
+
+Address が IP アドレスを，
+Hardware Addr は MAC アドレスを示す．
+
+\end{alltt}
+\end{breakbox}
+\end{center}
+                
+

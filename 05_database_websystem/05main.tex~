@@ -1,0 +1,1079 @@
+今日においては，基幹システムなどが組織内ネットワークやインターネットといったネットワークを介する Web システムとして提供されることも多い．大規模なシステムにおいては基本的にデータの管理にデータベースを使うことになるため，Web システムとの連携技術が重要となる．また，そのようなシステムではアクセスする状況やデータそのものの変化に応じた処理を行う必要があり，Web ブラウザに返す Web 文書を Web サーバが動的に生成する技術が必要である．
+
+\section{データベース}
+コンピュータシステムにおいては，データの記憶は単に保存領域に保存すること
+だけでなく，必要なデータを容易に取り出せる検索容易性も重要な要素である．
+通常，データをそのまま工夫せずに記憶した場合，必要なデータを探して取り出
+すためにはデータの先頭から比較照合を行いながらデータを探す必要がある．こ
+のため，データに構造を持たせて記憶する（構造化）．例えば，配列に添字
+（index）を付与する，表形式（table）にてデータを記憶するなどは，データの
+構造化の例である．
+
+データベースには，検索容易性やデータの一貫性を確保するために，いくつかの
+技術が用いられているので，下記で説明する．
+
+\subsection{データ形式}
+一般に，データベースでは検索を容易にするために，データに対していくつかの
+属性を付与して記憶する．最も単純なものは配列であり，添字である整数に関連
+付けてデータを記憶する．配列では，添字がデータに対するキーとなり，キーを
+指定すると，キーに関係するデータを読み出すことができる．このように，デー
+タベースにおいては，データを検索する際にシステム入力する項目を\textbf{キー}と呼ぶ．
+
+配列をさらに進めたものが，連想配列である．連想配列は，キーとして一般の文
+字列を用いたものであり，perl や ruby, python などのスクリプト言語には最
+初から組み込まれている．
+
+配列や連想配列では，どちらもキーとデータのペアを記憶しており，キーを手が
+かりとして関係するデータを取得している．このペアをさらに拡張して，データ
+に対して複数の属性を持たせたものが，\textbf{テーブル}形式によるデータの
+記憶である．表計算ソフトウェアで用いられる表は，その例であり，例えば，住
+所録では，データに対して，「学籍番号」，「氏名」，「住所」，「電話番号」，
+「生年月日」などの属性を付与して記憶する．テーブルでは，データの属性は対
+等であり，どの属性をキーにして，どの属性を出力するかは検索に応じて決まる．
+例えば，特定の氏名に対して，その人の住所を出力することもあれば，特定の住
+所に対して対応する氏名を求めることもある．現在のデータベースシステムは，
+このテーブル形式でのデータ記憶を基本となっている．
+
+ここで，各属性を持つ一つのデータを\textbf{レコード}，そのデータの属性の
+ことを\textbf{フィールド}と呼ぶ．
+
+\subsection{ハッシュ (Hash)}
+
+記憶したデータから，キーに適合するものを照合しながら探す作業は，データ数
+（レコード数）を $n$ とすると，一般に $\mathcal{O}(n)$ の計算コストがかかる．辞書
+において必要な単語を求める際に，インデックスがなければ最初の項目から一つ
+ずつ探していくことになることと同じである．
+
+このような計算コストがかかるのは，必要なデータが格納されている位置が分か
+らないためである．このため，必要なレコードがどこに格納されているかを知る
+ことができれば，その記憶場所を読み出すことができるため，データの取り出し
+を早めることができる．理想的には $\mathcal{O}(1)$ にすることができる．このため，デー
+タにインデックスを付与する．配列はキーそのものがインデックスであったが，
+一般のデータベースでは，キーは文字列などのデータである．このキーとインデッ
+クスの関連付けの方法により，検索の容易さが決まる．例えば辞書において，頭
+文字ごとにデータを集める方法は，データの検索速度を頭文字に使われる文字数
+の分だけ減らすことができる．アルファベット26文字であれば平均的に 1/26 に，
+日本語であれば 1/50 になる．
+
+このように，何らかの形でデータのキーから，そのデータを代表する値を求め，
+その値ごとに記憶場所に決めることを，インデクシング(indexing, 索引付け）
+と呼び，その代表値をインデックス(index, 索引)と呼ぶ．インデクシングはデー
+タ検索の基本的な技術である．
+
+キーからインデックスを求める際，なるべくデータの分布に偏りがないようにす
+ることが望ましい．辞書の例で言うと，「z」で始まる単語は少なく，「e」で始
+める単語は多いため，検索キーにより検索性能にばらつきが起きてしまう．そこ
+で，ハッシュ関数(hash funtion)を用いて，ばらつきを極力減らしたテーブルが
+ハッシュテーブル(hash table)である．
+
+ハッシュ関数は，ハッシュテーブル以外にも多くの分野で用いられ，多くのハッ
+シュ関数が定義されている．また，それぞれの分野において，ハッシュ関数に求
+められる性質は異なるが，データ検索の分野では，なるべくばらついていることが
+重要である．
+
+\subsection{リレーショナルデータベース(RDB)}
+
+リレーショナルデータベースは，複数のテーブルの間でキーを介して新たなデー
+タの関係を見出すことを可能にするデータベースである．例えば，顧客がどのよ
+うなものを購入したかの売上一覧のテーブルと，顧客情報テーブルから，男性が
+購入した商品の一覧や，関東地方に出荷された商品の一覧を求めることができる．
+
+このようなデータベースのモデルの理論的な背景は，1960年代から70年代にかけ
+て IBM の Edgar F. Codd により体系付けられた関係モデルである．その後，
+1970年の Codd の論文\footnote{Codd, E. F. : ``A relational model
+of data for large shared data banks,'' Communications of the ACM 13 (6),
+pp.377-387 (1970)}に触発され，Larry Ellison により，データベースに応用
+された．Larry Ellinson は1970年代にデータベースソフトェアである Oracle
+を開発し，そこで SQL と呼ばれるデータ検索言語を実装した．現在，Oracle は
+世界でも有数のシェアを持つデータベースソフトウェアであり，SQL も多くのデー
+タベースソフトウェアに採用され，標準化されている\footnote{ISO/IEC 9075 :
+2008}．
+
+\subsection{SQL}
+
+SQL は，現在一般に用いられているデータベース管理システム (DBMS) での検索
+クエリを表す言語である．
+
+その文法は，機能に応じて下記の3つに大別される．
+\begin{itemize}
+ \item データ定義
+ \item データ操作
+ \item データ制御
+\end{itemize}
+
+データ定義には，CREATE, DROP, ALTER などがあり，それぞれ，テーブルの作成，
+削除，（テーブルそのものの定義の）変更などである．
+
+データ操作は，テーブルに対してのデータ操作であり，INSERT，UPDATE，DELETE，
+SELECT などであり，それぞれデータの挿入，更新，削除，取り出しである．
+
+データ制御は，データ操作の権限付与，削除を行う GRANT, REVOKE，データの一
+貫性を確保するためのトランザクションの BEGIN, COMMIT，ROLLBACK などであ
+る．
+
+代表的な書式を下記に示す．
+
+\begin{description}
+ \item[データ挿入] \mbox{} \\
+       INSERT INTO テーブル名 ( フィールド名1， フィールド名2 ) VALUES
+       (値1，値2 );
+ \item[レコード挿入] \mbox{} \\
+       INSERT INTO テーブル名 VALUES (値1，値2，$\cdots$, 値$n$)
+ \item[更新] \mbox{} \\
+       UPDATE テーブル名 SET フィールド名2=値2，フィールド名3=値3 WHERE
+       列名1=値1 ;
+ \item[削除] \mbox{} \\
+       DELETE FROM テーブル名 WHERE フィールド名1=値1;
+ \item[取り出し] \mbox{} \\
+       SELECT * FROM テーブル名 WHERE 列名1=値1;
+\end{description}
+
+
+\subsection{代表的な RDBMS}
+
+代表的な RDBMS を挙げる．
+
+\begin{description}
+ \item[MySQL] \mbox{} \\
+            GPL で配布されるオープンソースソフトウェアであり，多くの
+	    Web ベースアプリケーションなどのバックエンドとして用いられる．
+	    1995年にスウェーデンの企業 MySQL AB により開発され，Sun，さ
+	    らに Oracle に買収されている．コマーシャルライセンスのものも
+	    ある．
+ \item[PostgreSQL] \mbox{} \\
+            BSD ライセンスに類似するライセンス形態で配布されるオー
+	    プンソースソフトウェア．カリフォリニア大学バークレイ校で1980
+	    年代から開発されており，歴史の古いソフトウェアである．
+ \item[Oracle] \mbox{} \\
+            Oracle 社が開発・販売する商用ソフトウェアであり，世界の商
+	    用ソフトウェアで有数のシェアを持つ．
+ \item[Microsoft Access] \mbox{} \\
+            Microsoft Office システムの1つとして販売されて
+	    おり，小〜中規模のデータベース市場で用いられることがある．
+ \item[Microsoft SQL Server] \mbox{} \\
+            Microsoft社が販売する，中〜大規模データベー
+	    スソフトウェアである．Windows ベースのサーバシステムで用いら
+	    れることが多い．
+\end{description}
+
+これらは，すべて SQL による問い合わせを行うことができるが，それらの互換
+性は微妙に異なる．このため，必要とするソフトウェアがこれらのデータベース
+と一緒に運用することができるかどうかは，よく調査しておく必要がある．
+
+
+\section{Webシステム}
+動的コンテンツは，Web アクセスの際にプログラムを動作させることで，同じ
+URL にアクセスした場合でも状況に応じて出力を変化させる仕組みであり，これ
+まで解説した CGI，PHP などもその一例である．
+この動的コンテンツは，サーバおよびブラウザ上でプログラムを動作させて，様々
+な処理を行うため，Web 上のアプリケーションとして応用することができる．こ
+のような仕組みを一般に，\textbf{Web アプリケーション}，\textbf{Web アプ
+リケーションシステム}，あるいは単に \textbf{Web システム}と呼ぶ．
+
+また，一般に，頻繁にデータの更新を Web システムで行う場合は，データの書
+き込み，読み込み部分を，データベースを通して行うことが多い．これは，デー
+タベースへのアクセスが，データベースアクセス言語である SQL を通して行う
+ことができるため，データの書き込み，読み込み，更新などがプログラムから処
+理をしやすいこと，ファイルのロックなど，データの一貫性や同時アクセスの際
+の正常なデータ処理をデータベースシステムに委ねることができることなどが理
+由である．
+
+このように，Web システムでは，一般にバックエンドにデータベースを用いる．
+\texttt{バックエンド}に用いられるデータベースは，MySQL をはじめ，
+PostgreSQL やOracle などがあるが，オープンソースのものでは MySQL が多い．
+このため，OSである Linux, HTTPサーバ Apache, MySQL, PHP の Web システム
+のコンポーネントをまとめて，LAMP などと呼ぶこともある．
+
+\subsection{動的コンテンツ}
+HTTP サーバによる Web サービスには，そのコンテンツの生成の方法により，2 
+通りの実現方法がある．一つ目は静的なコンテンツであり，もう一方は動的なコ
+ンテンツである．静的なコンテンツは，情報の発信者が，あらかじめ公開するファ
+イルをHTML形式や画像などのファイル形式で作成しておき，これを HTTP サーバ
+の公開するディレクトリの配置することで，ファイルを公開する．
+これに対して，クライアントからのリクエストに応じて，その場で処理を行い結
+果となるコンテンツデータを動的に生成して，レスポンスを行うものを動的コン
+テンツと呼ぶ．
+
+動的コンテンツの実現技術として下記のようなものがある．
+
+\begin{description}
+ \item[SSI] \mbox{} \\
+            Server Side Include と呼ばれ，HTML 形式で記述されたコンテン
+	    ツのなかに，いくつかのコマンドを記述することができ，そのコマ
+	    ンドをサーバはリクエストを受けるたびに実行し，そのコマンドが
+	    書かれた部分を，そのコマンド結果の出力で置き換える．
+ \item[CGI] \mbox{} \\
+            Common Gateway Interface と呼ばれ，サーバはリクエストを受け
+	    ると，その URI で指定されたプログラムを実行する．このプログ
+	    ラムの標準出力に出力されたデータを，HTTP サーバはそのままク
+	    ライアントへ転送する．プログラムは，HTML でも画像ファイルで
+	    も任意のデータを出力できるが，正しい形式で出力する必要がある．
+	    また，プログラムは実行可能権限がなければ実行できない．また，
+	    スクリプト言語で書かれたプログラムは，一行目でそのスクリプト
+	    の正しいパスが書かれていないと実行できない．Perl で書かれて
+	    いるものが最も多く，一部 Ruby や Python もあり，性能を重視し
+	    た CGI の場合は，C言語なども用いられる．
+ \item[PHP] \mbox{} \\
+            HTML 形式のファイルの中に，\texttt{<?php 〜 ?>} と書いた部分
+	    にプログラムを記述することができる．CGI に比較して，HTML 形
+	    式の出力をプログラムで記述する必要がなく，Web アプリケーショ
+	    ンの開発言語として広く使われている．
+% \item[ECMAScript] \mbox{} \\
+%            多くのブラウザに実装されているクライアントサイドのス
+%	    クリプト言語である．HTML と一緒に，あるいは独立にダウンロー
+%	    ドされ，クライアントのブラウザ内でスクリプトが動作し，ブラウ
+%	    ザ内に出力される．Netscape 社が開発した JavaScript がその後
+%	    多くのブラウザに実装され，Microsoft の JScript など互換性の
+%	    問題も発生したため，標準化されたものが ECMAScript である．
+%	    Oracle の Java 技術とは何の関係もない．
+ \item[その他] \mbox{} \\
+            Java 技術を用いた Java Servlet, JSP (Java Server Pages),
+	    Microsoft 社の Visual Basic 技術，ASP 技術を用いた，VBScript，
+	    ASPなどがある．%り，それぞれ特定のベンダ向けの分野で多く使われて
+%	    いるがオープンソースでないため，プロプライエタリな企業向け製
+%	    品などで多用される．
+\end{description}
+
+\subsection{Wiki}
+
+Wiki はコンテンツ作成を，Web ブラウザから行うシステムの一種であるが，コ
+ンテンツの作成・編集がなるべく簡便な操作・記述で行うことができるように，
+独自のタグを用いて，見出しや新しいページの作成，他のページやファイルへの
+リンクを記述できるようになっている．
+
+複雑な認証機構などを持たないものが多いので，小規模な Web ページ公開で用
+いることが多いが，大規模な運用も運用次第では可能である．
+
+\subsection{ブログ}
+ブログ(Blog) システムは，Weblog を略したものであり，もともとは個人が Web 
+上に様々な出来事や考えを記していた日記のようなコンテンツを発展させたもの
+である．
+現在では，ブログは世に広く普及し，個人の情報発信だけでなく，有名人や企業
+からのプロモーション，政府，機関などからの公式な情報発信手段としても，し
+ばしば用いられる．
+
+日記 (diary) の形のコンテンツは，ブログ以前から既に広く普及していたが，
+これを Web システム上でコンテンツ管理を行えるように，更に，コメントトラッ
+クバックという機能で，記事の読者の側からも情報に対するコメントを返信・発
+信できるようにしたものがブログである．
+ブログシステムの構築のために多くのソフトウェアがあるが，MovableType と
+WordPress がよく用いられる．MovableType はブログシステムの初期から使われ
+てきたが，現在では，GPL で配布されるオープンソースの WordPress が広く使
+われている．
+
+\subsection{CMS (Content Management System)}
+Content Management System は，その名の通り Web コンテンツを管理するため
+の Web システムであり，Web コンテンツそのものを Web の仕組みを用いて，作
+成，編集，管理するものである．
+これまでは，エディタや HTML 編集ソフトウェアを用いて，別途 HTML ファイル
+の形でコンテンツを準備し，Web サーバの公開ディレクトリに置くことで公開し
+ていたが，作成から公開，編集，管理まですべて Web ブラウザから行えるよう
+になる．
+
+CMS の構築のためには，どのユーザがどのような処理を
+しているかを Web サーバ側で把握するために，\textbf{Cookie} などの仕組みが用
+いられる．
+
+\subsection{SNS (Social Networking System)}
+
+特定のコミュニティあるいは不特定多数の人との人間関係のネットワークを築い
+たり，維持したりするためのシステムである．コミュニティを新たに作り出すな
+どの目的にも用いられる．コミュニケーションツールの一つとも捉えることがで
+き，電子メールや従来のメッセージツール，掲示版(BBS)に取って代わるツール
+ともなり得る．Facebook や LINE, twitter のサービスが有名であり，無料電話
+サービスからはじまった Microsoft の Skype，Google+，Instagram，中国の微
+博(ウェイボー)，テンセント QQ など多くのサービスが世界で展開されている．
+
+
+\section{実験内容(1)}
+
+\subsection*{データベースのインストール}
+
+MySQL をインストールする．
+
+\subsection*{データベースの操作}
+
+指定されたデータのインポートを行い，データベースの操作を行う．
+
+この後，日本語をデータとして用いるため，Windows の Putty や Linux や Mac 
+のターミナル（端末）にて，UTF-8 に文字コードを設定後，ssh にてサーバに接
+続して作業する．また，サーバにログイン後のシェルの言語に関する環境変数 
+LANGを UTF-8 に設定する．
+
+インポートを行うデータはメインサーバの /pub/data ディレクトリにあるCSV形式の以下の3ファイルである．
+\begin{itemize}
+ \item bunrui.csv
+ \item tanka.csv
+ \item uriage.csv
+\end{itemize}
+
+これらのデータファイルは，Microsoft Excel で作成され保存された Shift-JIS 
+コードによる CSV ファイル\footnote{CSV: Comma Separated Value カンマ',' 
+で各フィールドが区切られた表データ．一般的な表計算ソフトウェアで読み書き
+できる形式である．}で，一行目にフィールドの項目名が日本語である．改行コー
+ドは Windows 形式の改行である．このままでは MySQL で用いることができない
+ため，日本語コード，改行コードをそれぞれUTF-8，UNIX改行への変更を行う．
+
+Unicode 対応の日本語コード変換および，日本語テキスト閲覧プログラムを導入
+する．前者として nkf，後者として lv がよく用いられる．なお，Ubuntu では
+通常のページャ less も UTF-8 に対応しているので，lv を用いずにそれをこの
+まま用いても良い．Ubuntu のパッケージ apt にて nkf （必要があれば lv も）
+を導入し変換する．使い方は，それぞれ\texttt{--help} や \texttt{-h} オプ
+ションによるヘルプを参照のこと．nkf 使用前・使用後は，\texttt{nkf
+--guess} にてコードの確認をすること．
+
+データのインポートを行うデータベース sales を文字コード UTF-8 で作成し，
+テーブル sales，price, foodgroup を作成する．それぞれの属性は下記のようにする．
+\begin{itemize}
+ \item sales : date(text), food(text), amount(integer)
+ \item price : food(text), fee(integer)
+ \item foodgroup : food(text), foodgroup(text)
+\end{itemize}
+
+コード変換後の uriage.csv, tanka.csv, bunrui.csv をそれぞれテーブ
+ル sales, price, foodgroup へ読み込む．ただし，一行目は読み込まな
+いように vi などで削除しておく．
+データのインポート後， 「describe テーブル名」や「select * from テーブル名」
+で内容を確認しておく．
+
+ここまでの作業を行った後，以下のデータベース操作を行う．
+\begin{itemize}
+ \item データの追加
+       \begin{itemize}
+		\item テーブル sales の 2006/12/31 の売上にあるサイダー2本を削除し，同
+       日のオレンジジュースを2本追加する．
+       \end{itemize}
+ \item データ抽出
+       \begin{itemize}
+			\item テーブル sales から 2006/12/26 に売り上げた食品の品目と個
+	      	数を表示する（日付の表示はしない）．
+			\item テーブル sales の食品名の横に，テーブル foodgroup の分類名
+	     	を参照して，日付，食品名，分類，個数を表示する．
+% select date,sales.food,amount,foodgroup from sales,foodgroup where sales.food=foodgroup.food;
+			\item テーブル sales から， 12/30 に売り上げたもののうち，麺でか
+	      つ単価が750円以上のものについて，売り上げ日，食品名，個数
+	      を表示する．
+%mysql> select date,sales.food,amount,foodgroup from sales,foodgroup,price where sales.food=foodgroup.food and sales.food=price.food and foodgroup.foodgroup='麺' and date='2006/12/30' and price.foodgroup>=750;
+       \end{itemize}
+\end{itemize}
+
+\section{必要な知識}
+
+\subsection{文字コード・改行コードの種類}
+\label{char}
+
+データベースの作成に先立ち，様々なテキストファイルを扱う必要があるが，日
+本語には様々な文字コードがあり，またOSによって改行コードも異なるため，こ
+れらに対応する環境を構築する必要がある．
+
+文字コードには，シフトJIS，EUC-JAPAN，JIS，UTF-8（Unicode）があるが，
+MySQL 等サーバ系では，今後は可能な限り UTF-8 を統一していく方が良いだろ
+う．
+
+しかし，Excel などシフトJISを扱うアプリケーションも多いため，変換が必要
+である．
+
+\begin{tabular}[t]{c|p{7cm}|p{3cm}}
+\hline \hline
+文字コード & 主な用途 & LANG, LC\_ALL等環境変数の値 \\
+\hline \hline
+UTF-8 & ユニコード一つ，汎用的，古いシステムでは動作しない可能性あり．
+ ASCII 互換のため，世界的に広く用いられるユニコード．1文字1〜3バイト．
+ Linux 等で用いられる．なお，Unicode には他にも多くの規格がある． &
+ ja\_JP.UTF-8 \\
+\hline
+シフトJIS & Microsoft Windows, Apple Mac OS X 等の標準．Excel の出力する
+ CSV ファイル等で用いられる．日本語1文字2バイト． & ja\_JP.SJIS\\
+\hline
+EUC & Extended Unix Code の略(古いUNIX用，FreeBSD の標準日本語コード)．
+ 日本語1文字2バイト &
+ ja\_JP.eucJP\\
+\hline
+JIS & JISコード，日本工業規格標準，7ビットのみで簡潔するため，電子メー
+ ルで用いられている．電子メールでの JUNET, ISO-2022-JP も同じコード．日
+ 本語1文字2バイトだが，日本語コード列の始まりと終わりに各1バイトの制御
+ コード(エスケープシーケンスKanji-in, Kanji-out)が入る &
+ ja\_JP.JIS0208\\
+\hline \hline
+\end{tabular}
+\\
+
+また，改行コードには3種類ある．
+
+\begin{tabular}[t]{l|p{6cm}|p{4cm}}
+\hline \hline
+システム & コード名称 & ASCIIコード(16進数) \\
+\hline \hline
+UNIX & LF (ラインフィード: 新しい行を追加するという意) & 0A\\
+\hline
+Microsoft Windows (DOS) & CR + LF & 0D 0A\\
+\hline
+Apple Mac OS & CR (キャリッジリターン: 行頭に（カーソルを）復帰するとい
+ う意) &
+ 0D\\
+\hline \hline
+\end{tabular}
+
+異なるコードに対応し，相互変換するために日本では nkf が広く用いられる．
+
+\paragraph{日本語コード変換フィルタ NKF の使い方}
+
+\begin{cli}
+主な使い方
+・ファイルの文字コードを調べる
+  nkf --guess ファイル
+・file1 を UTF-8，UNIX改行にして file2 とする
+  nkf -w -Lu < file1 > file2
+その他のオプションは nkf --help で調べる
+\end{cli}
+
+\subsection{日本語文字コードに対応させる手順}
+
+日本語 UTF-8 を扱うためには，下記の3つ全てを UTF-8 に対応させる．
+\begin{enumerate}
+ \item 端末（CentOS の「端末」，Mac OS X の「ターミナル」，Puttyの設定．
+ \item シェル（ここでは root の sh）
+ \item データベース
+       \begin{enumerate}
+	\item mysql コマンドの設定
+	\item MySQLサーバ (mysqld) の設定
+	\item 作成するデータベースでの設定
+       \end{enumerate}
+\end{enumerate}
+
+1つ目は，Putty の設定の「ウインドウ(Window)」→「変換(Translation)」→
+「文字セット変換 (Character set)」の設定をUTF-8 にする\footnote{CJK とあるのは，Chinese,
+Japanese, Korean の特殊な文字にも対応するということ．}．
+
+2つ目は，Putty 等からサーバにログイン後，下記の設定をする(\ref{char}節)．
+
+（LANG 変数のデフォルトは「C」）．
+
+\begin{cli}
+# export LANG=ja_JP.UTF-8
+
+# locale
+LANG=ja_JP.UTF-8
+となることを確認
+\end{cli}
+
+3つ目は\ref{char-sql}節の2つを設定する．
+
+%\textbf{注意!} 作成するデータベースは，CREATE DATABASE する度に，毎回行
+%うことを忘れない．
+
+
+
+\subsection{インストール}
+
+\subsection{MySQL インストール}
+\label{char-sql}
+
+server にパッケージシステムから mysql をインストールする．
+
+\begin{cli}
+# export http_proxy=http://192.168.0.1:7999     (←環境変数の設定)
+
+# apt install mysql-server
+
+  MySQL 用の管理者アカウント(root)パスワードを入力する．
+
+  設定ファイルは，/etc/mysql/my.cnf であるが，個別のセクションに
+  ついては，/etc/myqsl/conf.d/ および /etc/myqsl/mysql.conf.d/
+  以下の別ファイルに分けられ，my.cnf から include されている．
+
+# vi /etc/mysql/conf.d/mysql.cnf
+
+下記の行を末尾に追加
+default-character-set=utf8
+
+# vi /etc/mysql/mysql.conf.d/mysqld.cnf
+
+下記の行を末尾に追加
+character-set-server=utf8
+
+MySQL の再起動
+
+# systemctl restart mysql
+\end{cli}
+
+\subsection{データベース構築の手順}
+データベース構築の手順を下記に示す．
+\begin{enumerate}
+ \item 日本語の入出力が必要になるため，日本語の入力・表示ができる端末を
+       用いる必要がある．具体的には，Windows の Putty を使い，「Window
+       (ウィンドウ)」→「変換(Translation)」の項目で，Remote Character
+       Set を UTF-8 (CJK) \footnote{Unicode 規格の UTF-8 文字コードで，
+       Chinese, Japanese Korean 文字を使うモード}に設定する．
+ \item Putty から，Server に SSH でログインし，root になる．
+ \item 漢字コード・改行コード変換フィルタを Server にパッケージからイン
+       ストールする．手順は以下の通り．
+\begin{cli}
+# export http_proxy=http://192.168.0.1:7999 (←既に設定済であれば必要無し)
+# apt install nkf  （←nkf のパッケージ名の設定）
+    （日本漢字フィルタ）
+\end{cli}
+ \item CSV (Comma Separated Value) 形式（カンマ ``,'' で各フィールドの値
+が区切られた表（テーブル）を表したのテキストファイル）のファイルを入力に
+用いる．Microsoft Excelなどで作成された CSV ファイルは，日本語文字コード
+が Shift JIS，改行コードは，Windows/MS-DOS用改行コードになっている
+ことが多い．
+ \item ftp にて，3つの CSV ファイル(bunrui.csv, tanka.csv, uriage.csv)をダウンロードする．
+\begin{cli}
+# ftp 192.168.0.1
+anonymous (ftp) でログインする
+> bin
+> cd /pub/data
+> get ファイル名.csv
+\end{cli}
+ \item nkf コマンドで文字コードを調べる．
+\begin{cli}
+# nkf --guess ファイル名
+\end{cli}
+ \item nkf コマンドで文字を変換する．
+\begin{cli}
+# nkf --help  | less ←オプションの意味を調べる
+# nkf 必要なオプション ファイル名 > 別のファイル名
+\end{cli}
+必要なオプションは，「出力を UTF-8 にすること」，「出力を UNIX 改行にす
+       ること」の2点である．このようにして UTF-8, UNIX 改行コードに変換
+       する．
+ \item 各データファイルの先頭行には各列のタイトルがあり，これはMySQL に
+       インポートする際には必要無いため，1行目を削除したものをMySQL の入
+       力に用いる．
+\end{enumerate}
+
+\subsection*{データベースの文字コード}
+
+設定の確認はデータベース起動後に，mysql コマンドで MySQL に接続し，下記
+のコマンドで調べることができる．
+
+\begin{cli}
+mysql> show variables like 'char%';
++--------------------------+----------------------------------+
+| Variable_name            | Value                            |
++--------------------------+----------------------------------+
+| character_set_client     | utf8                             |
+| character_set_connection | utf8                             |
+| character_set_database   | utf8                             |
+| character_set_filesystem | binary                           |
+| character_set_results    | utf8                             |
+| character_set_server     | utf8                             |
+| character_set_system     | utf8                             |
+| character_sets_dir       | /usr/local/mysql/share/charsets/ |
++--------------------------+----------------------------------+
+\end{cli}
+
+\subsection*{データベースへの接続}
+mysqlコマンドを用い， -u で接続するユーザ名を -p でパスワードによる認証を行う．
+	\begin{center}
+	\begin{breakbox}
+	\begin{alltt}
+		$mysql -u root -p
+	\end{alltt}
+	\end{breakbox}
+	\end{center}
+%$
+	
+\subsection*{データベース一覧の出力}
+存在するデータベースを一覧で表示したい場合，show databases; (mysqlのコマンドは ; までを1行と解釈する)を用いる．
+	\begin{center}
+	\begin{breakbox}
+	\begin{alltt}
+		mysql> show databases;
+	\end{alltt}
+	\end{breakbox}
+	\end{center}
+
+MySQL が自身の動作に用いるデータベースがいくつか作成されている．
+	
+\subsection*{データベースの作成}
+新規にデータベースを作成する場合は create database を用いる．例として{\bf testdatabase}を作る場合
+	\begin{center}
+	\begin{breakbox}
+	\begin{alltt}
+		mysql> create database testdatabase;
+	\end{alltt}
+	\end{breakbox}
+	\end{center}
+となる．
+
+\subsection*{データベースの選択}
+データベースを利用する場合は use コマンドでデータベース名を指定する．
+	\begin{center}
+	\begin{breakbox}
+	\begin{alltt}
+		mysql> use データベース名;
+	\end{alltt}
+	\end{breakbox}
+	\end{center}
+
+\subsection*{テーブルの作成}
+データベースに対し，新規にテーブルを作成する場合 create table コマンドを用いる．
+例として，データベス testdatabase に対し，テーブル {\bf address} を作成する場合，
+
+	\begin{center}
+	\begin{breakbox}
+	\begin{alltt}
+		mysql> use testdatabase;
+		mysql> create table address (
+		    -> name text,
+		    -> address text,
+		    -> phone integer );
+	\end{alltt}
+	\end{breakbox}
+	\end{center}
+となる．ただし，テーブル address は要素として name(text), address(text), phone(integer) の3つを持っている．
+	
+\subsection*{ファイルからのインポート}
+mysql では，load コマンドで外部ファイルからの一括入力が行える．
+例えば，各行にフィールドの値「名前,住所,電話番号」を列挙したファイル addresslist から
+先ほどのtestdatabase上のテーブルaddressにインポートを行う場合
+	\begin{center}
+	\begin{breakbox}
+	\begin{alltt}
+		# mysql -u root --local-infile=1 -p
+		mysql> use testdatabase;
+		mysql> load data local infile "addresslist" into table address fields
+ 		terminated by ',';
+  		（addresslist ファイルから，',' で区切られた各項目を，テーブル address の
+ 		各フィールドへ代入する．）
+	\end{alltt}
+	\end{breakbox}
+	\end{center}
+となる．
+	
+\subsection*{表の確認}
+テーブルの内容を確認したい場合，select * from テーブル名 となる．
+例として，テーブルaddressの中身を確認する場合，
+	\begin{center}
+	\begin{breakbox}
+	\begin{alltt}
+		mysql> select * from address;
+	\end{alltt}
+	\end{breakbox}
+	\end{center}
+となる．
+
+\subsection*{データベースの閲覧}
+例として，データベースとして mysql にある user テーブルに設定されている
+ユーザ情報を閲覧する場合は，下記のように行う．
+\begin{cli}
+$mysql -u root -p
+mysql> show databases;
+      (mysql データベースがあることを確認)
+mysql> use mysql;
+mysql> show tables;
+      (user テーブルがあることを確認)
+mysql> describe user;
+      (user テーブルの属性を確認)
+mysql> select host,user,password from user;
+      (user テーブルからホスト名・ユーザ名・パスワードの欄を出力)
+\end{cli}
+%$
+
+MySQL では，ユーザ名と接続ホストの組でパスワードを記憶する．ホスト名とユー
+ザ名，ハッシュ化されたパスワードが表示されていることを確認する．
+
+データベース sales の作成と，3つのテーブルの作成を行う．
+
+\begin{cli}
+# mysql -u root -p
+mysql> create database sales;
+mysql> use sales;
+mysql> create table sales (
+    -> date text,
+    -> food text,
+    -> amount integer );
+mysql> create table price (
+    -> food text,
+    -> fee integer );
+mysql> create table foodgroup (
+    -> food text,
+    -> foodgroup text );
+mysql> exit
+\end{cli}
+
+日本語コード変換，改行コード変換，1行目を削除した CSV ファイルをインポー
+トする．
+
+\begin{cli}
+# mysql -u root --local-infile=1 -p
+mysql> use sales;
+mysql> load data local infile "変換後のuriage.csv" into table
+ sales fields terminated by ',';
+mysql> load data local infile "変換後のtanka.csv" into table price
+ fields terminated by ',';
+mysql> load data local infile "変換後のbunrui.csv" into table
+ foodgroup fields terminated by ',';
+\end{cli}
+
+\subsection*{SQL言語によるデータベース操作}
+
+テーブル内のデータ操作の例を下記に示す．フィールドとは，列の名前のことを
+表し，例えば住所録なら「住所」や「姓」，「名」などにあたる．
+\begin{description}
+ \item[データ挿入] フィールド1が値1，フィールド2が値2となるデータを挿入
+	    する．\\
+       INSERT INTO テーブル名 ( フィールド名1， フィールド名2 ) VALUES
+       (値1，値2 );
+ \item[レコード挿入] レコード（1行のデータ）を追加する．\\
+       INSERT INTO テーブル名 VALUES (値1，値2，$\cdots$, 値$n$)
+ \item[更新]  フィールド1が値1のデータの，フィールド2を値2に，フィール
+	    ド3を値3に変更する．\\
+       UPDATE テーブル名 SET フィールド名2=値2，フィールド名3=値3 WHERE
+       フィールド名1=値1 ;
+ \item[削除] フィールド1が値1のデータを削除する．\\
+       DELETE FROM テーブル名 WHERE フィールド名1=値1;
+ \item[取り出し] (A) フィールド1が値1のデータの全てのフィールドを取り出す．\\
+       SELECT * FROM テーブル名 WHERE フィールド名1=値1;\\
+
+	(B) フィールド1が値1でかつフィールド2が値2のデータのフィールド1
+	    とフィールド3の値を取り出す．\\
+
+       SELECT フィールド名1,フィールド名3 FROM テーブル名 WHERE フィール
+	    ド名1=値1 and フィールド名2=値2\\
+
+	(C) テーブル1とテーブル2からテーブル1のフィールド1とテーブル2の
+	    フィールド1が対応しており，テーブル1のフィールド2が値2で，か
+	    つテーブル2のフィールド3が値3のデータについて，テーブル1の
+	    フィールド1 とテーブル2のフィールド3の値を取り出す．\\
+
+       SELECT テーブル名1.フィールド名1,テーブル名2.フィールド名3 FROM
+	    テーブル名1,テーブル名2 WHERE テーブル名1.フィールド名1=テーブル
+	    名2.フィールド名1 and テーブル名1.フィールド名2=値2 and テーブ
+	    ル名2.フィールド名3=値3 \\
+
+\end{description}
+
+文字列を含むキーは，下記のように，シングルクオーテーションで囲む．
+
+\begin{cli}
+mysql> delete from sales.sales where sales.date='2016/12/31' and
+ sales.food='コカコーラ';
+\end{cli}
+
+
+
+% support / mysql.server
+% ./bin/mysqladmin -u root password 'new-password'
+% ./bin/mysqladmin -u root -h yoch password 'new-password'
+
+% Alternatively you can run:
+% ./bin/mysql_secure_installation
+
+
+% cd . ; ./bin/mysqld_safe \&
+% cd ./mysql-test ; perl mysql-test-run.pl
+\section{実験内容(2)}
+
+\subsection*{動的コンテンツ}
+
+動的コンテンツを生成するための設定と動的コンテンツの配置を行う．
+\begin{itemize}
+\item Apache にて SSI，CGI が実行できる環境の設定
+\item 簡単な動的コンテンツの作成
+\item PHP の動作環境をサーバに作成
+\end{itemize}
+
+簡単な動的なコンテンツの作成として，時刻を表示するプログラムをそ
+れぞれ下記の技術を用いて作成し，それぞれの技術的違いを考えてみよ．
+\begin{itemize}
+ \item SSI
+ \item CGI (用いる言語は Perl でも何でも良い)
+ \item PHP
+\end{itemize}
+
+次に，CGI でカウンタプログラムを作成せよ．カウンタプログラ
+ムはユーザからリクエストを受けるたびに，カウンタの値を1つずつ増加させ，
+そのウェブページに何回のリクエストがあったかを表示するものである．プログ
+ラムやカウンタを記録するデータファイルの書き込み権限に注意すること．
+
+\subsection*{Web システムのインストール1}
+
+CGI, PHPを用いた掲示板(Minibbs)，Wiki (PukiWiki)のインストールを行う．
+
+\subsection*{Web システムのインストール2}
+
+MediaWiki のインストールを行う．
+
+\subsection*{Web システムのインストール3}
+
+WordPress のインストールを行う．
+
+
+\section{必要となる知識}
+
+\subsection{SHELL の環境変数による言語設定}
+
+シェルの環境変数の設定は，C シェル系であれば setenv, Bシェル系であれば
+export を用いる．
+
+言語系の設定は，下記のように locale コマンドで用いられる変数を閲覧できる．
+
+\begin{cli}
+#locale
+LANG=ja_JP.eucJP
+  ...
+LC_ALL=
+\end{cli}
+
+LANG 変数が全ての言語系の挙動を決定するので，この変数を変更する．この変
+数に設定できる値は，locale -a コマンドで調べられる．
+
+一般には，日本においては下記のようなものが用いられる．
+
+\begin{cli}
+C               英語
+ja_JP.SJIS      日本語(Shift JIS)
+ja_JP.UTF-8     日本語(UTF 8)
+ja_JP.eucJP     日本語(EUC JAPAN)
+\end{cli}
+
+
+\subsection{PukiWiki のインストール}
+
+PukiWiki をインストールする際は，PukiWiki ディレクトリ内のファイルにて，
+下記2点を変更すること．
+
+\begin{itemize}
+ \item ファイル lib/func.php 中の以下の関数定義に関する行を全て削除．
+
+\begin{cli}
+function hex2bin($hex_string)
+{
+ ...
+}
+\end{cli}
+
+ \item ファイル plugin/ls2.inc.php 中の下記の行の '\&' を取り除く．\\
+       (引数の参照渡しを，値渡しに変更)
+
+\begin{cli}
+array_walk($args, 'plugin_ls2_check_arg', & $params);
+\end{cli}
+%$
+\end{itemize}
+
+\clearpage
+
+\subsection{CGIの設定}
+
+Apache 自体の CGI の機能を有効にし(module 追加)，CGI 処理を行うファイル
+の拡張子を指定し(AddHandler)，どのディレクトリで CGI 動作を許可するかの
+設定の3つを行う．
+
+Ubuntu では a2enmod で，Apache のモジュールを追加できるので，
+CGI のモジュールを追加する．
+
+\begin{cli}
+# a2enmod cgi
+
+# vi /etc/apache2/mods-enabled/mime.conf
+
+AddHandler cgi-script .cgi 
+の行のコメントを外して有効にする
+(拡張子 .cgi のファイルが CGI)
+
+# vi /etc/apache2/sites-enabled/000-default.conf
+（下記の3行を追記することで，/var/www/html/cgi 
+  のディレクトリの中で CGI 動作を許可する）
+
+<Directory /var/www/html/cgi>
+ Options +ExecCGI
+</Directory>
+
+\end{cli}
+
+Apache のモジュールをインストールしたり，設定ファイルを変更した際は，
+Apache の再起動が必要である．
+
+\subsection{SSIの設定}
+
+SSI の設定も同様に，Apache へのモジュール追加，拡張子の設定，ディレクト
+リでの動作許可の3つが必要である．
+
+\begin{cli}
+# a2enmod include
+
+# vi /etc/apache2/mods-enabled/mime.conf
+
+  AddType text/html .shtml
+  AddOutputFilter INCLUDES .shtml
+の2行が有効であることを確認する (.shtml ファイルが SSI)．
+
+# vi /etc/apache2/sites-enabled/000-default.conf
+<Directory /var/www/html/ssi>
+        Options Includes
+</Directory>
+
+\end{cli}
+
+Apache の再起動を行う．
+
+\subsection{PHPの設定}
+
+PHP のインストールは下記のようにする．
+
+\begin{cli}
+# apt install php
+# apt install libapache2-mod-php
+\end{cli}
+
+\subsection{時間表示・カウンタプログラム}
+
+Mainserver の FTP サイト \texttt{/pub/www-contents} を参照しファイル名を
+参考にしながら，それぞれのコンテンツとして使用する．
+
+カウンタープログラム counter.cgi を用いるには，同一ディレクトリに
+count.dat というテキストファイルを作成する．vi 等で，その内容と
+して「0」とだけ書く．
+
+その他の動作については，各プログラムとも短いですので，内容を呼んで理解し
+て使うこと．
+
+その他，下記の点に注意する．
+
+\begin{description}
+ \item[CGIの実行権限] CGI プログラムを実行するには，CGI のファイルに実行
+	    権限が付与される必要があります．
+ \item[書き込み権限] CGI，PHP等のプログラムは，Apache の動作権限で実行さ
+	    れますので，ファイルの書き込み等は，その権限で書き込みできる
+	    必要があります(/etc/apache2/envvars にある環境変数
+	    APACHE\_RUN\_USER, APACHE\_RUN\_GROUP に権限が示されている)．
+ \item[エラー対処] Internal Server Error が出力された場合は，動的コンテ
+	    ンツでの実行エラーです．ログファイル
+	    \texttt{//var/log/apache2/} 以下のファイルを参照したり，コ
+	    マンドラインからその CGI を実行するなどして，デバッグする．
+\end{description}
+
+\subsection*{MediaWiki での補足}
+
+ブラウザから設定後，LocaSettings.php をサーバにアップロードするよう言わ
+れるので，SSH のファイル転送機能である SFTP, SCP を用いてアップロードす
+る．root 権限ではアップロードできないので，一般ユーザで転送した
+後，サーバ側の root ユーザで，MediaWiki のディレクトリに移動すること．
+
+Mac, Linux の場合
+\begin{cli}
+$ scp  LocalSettings.php  user@xxx.yyy.zzz.www:
+（userはサーバのユーザ名，xxx.yyy.zzz.www はサーバの IP）
+\end{cli} %$
+これで，user のホームディレクトリに転送る．
+
+Windows で Putty の pscp コマンドを使う場合
+\begin{cli}
+putty のあるディレクトリに LocalSettings.php を移動
+コマンドプロンプトを開き，putty のディレクトリに移動
+> pscp LocalSettings.php user@xxx.yyy.zzz.www:
+（user, xxx.yyy.zzz.www は scp と同様）
+\end{cli}
+その他，Windows では，WinSCP というソフトウェアを用いることで，
+GUI でアップロードできる．
+
+\clearpage
+
+\subsection{MediaWiki のインストール}
+MediaWiki のアーカイブを取得し展開する．
+展開したディレクトリの名前を mediawiki に変更し，
+httpd の公開ディレクトリに移動して，owner をすべて変更し，
+その後の設定は，ブラウザから接続して行う．
+
+最後に表示された通りに，mediawiki フォルダの下の config フォルダにある，
+ファイル \texttt{LocalSettings.php} を親ディレクトリに移動する．
+
+MediaWikiの設定において，動作確認が行われている設定は以下のものである．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+wikiname: groupXXX
+        Wiki 名称は，groupXXX とする
+mail: dummyのもの
+        dummy アドレス
+Language: 希望の言語
+Admin user: root
+        MediaWiki システム
+        パスワード：root00
+Database: wikidb
+        MySQL 上でのデータベース名
+DB username: root
+        + パスワード
+        MySQL でのユーザ名/パスワード
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+\subsection{WordPress のインストール}
+WordPress のアーカイブを取得して展開した後，展開されたディレクトリを，公
+開ディレクトリの下に，wordpress という名前で移動する．
+このディレクトリおよびディレクトリ中のすべてのファイル・サブディレクトリ
+の owner を Apache の実行権限に変更しておく．
+
+MySQL 上にて，データベース wordpressを作成しておく．
+
+Web ブラウザで http://\verb+<+Webサーバのホスト名\verb+>+/wordpress/ に接続し，設定を行う．
+
+WordPressの設定において，動作確認が行われている設定は以下のものである．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+データベース名
+データベース接続ユーザ名・パスワード
+  → 上での設定の通り
+テーブルの接頭辞 → そのままで OK
+
+Wordpress のユーザ名：root
+            パスワード：（いつもの）
+
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+\section{動作確認}
+
+\subsection*{データベース}
+MySQLが正しくインストール，設定されデータベースの操作が行えるか確認する．
+
+\subsection*{動的コンテンツ}
+アクセスを行うごとに，CGIで構築されたカウンタが増加するか，
+SSI, CGI, PHP 全てで時刻表示が正常に行われるか確認する．
+
+掲示板・wiki の閲覧や編集が行えるか確認する．
+
+\subsection*{Web システム}
+Web システム用のデータベースが正しく構築できているか確認する．
+構築した Web システムについて，それぞれ閲覧，更新，修正などの作業が正しく行われるか確認する．
+
+\section{考慮すべき点}
+
+\subsection*{データベース}
+\begin{itemize}
+ \item MySQL などのリレーショナルデータべースを用いる利点．例えば，CSV
+       ファイル等の表計算形式のファイルにデータを格納し，適宜プログラム
+       から操作することに対する比較．
+ \item リレーショナルデータベースのリレーショナル（関係）の部分について，
+       他のデータベースと比較してどのような点が特徴的であるかを考える．
+\end{itemize}
+
+\subsection*{動的コンテンツ}
+CGI, SSIなど動的コンテンツを構成する技術がどのように，どこで実行されているか．
+また，それぞれどのような用途に向いているのか，利点・欠点を考えた上で考察せよ．
+
+\subsection*{Web システム}
+\begin{itemize}
+ \item バックエンドとしてデータベースを用いる場合の利点が何かを考える．
+ \item Web システムは，HTTP サーバ，動的コンテンツ(PHP)，データベース
+       (SQL) を組み合わせて構築するが，単なる動的コンテンツとデータベー
+       スを用いる Web システムとの比較・考察を行う．
+ \item CMS, Wiki, Blog という，Web システムで代表的な3種において，それぞ
+       れの特徴を考察する．また，SNS\footnote{Social Networking System:
+       Facebook やミクシィなどが有名} やショートメッセージシステム
+       Twitter などの，インターネット上の Web システムの特徴を考えるとよ
+       い．
+ \item Web アプリケーション，SaaS，クラウドなどのキーワードについて例を
+       挙げながら，それらを実現する要素技術の関連について考える．また，
+       将来どのような Web アプリケーションが考えられるかを考察するとよい．
+\end{itemize}
+

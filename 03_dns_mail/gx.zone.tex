@@ -1,0 +1,71 @@
+\textbf{■ \texttt{/etc/namedb/gX.zone} ファイル（正引きデータベース）}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+; file name: gX.zone
+; for gX.a360.info.kochi-tech.ac.jp
+\$TTL       1H
+@          IN      SOA     serverX.gX.info.kochi-tech.ac.jp. postmaster.gX.
+info.kochi-tech.ac.jp. (          （←{\rm{}前の行の続きで1行で記述する}）
+                   2011060101	      ; serial number
+                   3h			; refresh after an hour
+                   1h			; retry after 30 minutes
+                   1w			; expire after a week
+                   1w )			; minimum TTL
+           IN      NS      serverX.gX.info.kochi-tech.ac.jp.
+serverX    IN      A       192.168.0.X1  （{\rm{}サーバのIPアドレス}）
+linuxX     IN      A       192.168.0.X2  （{\rm{}LinuxのIPアドレス}）
+windowsX   IN      A       192.168.0.X3  （{\rm{}WindowsのIPアドレス}）
+macX       IN      A       192.168.0.X4  （{\rm{}MacintoshのIPアドレス}）
+noteX      IN      A       192.168.0.X5  （{\rm{}ノートPCのIPアドレス}）
+localhost  IN      A       127.0.0.1
+\end{alltt}
+\end{breakbox}
+\end{center}
+\noindent
+\textbf{◆ \texttt{/etc/namedb/gX.zone} ファイルの説明}
+\begin{itemize}
+\item ホスト名から IP アドレスを検索するためのデータベース．
+\item セミコロン``\verb|;|''から後の文字列はコメントである．
+``\verb|(|''や ``\verb|)|'' の前には空白を 1 文字以上挿入する．
+\item 5$\sim$11 行目を除いて，すべて行頭から記述しなければならない．
+空白があると動作しない．
+\item 3 行目，``\verb|$TTL|''はデフォルトの TTL（Time To Live：キャッ%$
+シュの生存時間）を指定する．DNS では各ホスト情報毎にTTLを指定で
+きるが，TTL が省略されたレコードはこの値が用いられる．
+\item 4 行目，``\verb|@|''はドメイン \texttt{gX.info.kochi-tech.ac.jp} を
+表す省略形である．SOA レコードにより，このドメインに権威をも
+つ（このドメインについて完全な情報をもつ）DNS サーバと管理者の
+メールアドレスを空白で分けて記述する．
+\item 5 行目はシリアルナンバーを意味しており，ここではファイルを作成
+した日付を \verb|yyyymmddNN| の形式で記述した．このデータベース
+を書き換えたら数字を増やす．このようにしないとセカンダリネームサーバ
+に変更が反映されない．
+\item 6$\sim$8 行目はセカンダリネームサーバに関する設定（セカンダリネー
+ムサーバがプライマリのゾーン転送を行なう間隔，プライマリの応答
+が無い場合にセカンダリがリトライするまでの時間，セカンダリがデー
+タを破棄するまでの時間）.
+\item 9 行目の TTL は，ネガティブキャッシュ（リクエスト失敗という情報
+のキャッシュ）に用いられる値．
+\item 10 行目は，NS レコードで nameserver とするマシンの名前を記述する．
+ここではホスト名の最後には必ずピリオド``\verb|.|''を付ける．
+``\verb|.|''がないと省略形とみなされ，\verb|named.conf|ファイ
+ルの \verb|zone| で指定した \texttt{gX.info.kochi-tech.ac.jp} がホスト
+名の最後に付加される．つまり
+``\texttt{serverX.gX.info.\\kochi-tech.ac.jp}''のように指定すると，
+``\texttt{serverX.gX.info.kochi-tech.ac.jp.gX.\\info.kochi-tech.ac.jp}''
+のように解釈される．また 10，11 行目は，行頭の %
+\texttt{gX.info.kochi-\\tech.ac.jp} が省略されているため，行頭には空
+白が必要である．
+%\item 11 行目は，MX レコードにより，ドメイン %
+%\texttt{gX.info.kochi-tech.ac.jp} 宛てに出されたメールを %
+%\texttt{serverX.gX.info.kochi-tech.ac.jp} で受けることを宣言する．
+%プリファレンス値 10 はメール配送の優先度を表す．
+\item 11$\sim$14 行目では，A レコードを用いてマシンの名前に address を割
+り振る．``\verb|.|''で終っていないドメイン（省略形）には %
+\texttt{gX.info.kochi-tech.ac.jp} が付加されるので，ここではドメイ
+ン名は省略されている．もし，address を割り振るマシンが他にもあ
+れば（WWW サーバや POP3 サーバが他のマシンにある場合など），16 行
+目以下に追加して記述する．
+\item 17 行目は localhost のアドレス指定．
+\end{itemize}

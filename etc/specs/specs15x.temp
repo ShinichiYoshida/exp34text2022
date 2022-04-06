@@ -1,0 +1,105 @@
+\documentclass[a4j]{jarticle}
+%Preamble
+\usepackage{eclbkbox}
+\usepackage{alltt}
+
+%\setlength{\textheight}{24cm}
+%\topmargin=-10mm
+%\textwidth=160mm
+%\oddsidemargin=1mm
+
+\title{\vspace{-1cm}\large{情報システム工学実験3/4J 実験仕様書}}
+\author{\LARGE{第16章 ファイアウォールの構築応用課題}}
+\date{2005年7月22日}
+
+%\pagestyle{empty}
+\begin{document}
+\begin{center}
+\LARGE{第16章 ファイアウォールの構築応用課題}
+\end{center}
+\vspace{1zh}
+%\maketitle
+
+%\subsection*{ポートスキャンをかけた相手をログから特定し，必要な措置を講じる}
+ポートスキャンとは，サーバがどのポートへのアクセスを受け付けているかを調査するための手段の一つである．様々なポート番号に対してアクセスを試み，応答があればそのポート番号へのアクセスを受け付けているということになる．本来は管理者がネットワークやサーバのサービスの提供状況が意図した通りになっているか確認するために行うが，悪意ある者がネットワークを通じて侵入を試みる際の初期調査手段としても使われることが多い．アクセスを受け付けているポート番号が分かれば利用されているアプリケーションもほぼ特定できるため，そのアプリケーションの脆弱性を利用した侵入の足がかりとして利用される．
+
+こういったポートスキャンが行われていないかを通信ログを監視して調査する．ポートスキャンをかけられている場合は同じアドレスから多数のポートに対してアクセス要求が送信されていないかを通信ログから判断する．不正なアクセスの兆候がある場合，侵入や攻撃を防ぐため，一般的にはパケットの送信元を特定し，送信元ネットワークの管理者に連絡をした上で，アクセス拒否など必要な措置を講じなければならない．ただし，必要な通信まで拒否してしまうような混乱を防ぐため，アクセス拒否などの対策は慎重に正しく講じなければならない．また，アクセス拒否をサーバで行うのかそれともルータで行うのかなども検討しなければならない．なお，ポートスキャンはサーバ以外のPCやルータも受ける可能性があるので，ルータなど全てのパケットが通過する場所で監視するのが重要である．
+
+\subsection*{ログの取得方法}
+通信のログを監視するには様々な方法があるが，今回はルータのアクセスリストのログを取得して調査する．アクセスリストでログを収集すると，そのルータに送られてきてアクセスリストに該当したパケットが全てログに残るので，ネットワーク内に入ってくるパケットを一通り監視することができる．
+
+ログの取得にはSYSLOGという仕組みを利用する．SYSLOGを使うとネットワーク機器のログをSYSLOGサーバにまとめて収集することができる．
+今回は Linux PC をSYSLOGサーバにして，ルータがログをSYSLOGサーバに送信するよう設定する．
+Red Hat Linuxには最初からSYSLOGサーバのソフトウェアが入っており，既に動作しているのでルータからのログを受け取るようその設定を変更する．
+
+まずは，/etc/syslog.conf に以下の一行をを追加する．
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+local0.*                            /var/log/cisco.log
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+次に，/etc/sysconfig/syslog ファイル内の該当箇所を以下のように変更する．
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+SYSLOGD\_OPTIONS="-r -m 0"      ← 「-r」を追加
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+%/etc/init.d/syslog の編集？
+そして，SYSLOG を再起動させる．
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+/etc/init.d/syslog restart
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+これでSYSLOGサーバがルータからのログを受け取れるようになったのでログを送信するよう
+ルータにtelnetでアクセスし，以下のように設定する．
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+ciscoX>enable
+Password:
+ciscoX#config
+Configuring from terminal, memory, or network [terminal]?
+Enter configuration commands, one per line.  End with CNTL/Z.
+ciscoX(config)#logging on
+ciscoX(config)#logging host 172.21.1X.4
+ciscoX(config)#logging facility local0
+ciscoX(config)#logging trap informational
+ciscoX(config)#logging source-interface FastEthernet0/1
+ciscoX(config)#no access-list 100
+ciscoX(config)#access-list 100 permit udp any any eq rip
+ciscoX(config)#access-list 100 deny tcp any host 172.21.10.1X eq telnet
+ciscoX(config)#access-list 100 deny tcp any host 172.21.1X.1 eq telnet
+ciscoX(config)#access-list 100 deny tcp any host 172.21.1X.10 eq telnet
+ciscoX(config)#access-list 100 permit ip any 172.21.1X.0 0.0.0.255 log
+ciscoX(config)#access-list 100 deny ip any any
+ciscoX(config)#interface FastEthernet0/0
+ciscoX(config-if)#ip access-group 100 in
+ciscoX(config-if)#end
+ciscoX#write memory
+Building configuration...
+[OK]
+ciscoX#
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+以上の設定が完了すると，/var/log/cisco.log にルータからのログが記録されていくので，その内容からポートスキャンの兆候が無いか探せばよい．
+\subsection*{考慮すべき点}
+今回の実験を行うに当たっては以下のようなことについて考慮する必要がある．
+\begin{itemize}
+  \item ポートスキャンにはどのような種類があるのか．
+  \item ポートスキャンをかけた相手への対抗策は何があるのか．
+  \item どうすればポートスキャンをかけられても大丈夫な環境にできるのか．      
+\end{itemize}
+
+\end{document}

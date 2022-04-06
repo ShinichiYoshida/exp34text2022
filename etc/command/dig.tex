@@ -1,0 +1,126 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  dig
+%% %% %%
+%% %% %%
+\section{dig}
+DNSサーバの挙動を表示する\\
+\label{cmd:dig}
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+\% dig  @[DNSサーバ] [確認したいドメイン名] [レコード]
+\end{alltt}
+\end{screen}
+\end{center}
+
+\noindent
+{\bf ◆機能説明}
+
+DNSサーバに対して問い合わせを行い応答結果をセクション毎に表示する．
+３番目引数にレコードを追加することでそのタイプの検索結果を表示し，ANYとすると
+全てのレコードの検索結果を表示する．レコードを指定しない場合はA(ネットワークアドレス)についての情報となる．
+単にdigとするとルートサーバの表示をする．
+nslookupと異なりDNSサーバの応答パケットをほぼそのまま表示する．
+
+\noindent
+{\bf ◆使用例(１)〜DNSサーバに指定したドメイン名の応答を全て表示する}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+\% \underline{dig @server.gX.info.kochi-tech.ac.jp gX.info.kochi-tech.ac.jp ANY}  (←DNSサーバserver.gX〜におけるgX.info〜の応答を全て表示する)
+
+; <<>> DiG 9.3.4-P1 <<>> @server.gX.info.kochi-tech.ac.jp gX.info.
+kochi-tech.ac.jp ANY 
+; (1 server found)
+;; global options:  printcmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 24369
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1
+
+;; QUESTION SECTION:
+;gX.info.kochi-tech.ac.jp. IN      ANY
+
+;; ANSWER SECTION:
+gX.info.kochi-tech.ac.jp. 3600 IN  SOA  server.gX.info.kochi-tech.ac.jp.
+ postmaster.gX.info.kochi-tech.ac.jp. 2002081601 10800 3600 604800 604800
+gX.info.kochi-tech.ac.jp. 3600 IN  NS   server.gX.info.kochi-tech.ac.jp.
+gX.info.kochi-tech.ac.jp. 3600 IN  MX   10 server.gX.info.kochi-tech.ac.jp.
+
+;; ADDITIONAL SECTION:
+server.gX.info.kochi-tech.ac.jp. 3600 IN A   172.21.1X.2
+
+;; Query time: 1 msec
+;; SERVER: 172.21.1X.2\#53(172.21.1X.2)
+;; WHEN: Mon Mar  2 21:18:02 2009
+;; MSG SIZE  rcvd: 145
+
+\end{alltt}
+\end{breakbox}
+\end{center}
+{\bf ◆digコマンド実行時の表示内容}
+\begin{itemize}
+\item {\bf ヘッダ}\\
+ ヘッダ部分は１行目にはdigコマンドのバージョンとコマンドの内容，２行目には該当したサーバ数，３行目にはグローバルオプションの表示，４行目には応答を受けたことを表示する．５行目には応答パケットのヘッダ情報を表示し，正しく情報を得られた場合はNOERROR，ドメイン名が存在しない場合は NXDOMAIN とstatusの後に表示する．６行目 flagsでこの応答がどのようなものか知ることができる．aaは権威のある回答であることを示しており，指定したドメイン名の情報を持ったDNSサーバからの応答だということを示している． QUERYには各セクションにいくつ該当するものがあったか表示する．  
+
+\item {\bf QUESTION SECTION}\\
+ 表示させる内容．[ドメイン名] [クラス] [レコード] の順に並んでいる．例の場合は指定したDNSサーバの持つgX.a360.info.kochi-tech.ac.jpの全ての情報を表示する．
+
+\item {\bf ANSWER SECTION}\\
+ DNSサーバの応答内容． [ドメイン名] [リフレッシュ間隔] [クラス] [レコード] [データ]の順に並んでいる．例の場合は要求をANYで行っているので，SOA，NS，MXの３つが返って来ている．
+
+\item {\bf ADDITIONAL SECTION}\\
+ 追加としてDNSサーバの情報を表示する．
+
+\item {\bf フッタ}\\
+ フッタには，検索にかかった時間，使用したDNSサーバ，検索した日時，受け取ったデータサイズなどを表示する．
+\end{itemize}
+%% 正引き %%
+\noindent
+{\bf ◆使用例(２)〜正引き(ドメイン名からIPアドレスを調べる)}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+\% \underline{dig machine.gX.info.kochi-tech.ac.jp} (←mashine.gX〜のドメイン名のIPアドレスを調べる)
+
+…
+
+;; ANSWER SECTION:
+machine.gX.info.kochi-tech.ac.jp. 3600 IN A  172.21.1X.4
+
+…
+
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+%% 逆引き %%
+\noindent
+{\bf ◆使用例(３)〜逆引き(IPアドレスからドメイン名を調べる)}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+\% \underline{dig @server.gX.info.kochi-tech.ac.jp 4.1X.21.172.in-addr.arpa. PTR}  (←IPアドレス172.21.1X.4のドメイン名を調べる)
+
+…
+
+;; ANSWER SECTION:
+4.1X.21.172.in-addr.arpa. 3600  IN      PTR     server.gX.info.kochi-tech.ac.jp.
+
+…
+
+\end{alltt}
+\end{breakbox}
+\end{center}
+上記のようにして，逆引きのレコードであるPTRを呼び出すことでIPアドレスからドメイン名を調べることができるが，-xというオプションを用いて
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+\% \underline{dig -x 172.21.1X.4}
+\end{alltt}
+\end{breakbox}
+\end{center}
+とすることでも同様の結果を得ることができる．
+\clearpage

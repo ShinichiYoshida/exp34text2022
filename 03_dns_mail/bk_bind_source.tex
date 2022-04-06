@@ -1,0 +1,29 @@
+\subsection{BINDのインストール}
+BINDのソースファイルをメインサーバからftpを用い取得し，解凍・展開・コンパイルを行い
+BINDをサーバにインストールする．
+
+ここで，ファイルを展開したディレクトリ内の README ファイルに一度目を通して，作業を行う．
+README にはどのような機能があるか，バージョンごとにどのような機能が追加
+されて来たか，どのようにビルドを行うかなどの情報が書かれている．
+
+主なインストール手順を下記に示す．README の詳細も合わせて参照すること．
+\begin{itemize}
+ \item FreeBSD 標準の古いバージョンの BIND について，コマンド名・ファイ
+       ル名の名前を変えておく．
+\begin{cli}
+#cd /usr/sbin
+#mv named ORG.named
+\end{cli}
+       同様の手順で，\ttt{/usr/sbin} 以下の named-checkconf,
+       named-checkzone, named-compilezone, named-journalprint,
+       \ttt{/etc/namedb}, \ttt{/usr/bin} 以下の dig, nslookup を名前を変
+       えておく．
+ \item ftp サーバから，BIND のソースコードをダウンロードし，コンパイル，
+       インストールを行う．
+ \item デフォルト設定でインストールを行うと \ttt{/usr/local} 以下のコマ
+       ンド・ファイル群が生成される．
+\end{itemize}
+
+\subsection*{BINDコンパイル時のオプション}
+BINDにもMakefileの生成を自動的に行うconfigure スクリプトが提供されている．
+本実験でインストールを行うBINDには特別なオプションは必要としない．

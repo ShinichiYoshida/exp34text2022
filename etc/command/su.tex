@@ -1,0 +1,45 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  su
+%% %% %%
+%% %% %%
+\label{cmd:su}
+\section{su(Switch User)}
+
+他のユーザになりかわる\par
+
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+ ルートになる時
+ % su
+ その他のユーザになる時
+ % su ユーザ名
+\end{alltt}
+\end{screen}
+\end{center}
+
+{\bf ◆機能説明}
+
+　su を行うと，一時的に他のユーザとして作業を行う事ができる．ログインする時にディフォルトでは環境変数 HOME ， SHELL ， USER(ユーザ ID が 0 の場合のみ) はターゲットとなるログインのディフォルトとなり，それ以外の環境変数は引き継がれる．\par
+ 特定のユーザ(ルート等)になろうとする時に，現在のユーザがそのユーザになる資格を持ってない場合はログインできないので注意が必要である．\par
+ また，ログインを終了させるときは exit と入力して終了する．\par
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+ % \underline{su}  \keybox{Enter} 
+ Password: \keybox{パスワードを入力して enter}
+ Mar 26 17:03:32 group@info su: syu to root on /dev/ttyp0
+ group@info#  \underline{exit}  \keybox{Enter}
+ exit
+ %
+\end{alltt}
+\end{breakbox}
+\end{center}
+ルートとして一時的にログインをして，その後ログアウトをした．
+
+\clearpage
+%% %% %%
+%% %% %% %%

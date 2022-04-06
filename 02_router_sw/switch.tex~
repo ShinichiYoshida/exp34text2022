@@ -1,0 +1,246 @@
+\section{スイッチを用いる目的}
+
+Ethernet による LAN を分割するには，物理的に異なるネットワーク機器および
+ケーブルを用いる方法がある．例えば，プロジェクトごとに異なる目的でネット
+ワークを利用し，互いの通信を制限させたい場合などは，A チーム用の LAN と 
+B チーム用の LAN を，全く異なるスイッチによるネットワークを構成し，A チー
+ムの端末は A チーム用のスイッチに A チームのケーブルを用いて接続し，B チー
+ムは，B チーム用のスイッチに B チームのケーブルを用いて接続することで，
+それぞれのチームの端末が互いにチーム内では通信を行い，チーム外との通信は
+行えなくなる．2つの異なる LAN を接続するためには，Layer 3 の機器であるルー
+タを用いる．
+
+Layer 2 において，物理的な分割でなく Layer 2 のプロトコルにおいて分割す
+る方法が，Virtual LAN (VLAN) である．VLAN は，主にスイッチにおいて用いら
+れている技術で，1つのスイッチに複数の異なる LAN の通信環境を実現したり，
+1本のケーブル上に複数の異なる LAN のパケットを送受信する技術である．本来
+1 台のスイッチやネットワークケーブルは，1つの LAN の通信に用いられるが，
+VLAN を用いることで，複数の異なる LAN で，機器やケーブルを共用することが
+できる．
+
+現在は，中規模以上のネットワークでは VLAN が広く使用されており，ルータや
+サーバ用コンピュータなどの端末も，VLAN の使用が可能なものが多い．
+VLAN を用いることで，管理する LAN の数が増加しても，機器の費用，設置場所，
+電気等のランニングコスト，ネットワークケーブルの敷設本数，管理の手間や保
+守のコストなどを抑えることが可能になる．
+
+VLAN が行っていることは，ブロードキャストドメインの分割である．ブロード
+キャストドメインとは，イーサネットのブロードキャストフレームが到達する範
+囲である．通常，リピータやブリッジ，スイッチはブロードキャストフレームを
+全てのポートに転送し，LAN 内の全ての機器に送信する．このようにすることで，
+ARP などの宛先を探索するフレームを確実に全ホストに転送する．ブロードキャ
+ストの届かない端末は，他の端末から探索されなくなるため，必然的に通信が行
+えなくなり，隔離される．
+
+VLAN に対応したスイッチ・ルータは，各ポートで受信したフレームがどのLAN 
+に所属するのかを判断し，その LAN に所属するポートのみに対して転送を行う．
+異なる LAN に所属するポートには，ブロードキャストも含め，いかなる別の 
+LAN のフレームも送信しない．このようにすることで，1つのスイッチ内で，LAN 
+を分割する．これはあたかも複数のスイッチを設置した環境と同じような環境で
+ある．
+
+図\ref{fig:22:static}は，ポートVLANを用いて LAN A，LAN B，LAN C の3つの
+LAN を実現する図である．VLAN を用いない場合は左のように，3つのスイッチを
+用意する必要があるが，VLAN を用いることで1台のスイッチで Layer 2 のレベ
+ルでネットワークを分割することができる．
+
+\begin{figure}[htb]
+  \begin{center}
+   \includegraphics[width=15cm,bb=0 0 720 540,clip]{\chapsw vlan1.pdf}
+   \caption{静的VLAN}
+   \label{fig:22:static}
+  \end{center}
+\end{figure}
+
+\begin{figure}[htb]
+  \begin{center}
+   \includegraphics[width=15cm,bb=0 0 720 540,clip]{\chapsw vlan2.pdf}
+   \caption{VLANを用いない場合}
+   \label{fig:22:no-vlan}
+  \end{center}
+\end{figure}
+
+\begin{figure}[htb]
+  \begin{center}
+   \includegraphics[width=15cm,bb=0 0 720 540,clip]{\chapsw vlan3.pdf}   
+   \caption{静的VLANとタグVLAN を用いる場合}
+   \label{fig:22:vlan}
+  \end{center}
+\end{figure}
+
+図\ref{fig:22:no-vlan}，図\ref{fig:22:vlan}は，3つの LAN を異なる場所で
+接続できるようする図である．図\ref{fig:22:no-vlan}の VLAN を用いない場合
+は，それぞれ3つのスイッチを準備し，さらにそれらの間を3本のネットワークケー
+ブルで接続する必要があるが，図\ref{fig:22:vlan}のように，ポートVLANとタ
+グVLANを用いることで，それらをまとめることができる．
+
+\section{VLAN の種類}
+
+VLAN では，受信したフレームがどの LAN に所属するかを判断する情報として，
+以下のようなものに分けられる．
+
+\begin{description}
+\item[静的VLAN] スイッチの各ポートが，どの LAN に所属するかを管理者が手
+  動で設定する VLAN．スイッチの物理ポート毎に所属する LAN を決めるため，
+  しばしば，ポートベース VLAN とも呼ばれる．管理者が一度設定すると設定
+  を変更するまでそのポートを送受信するフレームの所属する LAN は固定され
+  る．このため静的 VLAN （Static VLAN）と呼ばれる．
+
+\item[動的VLAN] スイッチで受信されたフレームのMacアドレスや IP アドレス
+  （サブネット），プロトコル(IP か Appletalk かなど）で，所属す
+  る LAN を決める方法．フレームに含まれる情報のみから，所属する LAN を
+  決めるので，受信するポートには依存することなく LAN が決める．このため，
+  動的 VLAN と呼ばれる．
+
+\item[タグVLAN] スイッチで受信されたフレームにあらかじめ所属する LAN の
+  情報が含まれており，この情報を元に所属する LAN を判断する方法．この情
+  報を，VLAN ID と呼ぶ．VLAN ID の含め方により，Cisco ISL VLAN と IEEE
+  802.1q VLAN に分けられるが，現在では，ほとんど 802.1q が用いられる．
+
+\end{description}
+
+なお Cisco では，タグ VLAN のことを VLAN トランキング (trunking) と呼び，
+タグ VLAN のポートのことを，トランクポート (trunk port) と呼ぶ．
+
+\section{実験内容 (2)}
+本章において必要となる作業は，下記の通りである．
+\begin{itemize}
+\item ポート VLAN を用いて，1〜16番ポートは自分たちのグループの VLAN を，
+      17〜20番ポートは別の1グループの VLAN を作成する（実験 3i では，
+      17〜20番ポートはデフォルトVLAN (VLAN 1) のままとし，バックボーンの 
+      LAN に割り当て，ルータのバックボーン側とバックボーンの線を接続す
+      る）．
+\item 21番ポートには，自グループの VLAN と他グループの VLAN の両方を，
+      IEEE 802.1q タグVLANで接続できるよう設定する（実験 3iでは必要ない）．
+\end{itemize}
+
+\section{設定に必要な情報}
+
+\begin{itemize}
+ \item VLAN 番号
+       \begin{itemize}
+	\item 自グループ用 VLAN：グループ番号
+	\item 他グループ用 VLAN：グループ番号
+       \end{itemize}
+ \item スイッチの設定
+       \begin{itemize}
+	\item ポート1〜16：自グループ用 ポートVLAN
+	\item ポート17〜20：他グループ用 ポートVLAN
+	\item ポート21〜22：自グループ・他グループ共用のタグ VLAN
+	\item ポート23〜24：設定なし
+       \end{itemize}
+\end{itemize}
+
+\section{作業内容}
+
+\subsection{ケーブルの作成}
+
+\begin{itemize}
+ \item ペアを組むグループとの間を接続するのに十分な長さのケーブルを作成
+       する（各グループ1本ずつ，隣接グループと合わせて2本．うち1本は次回
+       用いる）．
+\end{itemize}
+
+\subsection{スイッチの設定}
+
+\begin{cli}
+Switch>enable  (または en)
+Password:
+Switch#show running-config  (または sh run )
+       ↑現在の設定の確認
+  スイッチ設定が表示される
+
+Switch#show interface status (ポート確認)
+Port      Name               Status       Vlan       Duplex  Speed Type
+Fa0/1                        notconnect   1            auto   auto
+ 10/100BaseTX
+ポートFa0/1 は VLAN 1(デフォルト) VLAN で未接続
+             :
+             :
+Fa0/6                        connected    1          a-full  a-100
+ 10/100BaseTX
+ポートFa0/1 は VLAN 1(デフォルト) VLAN で 100M, 全二重で接続されている
+
+Switch#configure terminal  (または conf term)
+
+Switch(config)#vlan XXX
+                 ↑vlan 作成．XXX はグループ番号
+Switch(config-vlan)#name group11
+                 ↑分かりやすく名前を付ける
+Switch(config-vlan)#exit
+
+次に interface コマンドでポートの設定
+
+Switch(config)#int range fa0/1-16
+  (range 記述で複数ポートの設定)
+Switch(config-if-range)#switchport mode access
+  (ポートVLAN用ポートに設定)
+     IOS ではアクセスVLANと呼ぶ
+Switch(config-if-range)#switchport access vlan XXX
+  (VLAN XXX (XXXはグループ番号)  に設定)
+Switch(config-if-range)#exit
+
+次に他グループ用ポートVLANの設定．
+
+Switch(config)#int range fa0/17-20
+  (range 記述で複数ポートの設定)
+Switch(config-if-range)#switchport mode access
+  (ポートVLAN用ポートに設定)
+     IOS ではアクセスVLANと呼ぶ
+Switch(config-if-range)#switchport access vlan YYY
+  (VLAN YYY (YYYはペアのグループのVLAN番号)  に設定)
+Switch(config-if-range)#exit
+
+最後に他グループのスイッチ間を接続するトランクポートを設定
+自グループと他グループの VLAN をタグ VLAN として設定する
+
+Switch(config)#int range fa0/21-22
+  (range 記述で複数ポートの設定)
+Switch(config-if-range)#switchport mode trunk
+  (VLANトランクポートに設定)
+Switch(config-if-range)#switchport trunk allowed vlan XXX,YYY
+  (自グループ用 VLAN XXX と他グループ用 VLAN XXX を設定)
+Switch(config-if-range)#exit
+
+\end{cli}
+
+\subsection{接続}
+
+\begin{itemize}
+ \item タグVLAN ポートとペアグループのタグVLANポートをケーブル1本で接続
+ \item 自グループの機器は，自グループのスイッチの自グループ VLANへ接続
+ \item 自グループのノートPCは，ペアのグループのスイッチの自グループ用 VLANへ接続
+ \item 他グループのノートPCは，自グループのスイッチのペアのグループ用
+       VLANへ接続
+\end{itemize}
+
+\begin{figure}[htb]
+  \begin{center}
+   \includegraphics[width=15cm,bb=0 0 720 540,clip]{\chapsw vlan4.pdf}
+   \caption{接続図}
+   \label{fig:22:static}
+  \end{center}
+\end{figure}
+
+\section{動作確認}
+
+\begin{itemize}
+ \item 自グループ用ポート同士で通信可能
+ \item 自グループのノートPCを他グループ用ポートに接続すると通信不可
+       能
+ \item 自グループの機器とペアグループの自グループ用ポートに接続したノー
+       トPCとの間で通信可能
+ \item 以上を 相互 ping，mainserver や ペアグループのサーバへの
+       traceroute(tracert) で確認する．
+ \item traceroute での確認の結果から，自グループ間，他グループとの間の通
+       信経路はどのようになっているかを確認しておくこと．
+ \item 自グループとペアグループとで，動作確認終了後，スイッチ間のケーブ
+       ルは外す．
+\end{itemize}
+
+\section{考慮すべき点}
+
+\begin{itemize}
+ \item 様々なVLAN とそれぞれ，効果的に用いることのできる場面
+ \item VLAN を用いても効果が無い場合や，VLAN では機能が不足している点
+\end{itemize}

@@ -1,0 +1,63 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  man
+%% %% %%
+%% %% %%
+
+\section{man}
+オンラインマニュアルのフォーマット、表示を行なう\\
+\label{cmd:man}
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+% man コマンド名
+\end{alltt}
+\end{screen}
+\end{center}
+
+\noindent
+{\bf ◆機能説明}
+
+引数としてコマンド名を指定して，コマンドのオンラインマニュアルを
+表示する．\par
+manコマンドは，/usr/share/man に格納されているマニュアルを参照する。\par
+\noindent
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+% \underline{man man}
+
+Reformatting page.  Wait... done
+
+User Commands                                              man(1)
+
+NAME
+     man - find and display reference manual pages
+
+SYNOPSIS
+     man [ - ] [ -adFlrt ] [ -M path ] [ -T macro-package ]
+          [-s section ] name ...
+     man [ -M path ] -k keyword ...
+     man [ -M path ] -f file ...
+
+DESCRIPTION
+     The man command  displays  information  from  the  reference
+     manuals.   It displays complete manual pages that you select
+     by name, or one-line summaries selected  either  by  keyword
+     (-k),  or  by  the  name  of an associated file (-f).  If no
+     manual page is located, man prints an error message.
+
+  Source Format
+     Reference Manual pages are marked up with either nroff(1) or
+     sgml(5)  (Standard  Generalized  Markup Language) tags.  The
+--More--(5%)
+%
+\end{alltt}
+\end{breakbox}
+\end{center}
+\clearpage
+%% %% %%
+%% %% %% %%

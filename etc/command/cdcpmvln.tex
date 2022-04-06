@@ -1,0 +1,50 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  c
+%% %% %%
+%% %% %%
+
+\section{mv, cp, cd, ln}
+mv, cp, cd, ln は，それぞれ，ファイルの移動 (MoVe), ファイルのコピー
+(CoPy)，カレントディレクトリ(今いるディレクトリ)の移動 (ChangeDirectory)，
+リンク(あるファイルを別のファイル名で参照する) LiNk に用いる．
+
+\label{cmd:cp}
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+% mv 古いファイル名 新しいファイル名
+% cp 元ファイル名 コピーのファイル名
+% cd 移動先ディレクトリ
+% ln -s 元ファイル名 別名
+\end{alltt}
+\end{screen}
+\end{center}
+
+\noindent
+{\bf ◆機能説明}
+
+chgrp は，引数にグループ名とファイルを指定してファイルのグループを
+変更する．このコマンドを実行するユーザーは，変更後のグループに
+属していないといけない．
+
+\noindent
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+% \underline{ls -l file}  （←fileの詳細な情報を表示する）
+-rw-r--r--   1 user1   group1  2058 Sep 18 15:33 file
+
+% \underline{chgrp  group2 file}  （←fileの所属するグループをgroup2に変更する）
+% \underline{ls -l file}
+-rw-r--r--   1 user1   group2  2058 Sep 18 15:33 file
+%
+\end{alltt}
+\end{breakbox}
+\end{center}
+\clearpage
+%% %% %%
+%% %% %% %%

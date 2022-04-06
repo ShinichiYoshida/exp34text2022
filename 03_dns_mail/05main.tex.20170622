@@ -1,0 +1,632 @@
+\section{目的}
+
+インターネットを使った様々なアプリケーションでは，通信の宛先・送信元を識
+別するのにホスト名を用いることが多い．ホスト名とは，通信を行う端末に対し
+何らかの意味を持たせた文字列を用いて名前を付けたものである．一方，インター
+ネットの通信プロトコル IP では，IPアドレスを用いて端末の識別を行う．そこ
+で，アプリケーションが通信を行うためにホスト名を指定した後，IPパケットで
+データを伝送するために，そのホスト名に対応する IP アドレスを求める必要が
+ある．これを名前解決と呼ぶ．
+
+DNS（Domain Name System）は，インターネットの標準的な名前解決システムで
+あり，ホスト名を用いた通信を行うために DNS サービスを構築する必要がある．
+
+電子メールは，DNSを用いる代表的なアプリケーションの一つであり，DNS と同
+じく1980年代より使われ，現在でもインターネットでの主要なアプリケーション
+として広く利用されている．電子メールで用いられる電子メールアドレスでは，
+メールドメインと呼ばれる部分にDNS で指定される名前が用いられる．
+
+\section{DNS とは}
+ネットワーク層プロトコルである IP では，ホストの識別をするのに IP アドレ
+スを用いる．IP アドレスは32ビットで表される整数であり，表記する際は，
+\texttt{192.168.0.1} というように，1 オクテット（8ビット＝1バイト）ずつ 
+10 進法で，ピリオドで区切って表記される\footnote{現在のバージョン 4 は 
+32 ビットのアドレス空間を持つが，次のバージョン 6（IPv6）では，128 ビッ
+トに拡大される．}．これを，英語では dotted-quad decimal notation (ドット
+付きの4つの10進表記)と呼ぶ．
+
+一方で，ホストの管理は IPアドレスとは独立して組織あるいは運用者単位で行っ
+ている．このため，ホストの識別は，会社や企業，部署の構成や，サーバで提供
+するサービスに対応して行えることが望ましい．このように，サービスの種類や，
+組織の構成などの情報をもとに決めるホストの識別情報として，\textbf{ホスト
+名} を用いる．
+
+実際の IP 通信は，IPアドレスを識別情報として通信を行うので，ホスト名とIP 
+アドレスの対応付けを行い，適宜変換する仕組みが，名前解決 (Hostname
+Resolver) である．名前解決で最も単純なものは，\textbf{Hosts ファイル} と
+呼ばれるもので，IP アドレスとホスト名の対応を，テキストファイルで格納し
+ておき，OS はその情報を参照して，両者の変換を行う．
+
+Hosts では，大規模なネットワークの名前管理は困難であるため，インターネッ
+トのような大規模なネットワークにおいても実用的に管理・運用できる名前解決
+の仕組みとして，DNS （Domain Name System）が使われている．DNS により，電
+子メールや WWW などのサービスを利用する際に，利用者はホスト名の情報のみ
+を用いて \verb|anyone@ugs.kochi-tech.ac.jp| や 
+\verb|http://www.kochi-tech.ac.jp/| などのアプリケーション層アドレスを用
+いることが可能となっている．
+
+\section{実験内容 (1)}
+本章において必要となる作業は，
+\begin{itemize}
+  \item サーバコンピュータでの DNS サービスの構築
+	\begin{itemize}
+	 \item 自ドメインのネームサーバ（コンテンツサーバ）の構築
+	 \item キャッシュサーバ（フルサービスリゾルバ）の構築
+	\end{itemize}
+  \item クライアントから DNS サーバ（キャッシュサーバ）への問い合わせ設定
+\end{itemize}
+である．
+
+\section{必要となる知識}
+先に述べたように，普段我々は計算機を識別するためにホスト名を用いている．
+しかし TCP/IP では計算機の識別に IP アドレスを指定しなければならなず，実際の
+運用にあたって，この問題を解決しなければならない．ホスト名から IP アドレスを
+求めることを{\bf 名前解決}（Name Resolution）といい，以下に示す方法がある．
+
+\subsection*{hosts ファイル}
+最も簡単な名前解決の方法は，各ホストが，ホスト名と IP アドレスとの
+対応表を持っておき，それを参照するというものである．この対応を記した
+ファイルは hosts ファイルと呼ばれ，以下に示すような書式
+となっている．hosts ファイルは，通常 \texttt{/etc} の下に置かれる．
+ただし，Microsoft Windows では，
+\verb|C:\Windows\system\drivers\etc\hosts| である．
+
+
+\begin{cli}
+#■/etc/hosts ファイルの例
+
+127.0.0.1    localhost
+192.168.0.1  mainserver.info.kochi-tech.ac.jp  mainserver
+
+### 上記の例では，ホスト名「mainserver.info.kochi-tech.ac.jp」
+### または，「mainserver」と指定したら，192.168.0.1
+### と解決することを示す．
+\end{cli}
+
+この方法は単純であり，数が限られている組織内であれば，全てのホスト名とそ
+のIPアドレスを上記のテキストファイルに記述するだけで，簡単に実現できるホ
+スト名解決方式である．しかし，大規模なネットワークでの名前解決や，インター
+ネット規模での名前解決には適さない．また，動的なネットワーク構成の変更に
+は対応しづらい，すべてのホストが同じファイルを保持しなければならない，な
+どという欠点がある．比較的ホスト数が少なく，内に閉じた LAN であればこれ
+でも構わないが，世界中のホストと通信するインターネットでは，ホスト名よる
+名前解決は不可能である．
+
+\subsection*{DNS}
+インターネットにおける名前解決の方法として用いられているのが DNS である．
+前説の hosts ファイルでは，インターネット全体の名前解決は不可能であるの
+で，分散管理ができる DNS が用いられている．
+
+DNS は，分散型データベースであり，クライアントからの名前解決要求（ポート
+番号 53 への接続）に対して回答を行なう機能を有する．そして，同一ドメイン
+内の各ホスト（クライアント）にこのようなデータベース索引サービスを提供
+するサーバである．DNS では，サーバでホスト名のデータベースが一元管理さ
+れるので，hosts ファイルの欠点であった動的なネットワーク構成の変化にも
+容易に対応できる．
+
+DNS では，名前を管理する名前空間を図~\ref{fig:05:dns-domain}のような階層
+的なツリー構造で構成しており，ホスト名は，図~ \ref{fig:05:dns-domain}~に
+示したツリーのラベルを最下層から順に並べ，``\verb|.|''で区切って表記する．
+例えば \verb|www.kochi-tech.ac.jp| や \verb|ugs.kochi-tech.ac.jp| などであ
+る．そして，これらの場合 \verb|kochi-tech.ac.jp| をドメイン名という．す
+なわちドメインとは，名前空間の分割の単位であり，階層的なツリー構造の名前
+空間のあるノードから先を構成するサブツリーである．このドメインを単位とし
+て，名前空間での名前の命名・変更の権利を，世界中の組織に分散させる．ある
+ドメインが自分のドメインの一部のサブツリーを別の組織の管理に任せることを，
+ドメインの委譲と呼び，委譲されたドメインはサブドメインと呼ぶ．世界で唯一
+の名前であるドメインが，唯一の組織にサブドメインを委譲する形で名前空間を
+分割する．このような名前の命名方法を用いれば，世界中で計算機のホスト名を
+重複することなく，命名することができる．なお，ルート階層のラベルは空ラベ
+ル（`` ''）であり，実際のホスト名では見えなくなっている．ルート階層での
+命名権は IANA にあり，IANA がルートのサブドメインであるトップレベルドメ
+イン(TLD)をサブドメインとして定義し，それぞれのサブドメインを委譲する．
+   
+図~\ref{fig:05:dns-dns}~ は DNS による名前解決処理の様子を示している．
+DNS では階層的な名前空間を用いているため，ホスト名 
+\verb|www.kochi-tech.ac.jp| のアドレスを取得する際の処理は次のようになる．
+
+\begin{figure}[ht]
+  \begin{center}
+   \includegraphics[width=.5\linewidth]{\chapdns dns-domain.eps}
+   \vspace*{1zh}
+   \caption{階層型ドメイン空間}
+   \label{fig:05:dns-domain}
+  \end{center}
+ \end{figure}
+
+ \begin{figure}[ht]
+   \begin{center}
+    \includegraphics[width=.8\linewidth,bb=0 0 720 540,clip]{\chapdns dns1.pdf}
+    \vspace*{1zh}
+    \caption{DNSによる名前解決}
+    \label{fig:05:dns-dns}
+   \end{center}
+  \end{figure}
+  
+  \begin{enumerate}
+   \item クライアントがローカルネームサーバに %
+         \verb|www.kochi-tech.ac.jp| のアドレスを問い合わせ．
+   \item ルートネームサーバにアドレスの問い合わせ．ルートネームサーバは %
+         \verb|jp| ネームサーバのアドレスを教える．
+   \item \verb|jp| ネームサーバにアドレスの問い合わせ．\verb|jp| ネームサー
+         バは \verb|ac.jp| ネームサーバのアドレスを教える．
+   \item \verb|ac.jp| ネームサーバにアドレスの問い合わせ．\verb|ac.jp| ネー
+         ムサーバは \verb|kochi-tech.ac.jp| ネームサーバのアドレスを教える．
+   \item \verb|kochi-tech.ac.jp| ネームサーバにアドレスの問い合わせ．%
+         \verb|kochi-tech.ac.jp| ネームサーバは\\
+         \verb|www.kochi-tech.ac.jp| のアドレスを教える．
+   \item ローカルネームサーバがクライアントにアドレスを応答する．
+  \end{enumerate}
+  
+DNS サーバは世界中のコンピュータのホスト名と IP アドレスを知っているわけではな
+い．名前空間の第一階層にある \verb|jp| ネームサーバは，
+第二階層である \verb|ac.jp|，\verb|co.jp|，\verb|ne.jp| などドメインのネー
+ムサーバのホスト名と IP アドレスを知っている．
+同様に，\verb|kochi-tech.ac.jp| ネームサーバは，
+\verb|ugs.kochi-tech.ac.jp|，\verb|www.kochi-tech.ac.jp| のホスト名と IP %
+アドレスを知っているのである．このようにおのおののネームサーバ
+は，ゾーンとよばれるドメイン空間の一部についての情報（データベース）を
+完全に保持している．この場合，「ネームサーバはこのゾーンに対する
+権威（authority）をもっている」という．
+
+図~\ref{fig:05:dns-domain}~のドメイン名空間の場合，ホスト名から IP アドレスを検
+索することはできるが，IP アドレスからホスト名を検索することができない．
+つまり，このドメイン名空間ではドメイン名を索引としてしているため，ドメ
+イン名から IP アドレスを検索することは容易であるが，IP アドレスからドメイ
+ン名を検索するためにはすべてのデータを調べなければならないからである．
+そこでDNSでは，図~\ref{fig:05:dns-ip-domain}~ に示すようなアドレスをラベルとす
+る \texttt{in-addr.arpa} というドメインを作りこの問題に対応している．
+
+  \begin{figure}[hbtp]
+   \begin{center}
+    \includegraphics[width=.5\linewidth]{\chapdns dns-ip-domain.eps}
+    \vspace*{1zh}
+    \caption{in-addr.arpaドメイン名空間}
+   \label{fig:05:dns-ip-domain}
+   \end{center}
+  \end{figure}
+
+図~\ref{fig:05:dns-ip-domain}~に示すのは，\verb|www.kochi-tech.ac.jp| の IP アド
+レス 210.163.144.42 の \texttt{in-addr.arpa} ドメイン名である．ドメイン名の読み方の
+規則に従うと，このホストの \texttt{in-addr.arpa} サブ
+ドメイン名は \texttt{42.144.163.210.in-addr.arpa} となる．DNS はこ
+のような IP アドレスを索引とするドメイン名空間により，ホスト名から IP アド
+レスを検索するのと同じ仕組みで IP アドレスからホスト名を検索することがで
+きる．
+
+以上から DNS は，ゾーン内のホストの，ホスト名から IP アドレスを検索するデー
+タベース，IP アドレスからホスト名を検索するデータベース，ルートネームサー
+バの情報を保持する必要がある．また安全性の観点から，DNS は通常，プラ
+イマリマスタとスレーブと呼ばれる 2 つのサーバで運用する．スレーブはプラ
+イマリマスタのデータベースファイルを定期的にコピー，バックアップし，プ
+ライマリマスタが停止している時などは，プライマリの DNS サーバとして機能
+する．
+
+\subsection*{BIND}
+
+DNS サービスのための実装プログラムとしては BIND を用いる．BIND は，
+California 大学 Berkeley 校（UCB）で開発・実装された DNS サービスのため
+のプログラムで，4.2 BSD UNIX 上で最初に実装された．現在はISC(Internet
+Systems Consortium)によりメンテナンスが行わており，同サイトで最新版が活
+発にリリースされている．
+
+UNIX はもちろん，その他のプラットフォーム上で利用できる DNS サーバは，ほ
+とんどがこの BIND のプログラムをもとに開発されている．また，BIND が DNS
+プロトコルのリファレンス実装\footnote{同プロトコルのサービスプログラムとして中心
+的な役割を担い，DNS プログラムを開発する人は BIND を参考にすべきである，
+という位置付け}となっている．
+
+\section{必要となる情報}
+\subsection*{DNS設定の方針}
+本実験では次のような設定の方針に基づいて，DNS を設定する．
+\begin{enumerate}
+ \item \texttt{server} でネームサーバを構築する．
+       \begin{itemize}
+	\item 各グループごとにドメインを構成し，どのドメインの
+	      ネームサービスを server にて行う．
+	\item ドメイン名は，\texttt{gX.info.kochi-tech.ac.jp} とする．
+	\item 各グループのホスト名から IP アドレスを引けるようにする（正引き）
+	%			\item 内部の IP アドレスからホスト名を引けるようにする（逆引き）
+	\item ドメイン名宛のメールは，\texttt{server} で処理する．
+	\item ドメインの Web サーバは，
+	      \texttt{www.domain名} でアクセスできるようにし，
+	      実際の Web サーバは，\texttt{server} となるように
+	      する．
+	\item このドメインの SMTP サーバは，
+	      \texttt{smtp.domain名} でアクセスできるようにし，
+	      実際のサーバは，\texttt{server} となるように
+	      する．
+	\item このドメインの POP サーバは，
+	      \texttt{pop.domain名} でアクセスできるようにし，
+	      実際のサーバは，\texttt{server} となるように
+	      する．
+       \end{itemize}
+ \item \texttt{server} にDNSリゾルバの機能を構築する．
+	\item \texttt{server} でDNSキャッシュサーバを構築し，各グループ
+	      内のコンピュータは本サーバをリゾルバとして名前解決できるよ
+	      うにする．
+		\begin{itemize}
+		 \item 各クライアントのドメイン名，ネームサーバアドレスを変更する．\\
+		つまり各ホストが \texttt{server} の DNS サーバを検索す
+		       るよう設定する．
+		\end{itemize}
+\end{enumerate}
+
+また，各グループ内のマシンの IP アドレス，およびマシン名は，
+表~\ref{tab:05:addrname}~となる．
+
+\begin{table}
+\begin{center}
+\caption{各グループ内のマシンの IP アドレスとマシン名（ただし，Yはグルー
+ プ番号 X に 10 を加えた数）}\label{tab:05:addrname}
+\vspace*{2zh}
+\begin{tabular}{ccc}
+\Hline
+サーバ& \texttt{server} & \texttt{172.21.Y.2} \\\hline
+Cent OS & \texttt{linux} & \texttt{172.21.Y.3} \\\hline
+Windows 10 & \texttt{win} & \texttt{172.21.Y.4} \\\hline
+Macintosh & \texttt{mac} & \texttt{172.21.Y.5} \\\hline
+ノートPC & \texttt{note} & \texttt{172.21.Y.6} \\\hline
+\Hline
+\end{tabular}
+\end{center}
+\end{table}
+
+その他に追加するレコードとして，ネームサーバ(＝server 自身)の NS レコー
+ドも忘れずに設定すること．
+
+また，今後，Web サーバ，メールサーバをこのドメインに追加設置する際は，
+CNAME レコード，MXレコードをそれぞれ追加する必要がある．
+
+\subsection*{設定ファイルの場所}
+
+設定ファイルは以下の場所に置くこと．
+
+\begin{description}
+ \item[named.conf] \ttt{/etc/bind}
+ \item[ゾーンファイル等のデータを置くディレクトリ] \ttt{/etc/bind}
+ \item[ゾーンファイル名] \ttt{/etc/bind/gX.zone}
+% \item[PIDのファイル名] \ttt{/var/run/named.pid}
+ \item[ドメイン名] \ttt{gX.info.kochi-tech.ac.jp}
+\end{description}
+
+\section{DNSサービスの提供}
+
+\subsection{BINDのインストール}
+
+Server にパッケージシステムを用いて BIND をインストールする．
+
+パッケージシステムとは，Linux のディストリビューションや FreeBSD, NetBSD 
+など，OSごとに様々なオープンソースなどの追加ソフトウェアについて，ダウン
+ロード・コンパイル・インストールなどの処理をパッケージ化して，簡単なコマ
+ンドのみでインストールできるように準備されたものである．
+
+Debian 系(Ubuntu)では apt コマンド，Redhat系(CentOS, SuSE等)では yum コ
+マンドを用いる．
+
+インターネットにアクセスできる環境が，（原則として）必要であるため，サー
+バのシェル（Bash）の環境変数 http\_proxy にプロキシ（IP・ポート）を設定
+することで，apt がプロキシ経由でパッケージの照会やダウンロードを行うよう
+になる．
+
+\begin{cli}
+$ sudo su
+   （↑管理者権限になる）
+# export http_proxy=http://192.168.0.1:7999
+   （↑HTTPプロキシを環境変数に設定．=の前後にスペースは入れない）
+# export https_proxy=http://192.168.0.1:7999
+   （↑HTTPSプロキシを環境変数に設定）
+# apt update
+   （↑パッケージサーバに最新情報を照会）
+# apt install bind9
+   （↑BIND 9 をインストール）
+\end{cli}%$
+
+これで，インストールは終了である．DNSの設定ファイルなどは，Ubuntu のパッ
+ケージの場合，\texttt{/etc/bind} に格納される\footnote{BINDをソースコー
+ドからインストールした場合は，\texttt{/etc/named}である．}．
+
+まず，named.conf の設定を行う．
+
+\begin{cli}
+# vi /etc/bind/named.conf
+\end{cli}
+
+このファイルは，BIND 全体の動作を設定する．
+具体的には，どのドメインを管理するのか，そのドメインに関する情報はどのディ
+レクトリに格納するか，マスターかスレーブか等である．
+
+zone で管理するドメインを定義していく．"." はルートゾーンを表しており，
+ルートサーバにに問い合わせるよう設定する．すなわち，問い合わせタイプを 
+hint とし，ルートサーバの IP アドレスを記述した named.root ファイルのパ
+スを指定する．
+
+次に，自分が管理するドメインを zone で指定する．以下の例は，\\
+g13.info.kochi-tech.ac.jp ドメインの情報を，
+ゾーンファイル \texttt{/etc/bind/g13.zone} に記述する場合である．
+
+\begin{cli}
+// This is the primary configuration file for the BIND DNS server named.
+//
+// Please read /usr/share/doc/bind9/README.Debian.gz for information on the
+// structure of BIND configuration files in Debian, *BEFORE* you customize
+// this configuration file.
+//
+// If you are just adding zones, please do that in /etc/bind/named.conf.local
+
+options {
+        directory       "/etc/bind";
+};
+// BIND で用いる設定ファイルを置くディレクトリ
+
+zone "." {
+        type    hint;
+        file    "/etc/bind/named.root";
+};
+// ルートドメインは，ヒントファイル(13個のルートサーバのIPアドレス)
+// を使って解決．ヒントファイルのパスを file で示す．
+
+zone "g13.info.kochi-tech.ac.jp" {
+        type    master;
+        file    "/etc/bind/g13.zone";
+};
+// g13... ドメインのプライマリサーバであり，その情報はゾーンファイル
+// に書かれていて，それを用いて解決する．file にはゾーンファイルの
+// パスを書く．自分がセカンダリの場合は，type を slave とし，
+// ゾーンファイルは自ら作成せずに，代わりに
+// プライマリサーバの IP アドレスを指定し，そこからゾーン転送してくる
+
+\end{cli}
+
+次に，メインサーバから，最新のルートサーバ情報を格納した named.root ファ
+イルを取得し，ディレクトリ \texttt{/etc/bind} に格納する．
+
+\begin{cli}
+root@server12:/home/exp# ftp 192.168.0.1  ← メインサーバの IP アドレス
+Connected to 192.168.0.1.
+220 mainserver FTP server (Version 6.00LS) ready.
+
+Name (192.168.0.1:exp): anonymous  ← 匿名ログイン
+
+331 Guest login ok, send your email address as password.
+
+Password:    ← パスワードは何でも良い
+
+230- Your welcome message here.
+230 Guest login ok, access restrictions apply.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+
+ftp> cd /pub/data  ← ログインができたらディレクトリ移動
+
+250 CWD command successful.
+
+ftp> get named.root ← ファイルをダウンロードする
+
+local: named.root remote: named.root
+200 PORT command successful.
+150 Opening BINARY mode data connection for 'named.root' (731 bytes).
+226 Transfer complete.
+731 bytes received in 0.01 secs (52.3056 kB/s)
+
+ftp> quit  ← ftp を終了する
+
+221 Goodbye.
+root@server12:/home/exp#
+\end{cli}
+
+named.root は named.conf で指定した場所に置く．
+
+その後，ゾーンファイルにて，そのドメインの IP アドレス・ホスト名等の情報を
+記述する．
+
+\begin{cli}
+# vi /etc/bind/gX.zone
+
+（以下は任意だが行うのを推奨）
+# named-checkconf /etc/bind/named.conf
+# named-checkzone （管理ドメイン） /etc/bind/gX.zone
+
+# systemctl start bind9
+
+（各種動作確認）
+
+\end{cli}
+
+動作確認でうまくいっていなければ，設定ファイルを確認する．
+ログ等も必要に応じて確認する．
+
+ログは，/var/log/syslogなどを確認する．
+
+\textbf{注意：設定ファイルを書き換えた場合は再度 named を再起動する．そうしないと，設定が反映されない．これは，postfix 等，systemctl を用いる多くのソフトウェアで同様である．}
+
+\begin{cli}
+# systemctl restart bind9
+\end{cli}
+
+ゾーンファイルの内容は下記の通りである（下記はグループ13の例であり，グルー
+プ番号は自分のものを使う）．
+
+\begin{cli}
+$TTL    100
+@       IN   SOA  server.g13.info.kochi-tech.ac.jp.  postmaster.g13.info.kochi-tech.ac.jp.  (
+        2017041701
+        100
+        100
+        1w
+        100 )
+        IN      NS      server.g13.info.kochi-tech.ac.jp.
+server  IN      A       172.21.13.2
+www     IN      CNAME   server
+smtp    IN      CNAME   server
+pop     IN      CNAME   server
+linux   IN      A       172.21.13.3
+win     IN      A       172.21.13.4
+mac     IN      A       172.21.13.5
+note    IN      A       172.21.13.6
+g13.info.kochi-tech.ac.jp.   IN  MX 10  server.g13.info.kochi-tech.ac.jp.
+\end{cli}
+
+
+\subsection{DNSの設定項目の詳細}
+BIND が DNS サービスを提供するには，以下のファイルを作成する必要がある．
+\begin{itemize}
+\item データベースファイルが置かれたディレクトリ情報や named の起動オプ
+      ションなどを記述したコンフィグファイル (named.conf)
+\item 各ドメインごとのホスト名と IP アドレスの対応を記述したデータベース
+      情報を格納するゾーンファイル
+\item ルートサーバの IP アドレスを記述したヒントファイル
+\end{itemize}
+
+設定ファイルの作成には，ファイルを作成する場所（ディレクトリ）や，ピリ
+オド``\verb|.|''，セミコロン``\verb|;|''に十分注意をして，vi 等のエディ
+タで作成する．ここでの内容を間違って設定すると，DNS は正しい挙動を示さず，
+今後作成するサーバは正常に動作しなくなる．
+  
+ゾーンファイルの各行の意味は下記の通りである．
+
+左端のカラムがホスト名であり，. （ピリオド）で終わるホスト名は FQDN，そ
+うでないものはゾーンのドメイン名が補完される．名前が @ となっているもの
+は，ドメイン名が補完される．空白のホスト名は，直前の行のホスト名が補完さ
+れる．
+
+\begin{description}
+ \item[SOA] SOAレコードには，サーバの FQDN，メールアドレスを表す FQDN(メー
+	    ルアドレスの @ のかわりに . に置き換える)，
+	    さらにかっこの中に，シリアル番号（日付と通し番号が良い），リ
+	    フレッシュ時間，リトライ時間，expire 時間，TTL などを書く．
+	    これらの時間は，実験においては短くしておく．
+ \item[NS] ネームサーバの FQDN．自分自身も定義する．セカンダリがある場合はこれも書く．
+ \item[MX] メールサーバの FQDN．MX の後に優先順位を決める番号を書く．小さい数ほど優先される．
+ \item[A] ホスト名と IP アドレスを書く．
+ \item[CNAME] ホスト名の別名を書く．
+\end{description}
+
+\begin{cli}
+$TTL       1H
+@          IN      SOA     server.gX.info.kochi-tech.ac.jp. (次行へ続けて記述)
+postmaster.gX.info.kochi-tech.ac.jp. (
+                   2011072504           ; serial number
+                   3h                   ; refresh after an hour
+                   1h                   ; retry after 1 hour
+                   1w                   ; expire after a week
+                   1d )                 ; minimum TTL is one day
+                IN      NS      ネームサーバのFQDN
+ホスト名(FQDN)  IN      A       IPアドレス
+別名            IN      CNAME   実ホストのFQDN
+メールドメイン  IN      MX      メールサーバのホスト名
+\end{cli}
+%$
+
+named.confファイル，ゾーンファイルの作成が終了したら，設定ファイルの文法的なチェックを行う.
+コマンド実行の結果，エラーが出力されないことを確認する.
+
+named.rootファイルとは
+\begin{itemize}
+\item ルートサーバの情報を記述するヒントファイル．
+\item 世界の 13 のルートネームサーバをこのファイルにすべて記述する．
+\item ヒントファイルは最新のルートネームサーバの情報を記述
+\end{itemize}
+であるため，通常は，\verb|rs.internic.net|から ftpで取得できるようになっ
+ている．今回の実習では，メインサーバの pub ディレクトリにヒントファイル
+（\texttt{named.root}）が用意されているので，ftp で取得し
+\texttt{/etc/bind} ディレクトリに置く．
+
+
+以上の設定を行った上で，サーバのリゾルバ設定を変更する．
+新しく立ち上げたDNSサーバアドレス（自分自身のIPアドレス）に変更し，
+同時にドメイン名も変更する．
+
+\subsection{DNSサーバの起動と動作確認}
+
+bind の起動を行う．
+
+\begin{cli}
+# systemctl enable bind9
+    ↑再起動時に BIND の自動起動
+
+# systemctl start bind9
+    ↑BIND の（手動での）起動
+(直接コマンドで起動する場合は /usr/sbin/named だがパッケージでは通常用いない)
+
+# ps auxww | grep named
+    ↑named プロセスがあることを確認
+\end{cli}
+
+もし起動していなければ，ログなどでエラーを確認し修正する．
+\begin{cli}
+# cd /var/log
+# less syslog (など)
+ …
+\end{cli}
+
+
+\subsection{サーバOSでの参照先DNSサーバ(リゾルバ)設定}
+\begin{itemize}
+  \item サーバ\\
+	\ttt{/etc/resolv.conf}に下記を書き込む．
+\begin{cli}
+domain  自グループのドメイン名
+search  検索時にドメインを省略した場合のデフォルトのドメイン（設定しなく
+ ても良いが，自グループのドメイン名を設定することが多い）
+nameserver  リゾルバのIPアドレス(自分自身であれば 127.0.0.1)
+\end{cli}
+\end{itemize}
+
+サーバで \texttt{dig} コマンドを用いて，
+以下のように様々なホスト名，IP アドレスを入力し，
+DNS サーバの動作状態を確認する．
+\begin{cli}
+# dig server.gX.info.kochi-tech.ac.jp
+ (ホスト名 server のIPアドレスを問い合わせ)
+ :
+\end{cli}
+正しい IP アドレスが引ければ，DNS は正常に動作している．答えが返って来な
+い，または，間違った答えが返ってくる場合は，各設定ファイルを再確認する．
+また， \texttt{ /var/log} 以下のファイルにエラーログが記録され
+るので参考にするとよい．
+\begin{cli}
+# cd /var/log
+# less syslog (など)
+ …
+\end{cli}
+
+\subsection{クライアントOSのリゾルバ設定}
+ サーバでの名前解決が正常に行えるようになったら，各クライアントのリゾルバ設定を
+ 立ち上げたDNSサーバに変更する．
+
+\begin{itemize}
+  \item Cent OS\\
+	サーバと同様の設定でもとりあえず動作するが，Cent OS 独自の GUI 設定スクリプト
+	（IPアドレス設定で使うもの）が上書きをするので，GUI のネットワーク設定からも設定し直しておく．
+  \item Mac OS X\\
+	「りんご」→「システム環境設定」→「ネットワーク」から，DNSサー
+	バのアドレスを指定する．UNIX系と同様に \ttt{/etc/resolv.conf}
+	も存在するが，このファイルに書かれた設定を反映しないアプリケーショ
+	ンも多い．
+  \item Windows 10, 7\\
+	「コントロールパネル」→「ネットワークとインターネット」→「ネッ
+	トワークと共有センター」→「アダプタの設定の変更」から，用いてい
+	るネットワークインターフェースのプロパティから，IPv4 の設定の項
+	の DNS サーバを変更する．
+\end{itemize}
+
+ \section{動作確認}
+ 自グループで構築したDNSサーバを利用し，自グループ内のホスト名からの正引き，他グループのホスト名の正引き，
+ 外部ネットワークの名前解決などが行えるか確認を行う．
+ 
+\section{考慮すべき点}
+\paragraph{名前の解決方法}
+			TCP/IPネットワーク上で名前解決を行うにはどのような技術が存在し，
+			それぞれどのようなメリット・デメリットがあるか．
+\paragraph{DNSによる名前解決の仕組み}
+		DNSとはどのような仕組みで名前の解決を行うのか．
+		また，リゾルバ・キャッシュサーバはどのように違うものか．
+\paragraph{管理外ホストの名前解決}
+		自分の管理外のホストに対しどのように名前の解決を行うのか．
+\paragraph{DNSサーバ}
+	DNSサーバを構築するには他にどのようなソフトが存在し，どのような特徴があるか．
+ 
+% \section{設定ファイル}
+
+

@@ -1,0 +1,175 @@
+\section{第10回 プリンタサーバ 応用課題}
+PostScriptとは本文にも説明がある通りページ記述言語である．これらの\textbf{\Underline{意義や用途}}については
+各自で十分調べてもらいたい．PSファイルを印刷するためには大きく分けて二通りの方法がある．
+一つは，PSデータをそのままプリンタに送りプリンタがPSを解釈し出力する方法で，
+PS対応プリンタの利用が前提となる．
+もう一つの方法として，PSデータを一旦プリンタが解釈できるデータに変換を行いプリンタにデータを
+送る方法である．この方法はプリンタがPSに対応しているかどうかにかかわらず利用できる．
+\subsection*{PSからプリンタ用命令への変換}
+今回実験で用いるプリンタはPS非対応のレーザプリンタである．そのためPSファイルを印刷するためには
+前述の通りプリンタ用の命令に変換を行わなければならない．この処理を行うソフトウェアは複数あるが，
+最も一般的であるGhostScript(gs)を今回は用いる．実際の印刷の流れは
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+\bf{PS → gsによる印刷命令の変換 → プリンタへの送信 → 出力}
+\end{alltt}
+\end{breakbox}
+\end{center}
+となる．
+\subsection*{プリンタドライバ}
+gsによって印刷命令を変換するが，もちろん印刷命令はメーカ・機種によって違っている．
+例えば LIPS(CANON)・ESC.P(EPSON)・HP-GL(旧HP) 等がメーカーごとの規格でありさらに
+同一メーカであっても命令の違いにによるバージョン(LIPS1 LIPS2等)がある．そのため
+gsを用いる場合にもどのメーカーのどの命令に変換すべきか指定をしなければならない．
+gsが標準で対応しているプリンタは数が少なく今回実験に用いるプリンタにも対応していない，
+そのため，対応したドライバを導入しなければならない．
+\subsection*{全体の流れ}
+\begin{enumerate}
+\item ghostscript，必要なライブラリの解凍・展開．
+\item Makefileの作成と環境に合わせた修正．
+\item EPSON用ghostscriptプリンタドライバの解凍・展開．
+\item 追加ドライバ用Makefileの修正．
+\item コンパイル後インストール．
+\end{enumerate}
+
+以下，インストールの詳細を説明する．
+
+\subsection*{PostScript/Ghostscript}
+
+前節までは，lp1800 の印刷制御ファイルを用意していたが，本来こうしたファ
+イルは，ワードプロセッサやドローソフトのようなアプリケーションソフトウェ
+アによって作成される．しかし，アプリケーションソフトウェアが全てのプリ
+ンタに対応することは現実的ではない．UNIX のアプリケーションでは，伝統的
+に PostScript というプリンタ制御言語に対応している．以下の節で
+は，PostScript について説明する．
+
+\subsubsection*{PostScript}
+
+PostScript とは，米 Adobe 社が開発したページ記述言語である．ページ記述
+言語は，ページ単位でプリンタを制御するためのプリンタ制御言語である．
+
+解像度に依存せずに描画できるため，出版社における印刷物の出力など，特に
+高解像度な出力を要求される場合に利用され，DTP（DeskTop Publishing） 分
+野では事実上の業界標準になっている．アウトラインフォントの印字や文字の
+変形，図形の描画など，ページ記述能力が高く，UNIX では広く一般的に使われ
+ている言語である．ただし，Postscript ファイルを印刷するには，ポストスク
+リプトに対応したプリンタ （PS プリンタとも呼ばれる） でなければならな
+い． PS プリンタは一般のプリンタと比べると高価である．そこで本実験では，
+フリーで開発・配布されている PostScript 互換のプリンタ記述言語処理系を
+用いて PostScript 言語を，本実験で用いる LP 1800 のプリンタ制御言語に変
+換して印刷を行う．
+
+\subsubsection*{Ghostscript}
+
+Ghostscript は，最も広く用いられている PostScript 互換のページ記述言語
+処理系である．Ghostscript は， PostScript を解釈し画面への表示や他のプ
+リンタの制御命令に変換を行うことができる．Ghostscript を用いて，安価な
+非 Postscript プリンタ（インクジェットプリンタなど）でも PostScript に
+よる出力を得ることができる．
+
+まず，以下のものをすべて ftp サーバのディレクトリ /pub/gs からダウンロー
+ドする．
+
+\begin{itemize}
+\item expat-2.0.1-sol26-sparc-local.gz
+\item xrender-0.8.3-sol26-sparc-local.gz
+\item cairo-1.4.10-sol26-sparc-local.gz
+\item fontconfig-2.4.2-sol26-sparc-local.gz
+\item freetype-2.3.1-sol26-sparc-local.gz
+\item libiconv-1.11-sol26-sparc-local.gz
+\item zip-3.0-sol26-sparc-local.gz
+\item ghostscript-8.64-sol26-sparc-local.gz
+\item zlib-1.2.3-sol26-sparc-local.gz
+\item gv-3.5.8-sol26-sparc-local.gz
+\end{itemize}
+
+これらを全て順番に gunzip で圧縮ファイルを復元し，pkgadd コマンドで，順
+番にバイナリパッケージのインストールを行う．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# pkgadd -d file名
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+これで，Ghostscript がインストールされた．しかし，このままでは日本語の
+印刷が行えないため，日本語のフォントファイルをインストール
+し，Ghostscript から呼び出せるよう設定を行う．
+
+IPA（情報処理推進機構）で配布されている日本語フォント ftp サーバのディ
+レクトリ /pub/gs からダウンロードする．
+
+\begin{itemize}
+\item IPAfont00203.tar.gz
+\end{itemize}
+
+これを gzip と tar を用いて展開する．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# gzip -cd IPAfont00203.tar.gz | tar xvf -
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+展開したファイルのうち，ipam.ttf, ipag.ttf ファイルを
+/usr/local/share/ghostscript/fonts に置く
+
+次に，ディレクトリ /usr/local/share/ghostscript/8.64/Resource/Init に移
+動し，フォントのマッピングを行うファイル cidfmap に以下の行を追加し，
+/usr/local/share/ghostscript/8.64/lib にコピーする．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+\small
+/Ryumin-Light << /FileType /TrueType /Path (ipam.ttf) /SubfontID 0 /CSI [ (Japan1)  3 ] >> ;
+/Gothic-BBB << /FileType /TrueType /Path (ipag.ttf) /SubfontID 0 /CSI [ (Japan1)  3 ] >> ;
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+また，環境変数を設定する必要があるため，以下の設定を行う．
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# GS_LIB=/usr/local/share/ghostscript/8.64/lib
+\end{alltt}
+\end{breakbox}
+\end{center}
+この環境変数が設定されていないと，正しく日本語が印刷されないため，シェ
+ルの設定ファイルに書くなどしておくと良い．
+
+確認用 PostScript ファイルは，ftp サーバの /pub/gs/sample-j.ps を用いる．
+まず，gs コマンドで正しく表示されるか確認する．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# gs sample-j.ps
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+正しく日本語が表示されたら，下記のコマンドで LP 1800 のプリンタ制御コマ
+ンドに変換する．
+
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+# gs -q -dSAFER -dNOPAUSE -sDEVICE=lp1800 -sOutputFile=tmp-lp1800 sample-j.ps -c quit
+\end{alltt}
+\end{breakbox}
+\end{center}
+
+出来上がった tmp-lp1800 ファイルの印刷要求を lp コマンドにより行い，正
+しく日本語の文書が印刷されているか確かめる．
+
+\subsection*{考慮すべき点}
+\begin{itemize}
+\item PostScript と GhostScript の関係を正しく理解する．
+\end{itemize}

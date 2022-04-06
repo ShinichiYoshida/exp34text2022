@@ -1,0 +1,53 @@
+\noindent
+\textbf{■ \texttt{/etc/named.conf} ファイル}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+options \{
+        directory "/etc/namedb";
+        pid-file "/etc/namedb/named.pid"; 
+        allow-query \{ "any"; \};
+        max-ncache-ttl 3600;
+        notify no;
+\};
+zone "." \{
+        type hint;
+        file "named.root";
+\};
+
+zone "0.0.127.in-addr.arpa" \{
+        type master;
+        file "localhost";
+\};
+
+zone "gX.info.kochi-tech.ac.jp" \{
+        type master;
+        file "gX.zone";
+\};
+
+\end{alltt}
+\end{breakbox}
+\end{center}
+%zone "1X.21.172.in-addr.arpa" \{
+%        type master;
+%        file "gX.rev";
+%\};
+\noindent
+\textbf{◆ \texttt{/etc/named.conf}ファイルの説明}
+\begin{itemize}
+\item BIND では起動ファイル \texttt{named.conf} ファイルで，ゾーンに対するデー
+タが記述されたファイル名の指定，など様々な設定を行う．
+\item options は，データベースファイルやキャッシュファイルのあるディ
+レクトリなどのグローバル値を指定する．
+%\item forwarders はグループサーバで解決できない名前をメインサーバから
+%取得するための設定．これにより DNS は，ルートネームサーバに名前
+%を問い合わせする前にまずメインサーバに問い合わせる，という挙動
+%をする．
+\item zone の後はドメイン名（``\verb|.|''はルートドメインを示す）を記
+述し，このゾーンに対するデータベースファイル名を file で指定する．
+さらに各ゾーンに対する設定を記述することも可能であり，設定され
+ていない項目は options で指定したものになる．
+\item type は，primary のサーバの場合 master とする．
+\item allow-query は DNS に問い合わせ可能なホストを指定する．
+ここでは any を指定しているので，どのホストも DNS に問い合わせ可能である．
+\end{itemize}

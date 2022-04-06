@@ -1,0 +1,62 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  ping
+%% %% %%
+%% %% %%
+
+\section{ping}
+パケットをネットワーク上のホストへ送る\par
+\label{cmd:ping}
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+% ping [ホスト名 or IPアドレス]
+\end{alltt}
+\end{screen}
+\end{center}
+
+\noindent
+{\bf ◆機能説明}
+
+特別なパケットを指定したホストとやり取りする事によって，そのホストがネッ
+トワークにつながっているかどうか調べる．\par pingによってつながっている
+事が確認できた事を「 ping が通った」と言う場合が多い．\par ネットワーク
+がつながっているかどうか調べる時に ping はとても便利なコマンドであるが，
+昨今セキュリティーの問題上 ping を返さないネットワークも出て来ているので 
+ping が通らないからと言ってネットワーク上つながっていないと一概に言えな
+い場合もある．しかし，それは特殊な例であり，ping が通らない場合はつながっ
+ていないと判断して構わない．
+
+ping での導通確認は，ネットワークの OSI レイヤーでの第3層が正しく動作し
+ていることを示す．
+
+\noindent
+{\bf ◆使用例〜 Linux で実行した場合}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+% \underline{ping 192.168.1.2}  （←IPアドレスが192.168.1.2のマシンにpingをおくる）
+PING 192.168.1.2 (192.168.1.2): 56 data bytes
+64 bytes from 192.168.1.2: icmp_seq=0 ttl=254 time=1.047 ms
+64 bytes from 192.168.1.2: icmp_seq=1 ttl=254 time=0.978 ms
+64 bytes from 192.168.1.2: icmp_seq=2 ttl=254 time=18.238 ms
+64 bytes from 192.168.1.2: icmp_seq=3 ttl=254 time=0.973 ms
+64 bytes from 192.168.1.2: icmp_seq=4 ttl=254 time=0.983 ms
+^C (←\keybox{Ctrl}+\keybox{c}で中断)
+--- 192.168.1.2 ping statistics ---
+5 packets transmitted, 5 packets received, 0% packet loss
+round-trip min/avg/max/stddev = 0.973/4.444/18.238/6.897 ms   (←ping が通った)
+% \underline{ping 192.168.1.1}  （←IPアドレスが192.168.1.1のマシンにpingをおくる）
+PING 192.168.1.1 (192.168.1.1): 56 data bytes
+^C (←\keybox{Ctrl}+\keybox{c}で中断)
+--- 192.168.1.1 ping statistics ---
+16 packets transmitted, 0 packets received, 100% packet loss   (←ping が通らなかった)
+%
+\end{alltt}
+\end{breakbox}
+\end{center}
+\clearpage
+%% %% %%
+%% %% %% %%

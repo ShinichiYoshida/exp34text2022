@@ -1,0 +1,150 @@
+\documentclass[a4j]{jarticle}
+\usepackage{eclbkbox,alltt}
+%\setlength{\textheight}{24cm}
+
+\title{\large{情報システム工学実験4J~実験仕様書}}
+\author{\LARGE{\bf 第13章 プリンタサーバ 応用課題}}
+\date{2007年7月2日}
+
+\begin{document}
+%\maketitle
+\thispagestyle{empty}
+\begin{center}
+\LARGE{\bf 第13章 プリンタサーバ 応用課題}
+\end{center}
+\vspace{1zh}
+
+%\subsection*{PSファイルの印刷}
+PostScriptとは教科書にも説明がある通りページ記述言語である．これらの意義や用途については
+各自で十分調べてもらいたい．PSファイルを印刷するためには大きく分けて二通りの方法がある．
+一つは，PSデータをそのままプリンタに送りプリンタがPSを解釈し出力する方法で，
+PS対応プリンタの利用が前提となる．
+もう一つの方法として，PSデータを一旦プリンタが解釈できるデータに変換を行いプリンタにデータを
+送る方法である．この方法はプリンタがPSに対応しているかどうかにかかわらず利用できる．
+\subsection*{PSからプリンタ用命令への変換}
+今回実験で用いるプリンタはPS非対応のレーザプリンタである．そのためPSファイルを印刷するためには
+前述の通りプリンタ用の命令に変換を行わなければならない．この処理を行うソフトウェアは複数あるが，
+最も一般的であるGhostScript(gs)を今回は用いる．実際の印刷の流れは
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+\bf{PS → gsによる印刷命令の変換 → プリンタへの送信 → 出力}
+\end{alltt}
+\end{breakbox}
+\end{center}
+となる．
+\subsection*{プリンタドライバ}
+gsによって印刷命令を変換するが，もちろん印刷命令はメーカ・機種によって違っている．
+例えば LIPS(CANON)・ESC.P(EPSON)・HP-GL(旧HP) 等がメーカーごとの規格でありさらに
+同一メーカであっても命令の違いにによるバージョン(LIPS1 LIPS2等)がある．そのため
+gsを用いる場合にもどのメーカーのどの命令に変換すべきか指定をしなければならない．
+gsが標準で対応しているプリンタは数が少なく今回実験に用いるプリンタにも対応していない，
+そのため，対応したドライバを導入しなければならない．
+\subsection*{全体の流れ}
+\begin{enumerate}
+\item ghostscript，必要なライブラリの解凍・展開．
+\item Makefileの作成と環境に合わせた修正．
+\item EPSON用ghostscriptプリンタドライバの解凍・展開．
+\item 追加ドライバ用Makefileの修正．
+\item コンパイル後インストール．
+\end{enumerate}
+
+\subsection*{インストール手順}
+\begin{itemize}
+\item ソフトウェアの準備
+\begin{itemize}
+\item FTPサーバから以下のソフトウェアを取得
+\begin{itemize}
+\item ghostscript-7.07b.tar.gz
+\item jpegsrc.v6b.tar.gz
+\item libpng-1.2.6.tar.gz
+\item zlib-1.1.3.tar.gz
+\end{itemize}
+\item 全て解凍・展開をする．
+\item {\bf ghostscript-7.07b} へ展開してできた {\bf zlib-1.1.3 jpeg-6b libpng-1.2.6}をそれぞれ {\bf zlib jpeg libpng}とリネームして移動させる．\\
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+---ghostscript-7.07b
+          |
+          |----zlib (画面出力用ライブラリ)
+          |
+          |----jpeg (JPEG画像入出力用ライブラリ)
+          |
+          |----libpng (PNG画像入出力用ライブラリ)
+          |
+\end{alltt}
+\end{breakbox}
+\end{center}
+\end{itemize}
+\item Makefileの作成と環境に合わせた修正．
+\begin{itemize}
+\item Makefile を作成する．
+\item Makefile 中の指示に合わせ{\bf Solaris2.6}用に修正する．
+\end{itemize}
+\item EPSONドライバの導入
+\begin{itemize}
+\item eplaser-3.1.3-705.tgz を取得，解凍，展開をする．
+\item eplaser-3.1.3 内の *.c ・ *.h を ghostscript-7.07b/src/ にコピーする．
+\item eplaser-3.1.3 内の gdevesmv7.mak の内容を catコマンド等を用いghostscript-7.07b/src/contrib.makに付け足す．
+
+\item ドライバを組み込むようMakefileを編集する．
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+DEVICE_DEVS17=\$(DD)lp1800.dev
+\end{alltt}
+\end{breakbox}
+\end{center}
+\end{itemize}
+\item コンパイル後インストールを行う．
+\item lp1800用ドライバが組み込まれているか確認をする．例: gs -h
+\item Solarisにネットワークプリンタを追加する．なお，JC-CONNECTのプリンタ名はlpである．
+\item 適当なPSファイルをgsを用いてlp1800用に変換し，プリンタに作成したファイルを送信し印刷できるか確かめる．
+\end{itemize}
+\subsection*{付録}
+\begin{itemize}
+\item {\bf Makefileの作成方法}\\
+Makefileの作成は通常，同梱されている {\bf configure} というスクリプトを用いて行う．
+\item {\bf Makefileを用いたコンパイル・インストール}\\
+{\bf make} を行い {\bf make install} でインストールが行われる．
+\item {\bf catを用いたアスキーファイルの連結}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+#cat file1 >> file2  
+\end{alltt}
+\end{breakbox}
+\end{center}
+これにより file1 の内容が file2 の最後に付け加えられる．
+\item {\bf admintoolを用いたプリンタの追加}\\
+solaris2.6はadmintoolを用いてプリンタの追加・削除が行える．ネットワークプリンタの
+追加はブラウズ - プリンター を選択し，編集 - 追加でプリンタへのアクセスから行うことが可能である．
+\item {\bf ghostscriptのオプション}\\
+gsのオプションとして変換デバイスの指定は {\bf -sDEVICE=デバイス名}，出力ファイルの指定は
+ {\bf -sOutputFile=出力ファイル名} でおこなえる．また，確認のための停止やメッセージがでて
+不便な場合には {\bf -q} や {\bf -dNOPAUSE} 等のオプションを用いるとよい．
+\item {\bf lprからのgsの出力の印刷方法}\\
+gsでOutputFileを指定してファイルを出力した場合には，その出力ファイルをlprを用いてプリンタに
+送信すれば良い．
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+#lpr -Pプリンタ名 ファイル名(gsによる変換後)
+\end{alltt}
+\end{breakbox}
+\end{center}
+また，わざわざ一度ファイルに出力しなくともgsの出力を標準出力とし，そのままlprへパイプで渡す方法もある．
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+#gs オプション -sOuyputFile=- | lpr -Pプリンタ名
+\end{alltt}
+\end{breakbox}
+\end{center}
+\item {\bf gsからテキストの印刷}\\
+ghostscriptは標準ではフォントデータを持っていないのでそのままではテキストを変換出力することは
+できない．そのため，テキストデータが入っているPSを変換するにはフォントを導入しなければならない．
+詳しい手順は割愛するが，サーバにフォントファイルはあるので方法を調べ導入してみるのもよい．
+\end{itemize}
+\end{document}
