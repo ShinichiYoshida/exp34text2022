@@ -77,8 +77,9 @@ Linux の場合
 以上のコマンドで，「eth0」や「enp2s0」，「en0」(macOS)など，インターフェース名と呼ばれる文字列から始まる行があれば良い．「e」は有線LANのEthernetからきている．なお，「lo」などは，ループバックインターフェース (loopback) で，すべてのTCP/IPに対応したOSが持ってる仮想的なインターフェースであり，それがあっても直ちにネットワークが有効であるとは判断できない(IPアドレスは，IPv4は 127.0.0.1, IPv6 が ::1)．
 
 その後，ネットワークインターフェースに対して，IPアドレス，ネットマスク，
-デフォルトゲートウェイ，DNSサーバアドレス，プロキシサーバのアドレスとポー
+デフォルトゲートウェイ，DNSサーバアドレスのアドレスとポー
 トを指定する．
+%プロキシサーバ削除
 
 最後に，OS のアップデート作業をネットワーク経由で行う．OS は，不具合やセ
 キュリティ上の問題が現れた場合，メーカからインターネット経由での更新プロ
@@ -515,15 +516,15 @@ Firmware Interface) に入っている．UNIX 系 OS では，gpart あるいは
    アカウント情報変更 & chsh \\
    アカウント情報変更(rootのみ) & vipw \\
    ディスクマウント状況確認 & mount \\
-   ディスク容量，パーティション確認 & df -k \\
-   ディレクトリ以下のファイル総容量 & du -k \\
+   ディスク容量，パーティション確認 & df -k や df -h \\
+   ディレクトリ以下のファイル総容量 & du -k や du -h\\
    ファイル操作 & cp, mv, ls, cd \\
-   ページャ & more, less \\
+   ファイルの閲覧(ページャ) & cat, more, less \\
    メッセージ記録 & script ファイル名 \\
    ファイル検索 & find ディレクトリ -name 'ファイル名' -print \\
    ファイル内容検索 & grep キーワード ファイル1 ファイル2 ... \\
    パーティション操作 & gpart サブコマンド HDDのデバイスファイル\\
-   ディスク初期化（format） & newfs パーティションのデバイスファイル\\
+   ディスク初期化（format） & newfs (mkfs, mkfs.XXX) パーティションのデバイスファイル\\
    \Hline
   \end{tabular}
  \end{center}
@@ -641,10 +642,10 @@ ls コマンドでユーザディレクトリが作成されているかも確�
  \Hline
  コンピュータ・OS & ホスト名\\
  \hline
- Desktop Linux & linux \\
- Windows 10 ノート & win \\
- Apple Macbook & mac \\
- Chromebook & chrome\\ \hline
+ Desktop Linux & linuxX \\
+ Windows 10 ノート & winX \\
+ Apple Macbook & macX \\
+ Chromebook & chromeX\\ \hline
  \end{tabular}
 \end{center}
 \end{table}
@@ -750,8 +751,7 @@ sda ＝1台目のディスクを選択する．
 \item{\bf パッケージマネージャのプロキシ}\\
 
 パッケージマネージャ（ソフトウェアのインストールツール）のプロキシを尋ね
-られるがここでは，空白としておく%% （ネットワークの設定後に行う）
-．
+られたら，空白としておく%% （ネットワークの設定後に行う）．
 
 \item{\bf アップデートの設定}\\
 
@@ -792,6 +792,9 @@ $ sudo su
 
 \end{itemize}
 
+\subsection{その他のOS}
+
+Ubuntu 20.04 およびその他のOS (Microsoft Windows, Apple macOS, Google ChromeOS) については，Google Drive の手順書を見ること．
 
 \section{考慮すべき点}
 
