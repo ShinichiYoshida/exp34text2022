@@ -750,7 +750,10 @@ TCP/IPネットワークの接続確認には，以下に示す \texttt{ping} �
 \end{itemize}
 
 
-\begin{cli}
+%% \begin{cli}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
 # \underline{ping X.Y.Z.W} ←相手のIPアドレス
 PING X.Y.Z.W (X.Y.Z.W): 56 data bytes
 64 bytes from X.Y.Z.W: icmp_seq=0 ttl=64 time=0.451 ms
@@ -760,7 +763,10 @@ PING X.Y.Z.W (X.Y.Z.W): 56 data bytes
 0.nnnミリ秒で返って来たこと示し，ping が成功している．
 
 なお，64バイトは最小長のパケットサイズ
-\end{cli}
+\end{alltt}
+\end{breakbox}
+\end{center}
+%% \end{cli}
 
 ping コマンドは，指定した IP アドレスの端末に，パケットを送り，相手から
      返信のパケットが届いた場合は，送信から受信までにかかった時間を表示
