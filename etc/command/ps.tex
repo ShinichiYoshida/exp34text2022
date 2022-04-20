@@ -46,7 +46,10 @@ ps コマンドはサーバでサービスがきちんと動いているか確�
 
 \noindent
 {\bf ◆使用例}
-\begin{cli}
+%% \begin{cli}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
 freebsdx# \underline{ps auxww} （←全プロセスの表示）
 USER    PID %CPU %MEM   VSZ   RSS  TT  STAT STARTED      TIME COMMAND
 root     11 100.0  0.0     0     8  ??  RL   12:37PM 1263:15.43 [idle]
@@ -64,7 +67,10 @@ root    857  0.0  0.1  3344  1160  v0  Is+  12:37PM   0:00.00 /usr/libexec/getty
 root    858  0.0  0.1  3344  1160  v1  Is+  12:37PM   0:00.00 /usr/libexec/getty Pc tt
 root   3220  0.0  0.1  4664  2588   1  Rs    7:58AM   0:00.04 -csh (csh)
 root   3431  0.0  0.1  3424  1144   1  R+    9:41AM   0:00.00 ps aux
-\end{cli}
+\end{alltt}
+\end{breakbox}
+\end{center}
+%% \end{cli}
 \clearpage
 %% %% %%
 %% %% %% %%
