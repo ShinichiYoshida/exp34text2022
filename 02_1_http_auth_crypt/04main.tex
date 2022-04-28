@@ -522,7 +522,7 @@ Apache2 の設定ファイルにて \url{http://www.g12.exp.info.kochi-tech.ac.j
 
 \begin{itemize}
  \item Apache2 インストール直後に，\texttt{/var/www/html}の下に\texttt{index.html}としてデフォルトのものがあるので，これが表示できるか確認する
- \item デフォルトの index.html を mv コマンドで別名にリネームする
+ \item デフォルトの index.html を mv コマンドで別のファイル名にリネームする
  \item グループ独自のコンテンツファイルを作成し，index.html として公開する
 \end{itemize}
 
@@ -781,20 +781,21 @@ Options 設定で，Indexes の項目があれば，そのディレクトリの�
 <Directory /var/www/html/inside>
         Order deny,allow
         Deny from all
-        Allow from サブネット/プレフィックス
+        Allow from IPアドレス1
+        Allow from IPアドレス2
 </Directory>
 \end{cli}
 
-サブネット/プレフィックスには，192.168.100.0/24 のようにアクセスを許可す
-る IP アドレスをサブネットおよびサブネットマスクのプレフィックス表記で
-設定する．この例では，192.168.100.0から192.168.0.255までのIPアドレスが指定される．
+IPアドレスについては，ネットワークアドレス/プレフィックス（例，192.168.100.0/24)
+やネットワークアドレス/ネットマスク（例，192.168.100.0/255.255.255.0）で複数のアドレスをまとめて
+指定することもできる． 
 
-1つしかない場合は，プレフィックスを指定しない．また，2つ以上を指定する場合は，Allow from の行を複数書く．
-
-
+2つ以上のIPアドレスを指定する場合は，Allow from の行を複数書く．
 
 
-\subsection{HTTPS による暗号通信設定 (modssl)}
+
+
+\subsection{HTTPS による暗号通信設定 (mod\_ssl)}
 
 Ubuntu の Apache で SSL/TLS を有効にするために必要なモジュールを使用する
 ための設定を行う．
