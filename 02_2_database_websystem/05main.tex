@@ -298,11 +298,12 @@ MySQL をインストールする．
 
 \subsubsection{端末の設定}
 \begin{itemize}
- \item 日本語をデータとして用いるため，Windows の Putty や Desktop Linux や Mac のターミナル（端末）を使う．サーバのコンソールでは標準では日本語は文字化けする．
+ \item 日本語をデータとして用いるため，Windows の Putty，Desktop Linux や macOS のターミナル（端末），などを使う．サーバのコンソールでは，標準では日本語は意図
+ 通り表示されない（文字化けする）．
  \item Putty 等の端末の文字コードを UTF-8 に設定
- \item MacやLinuxはデフォルトがUTF-8
+ \item macOS や Linux はデフォルトがUTF-8
  \item ssh で server にログイン
- \item ログイン後，シェルの文字コードを UTF-8 に設定
+ \item ログイン後，シェルの文字コードを必要に応じて UTF-8 に設定
  \item シェルの文字コードは，環境変数 LANG で設定（サーバ日本語設定については，\ref{sec:japanese-locale}節を参照）\end{itemize}
 
 
@@ -322,9 +323,9 @@ MySQL をインストールする．
 \subsubsection{nkf で日本語文字コード変換}
 
 データファイルは，Microsoft Excel で作成され保存された Shift-JIS コードによる CSV ファイル\footnote{CSV: Comma Separated Value カンマ',' で各フィールドが区切られた表データ．一般的な表計算ソフトウェアで読み書きできる形式である．}で，一行目にフィールドの項目名が日本語である．改行コードは Windows 形式の改行である．このままでは MySQL で用いることができない
-ため，日本語コード，改行コードをそれぞれUTF-8，UNIX改行への変更を行う．
+ため，日本語コード，改行コードをそれぞれ UTF-8，UNIX 形式の改行へと変更する．
 
-Unicode 対応の日本語コード変換および，日本語テキスト閲覧プログラムを導入する．前者として nkf，後者として lv がよく用いられる．
+Unicode (UTF-8) 対応の日本語コード変換および，日本語テキスト閲覧プログラムを導入する．前者として nkf，後者として lv がよく用いられる．
 
 \begin{itemize}
     \item nkf コマンドをapt を使いインストール
@@ -349,7 +350,7 @@ Unicode 対応の日本語コード変換および，日本語テキスト閲覧
 
 \begin{itemize}
     \item データベース名は sales
-    \item データベースはの文字コードは UTF-8 とする
+    \item データベースの文字コードは UTF-8 とする
 \end{itemize}
 
 \subsubsection{テーブル構築}
@@ -400,30 +401,28 @@ Unicode 対応の日本語コード変換および，日本語テキスト閲覧
 \subsection{文字コード・改行コードの種類}
 \label{char}
 
-データベースの作成に先立ち，様々なテキストファイルを扱う必要があるが，日
-本語には様々な文字コードがあり，またOSによって改行コードも異なるため，こ
-れらに対応する環境を構築する必要がある．
+データベースの作成に先立ち，様々なテキストファイルを扱う必要があるが，使用する OS や各ソフトウェアによって取り扱う文字コードや改行コードが異なるため，これらに対応す
+る環境を構築する必要がある．
 
-文字コードには，シフトJIS，EUC-JAPAN，JIS，UTF-8（Unicode）があるが，
-MySQL 等サーバ系では，今後は可能な限り UTF-8 を統一していく方が良いだろ
-う．
-
-しかし，Excel などシフトJISを扱うアプリケーションも多いため，変換が必要
-である．
+文字コードには，SHIFT\verb+_+JIS (JIS X 0208)，EUC-JP，JIS (ISO-2022-JP)，UTF-8（Unicode）
+などがあるが，MySQL 等サーバ系をはじめ各種環境で UTF-8 (Unicode) を採用する動きが
+進んでいるとみられるため，基本的には UTF-8 を使用するのが望ましい．しかし，Microsoft Excel 
+など，SHIFT\verb+_+JIS を基本設定とするアプリケーションも多いため，そのようなアプリケーショ
+ンとの間でデータ交換をする場合には文字コード等を変換する．
 
 \begin{tabular}[t]{c|p{7cm}|p{3cm}}
 \hline \hline
 文字コード & 主な用途 & LANG, LC\_ALL等環境変数の値 \\
 \hline \hline
-UTF-8 & ユニコード一つ，汎用的，古いシステムでは動作しない可能性あり．
+UTF-8 & ユニコード (Unicode) の一つ，汎用的，古いシステムでは動作しない可能性あり．
  ASCII 互換のため，世界的に広く用いられるユニコード．1文字1〜3バイト．
  Linux 等で用いられる．なお，Unicode には他にも多くの規格がある． &
  ja\_JP.UTF-8 \\
 \hline
-シフトJIS & Microsoft Windows, Apple Mac OS X 等の標準．Excel の出力する
- CSV ファイル等で用いられる．日本語1文字2バイト． & ja\_JP.SJIS\\
+SHIFT\verb+_+JIS & Microsoft Windows ではこの文字コードであることが多い．Excel の
+出力する CSV ファイル等でよく用いられる．日本語1文字2バイト． & ja\_JP.SJIS\\
 \hline
-EUC & Extended Unix Code の略(古いUNIX用，FreeBSD の標準日本語コード)．
+EUC-JP & Extended Unix Code の略(古いUNIX用，FreeBSD の標準日本語コード)．
  日本語1文字2バイト &
  ja\_JP.eucJP\\
 \hline
@@ -451,8 +450,8 @@ Apple Mac OS & CR (キャリッジリターン: 行頭に（カーソルを）�
  0D\\
 \hline \hline
 \end{tabular}
-
-異なるコードに対応し，相互変換するために日本では nkf が広く用いられる．
+\\
+異なるコードに対応し，相互変換するために使用できるツールとして nkf を用いることができる．
 
 \paragraph{日本語コード変換フィルタ NKF の使い方}
 
@@ -461,7 +460,7 @@ Apple Mac OS & CR (キャリッジリターン: 行頭に（カーソルを）�
 ・ファイルの文字コードを調べる
   nkf --guess ファイル
 ・file1 を UTF-8，UNIX改行にして file2 とする
-  nkf -w -Lu < file1 > file2
+  nkf -w -Lu file1 > file2
 その他のオプションは nkf --help で調べる
 \end{cli}
 
@@ -470,7 +469,7 @@ Apple Mac OS & CR (キャリッジリターン: 行頭に（カーソルを）�
 
 日本語 UTF-8 を扱うためには，下記の3つ全てを UTF-8 に対応させる．
 \begin{enumerate}
- \item 端末（CentOS の「端末」，Mac OS X の「ターミナル」，Puttyの設定．
+ \item 端末（Ubuntu の「端末」，macOS の「ターミナル」，Putty の設定．
  \item シェル（ここでは root の sh）
  \item データベース
        \begin{enumerate}
@@ -484,7 +483,7 @@ Apple Mac OS & CR (キャリッジリターン: 行頭に（カーソルを）�
 「文字セット変換 (Character set)」の設定をUTF-8 にする\footnote{CJK とあるのは，Chinese,
 Japanese, Korean の特殊な文字にも対応するということ．}．
 
-2つ目は，Putty 等からサーバにログイン後，下記の設定をする(\ref{char}節)．
+2つ目は，Putty 等からサーバにログイン後，変更する必要があれば下記の設定をする(\ref{char}節)．
 
 （LANG 変数のデフォルトは「C」）．
 
@@ -535,26 +534,28 @@ server にパッケージシステムから mysql をインストールする．
 
 \begin{cli}
 # apt install mysql-server
+\end{cli}
 
-  MySQL 用の管理者アカウント(root)パスワードを入力する．
+必要があれば文字コードの設定を行う．
 
+\begin{cli}
   設定ファイルは，/etc/mysql/my.cnf であるが，個別のセクションに
   ついては，/etc/myqsl/conf.d/ および /etc/myqsl/mysql.conf.d/
   以下の別ファイルに分けられ，my.cnf から include されている．
 
 # vi /etc/mysql/conf.d/mysql.cnf
 
-下記の行を末尾に追加
-default-character-set=utf8
+  下記の行を末尾に追加
+  default-character-set=utf8
 
 # vi /etc/mysql/mysql.conf.d/mysqld.cnf
 
-下記の行を末尾に追加
-character-set-server=utf8
-
-MySQL の再起動
+  下記の行を末尾に追加
+  character-set-server=utf8
 
 # systemctl restart mysql
+
+  MySQL の再起動
 \end{cli}
 
 \subsection{データベース構築の手順}
@@ -575,7 +576,7 @@ MySQL の再起動
  \item CSV (Comma Separated Value) 形式（カンマ ``,'' で各フィールドの値
 が区切られた表（テーブル）を表したのテキストファイル）のファイルを入力に
 用いる．Microsoft Excelなどで作成された CSV ファイルは，日本語文字コード
-が Shift JIS，改行コードは，Windows/MS-DOS用改行コードになっている
+が Shift\verb+_+JIS，改行コードは，Windows/MS-DOS用改行コードになっている
 ことが多い．
  \item ftp にて，3つの CSV ファイル(bunrui.csv, tanka.csv, uriage.csv)をダウンロードする．
 \begin{cli}
@@ -595,9 +596,8 @@ ftp> ls
 ftp> get ファイル名.csv
 
 3つのCSVファイルをダウンロード
-
 \end{cli}
- \item nkf コマンドで文字コードを調べる．
+ \item nkf コマンドで文字コードを調べる．\ref{char}節の内容も参考にして以下を進める．
 \begin{cli}
 # nkf --guess ファイル名
 \end{cli}
@@ -625,13 +625,13 @@ mysql> show variables like 'char%';
 +--------------------------+----------------------------+
 | Variable_name            | Value                      |
 +--------------------------+----------------------------+
-| character_set_client     | utf8mb3                    |
-| character_set_connection | utf8mb3                    |
-| character_set_database   | utf8mb3                    |
+| character_set_client     | utf8mb4                    |
+| character_set_connection | utf8mb4                    |
+| character_set_database   | utf8mb4                    |
 | character_set_filesystem | binary                     |
-| character_set_results    | utf8mb3                    |
-| character_set_server     | utf8mb3                    |
-| character_set_system     | utf8mb3                    |
+| character_set_results    | utf8mb4                    |
+| character_set_server     | utf8mb4                    |
+| character_set_system     | utf8mb4                    |
 | character_sets_dir       | /usr/share/mysql/charsets/ |
 +--------------------------+----------------------------+
 8 rows in set (0.01 sec)
@@ -639,10 +639,13 @@ mysql> show variables like 'char%';
 
 \subsection*{データベースへの接続}
 mysqlコマンドを用い， -u で接続するユーザ名を -p でパスワードによる認証を行う．
+MySQL 8.0 より，ユーザ root には，該当ユーザとシステム上のユーザとが合致してい
+る必要があるというオプションが設定されているため，管理者権限で mysql コマンドを
+実行する．
 	\begin{center}
 	\begin{breakbox}
 	\begin{alltt}
-		$mysql -u root -p
+		$ sudo mysql -u root -p
 	\end{alltt}
 	\end{breakbox}
 	\end{center}
@@ -661,7 +664,7 @@ mysqlコマンドを用い， -u で接続するユーザ名を -p でパスワ�
 MySQL が自身の動作に用いるデータベースがいくつか作成されている．
 	
 \subsection*{データベースの作成}
-新規にデータベースを作成する場合は create database を用いる．例として{\bf testdatabase}を作る場合
+新規にデータベースを作成する場合は create database を用いる．例として\textbf{testdatabase}を作る場合
 	\begin{center}
 	\begin{breakbox}
 	\begin{alltt}
@@ -683,7 +686,7 @@ MySQL が自身の動作に用いるデータベースがいくつか作成さ�
 
 \subsection*{テーブルの作成}
 データベースに対し，新規にテーブルを作成する場合 create table コマンドを用いる．
-例として，データベス testdatabase に対し，テーブル {\bf address} を作成する場合，
+例として，データベス testdatabase に対し，テーブル \textbf{address} を作成する場合，
 
 	\begin{center}
 	\begin{breakbox}
@@ -743,7 +746,7 @@ mysql> set persist local_infile=1;
 例として，データベースとして mysql にある user テーブルに設定されている
 ユーザ情報を閲覧する場合は，下記のように行う．
 \begin{cli}
-$mysql -u root -p
+$ sudo mysql -u root -p
 mysql> show databases;
       (mysql データベースがあることを確認)
 mysql> use mysql;
@@ -762,7 +765,7 @@ MySQL では，ユーザ名と接続ホストの組でパスワードを記憶�
 データベース sales の作成と，3つのテーブルの作成を行う．
 
 \begin{cli}
-# mysql -u root -p
+$ sudo mysql -u root -p
 mysql> create database sales;
 mysql> use sales;
 mysql> create table sales (
@@ -862,39 +865,36 @@ mysql> delete from sales.sales where sales.price<>100;
 \clearpage
 \section{実験内容(2)}
 
-\subsection*{動的コンテンツ}
+%\subsection*{動的コンテンツ}
+%
+%動的コンテンツを生成するための設定と動的コンテンツの配置を行う．
+%\begin{itemize}
+%\item Apache にて SSI，CGI が実行できる環境の設定
+%\item 簡単な動的コンテンツの作成
+%\item PHP の動作環境をサーバに作成
+%\end{itemize}
+%
+%簡単な動的なコンテンツの作成として，時刻を表示するプログラムをそ
+%れぞれ下記の技術を用いて作成し，それぞれの技術的違いを考えてみよ．
+%\begin{itemize}
+% \item SSI
+% \item CGI (用いる言語は何でも良いが，本テキストではシェルスクリプトを提供)
+% \item PHP
+%\end{itemize}
+%
+%次に，CGI でカウンタプログラムを作成せよ．カウンタプログラ
+%ムはユーザからリクエストを受けるたびに，カウンタの値を1つずつ増加させ，
+%そのウェブページに何回のリクエストがあったかを表示するものである．プログ
+%ラムやカウンタを記録するデータファイルの書き込み権限に注意すること．
+%
+%\subsection*{Web システムのインストール1}
+%
+%CGI, PHPを用いた掲示板(Minibbs)，Wiki (PukiWiki)のインストールを行う．
+%
+\subsection*{Web システムのインストール}
 
-動的コンテンツを生成するための設定と動的コンテンツの配置を行う．
-\begin{itemize}
-\item Apache にて SSI，CGI が実行できる環境の設定
-\item 簡単な動的コンテンツの作成
-\item PHP の動作環境をサーバに作成
-\end{itemize}
+MediaWiki および Wordpress のインストールを行う．
 
-簡単な動的なコンテンツの作成として，時刻を表示するプログラムをそ
-れぞれ下記の技術を用いて作成し，それぞれの技術的違いを考えてみよ．
-\begin{itemize}
- \item SSI
- \item CGI (用いる言語は何でも良いが，本テキストではシェルスクリプトを提供)
- \item PHP
-\end{itemize}
-
-次に，CGI でカウンタプログラムを作成せよ．カウンタプログラ
-ムはユーザからリクエストを受けるたびに，カウンタの値を1つずつ増加させ，
-そのウェブページに何回のリクエストがあったかを表示するものである．プログ
-ラムやカウンタを記録するデータファイルの書き込み権限に注意すること．
-
-\subsection*{Web システムのインストール1}
-
-CGI, PHPを用いた掲示板(Minibbs)，Wiki (PukiWiki)のインストールを行う．
-
-\subsection*{Web システムのインストール2}
-
-MediaWiki のインストールを行う．
-
-\subsection*{Web システムのインストール3}
-
-WordPress のインストールを行う．
 
 \clearpage
 \section{必要となる知識}
@@ -942,18 +942,17 @@ PHP機能追加・変更後には，Apache 再起動が必要
 
 \end{cli}
 
-更に，MediaWiki をインストールするには，XML およびマルチバイト文字列（漢字等）が必要であり，下記もインストールする．
+更に，MediaWiki をインストールするには，XML，マルチバイト文字列（漢字等），国際化への対応が必要であり，下記もインストールする．
 
 \begin{cli}
 apt install php-xml
 apt install php-mbstring
+apt install php-intl
 \end{cli}
 
 \subsection{MediaWiki のインストール}
 
-MediaWiki のアーカイブを取得し展開する．
-
-MySQL上でMediaWiki 用データベースを作成する．
+MediaWiki のアーカイブを取得し展開する．その後，MySQL上でMediaWiki 用データベースを作成する．
 \begin{cli}
 mysql> create database mediawiki;
 mysql> create user 'mediawiki'@'localhost' identified by 'root00';
@@ -972,12 +971,11 @@ mysql> grant all on mediawiki.* to 'mediawiki'@'localhost';
 展開したディレクトリの名前を mediawiki に変更し，
 Webサーバの公開ディレクトリにディレクトリ内容を全て移動して，owner を全て WWW サーバのものに変更し，その後の設定は，ブラウザから接続して行う．
 
-最後に生成されたコンフィグ用ファイル \texttt{LocalSettings.php} を mediawiki のディレクトリに移動する（権限も他ファイルと同じになるよう確認）．
+最後に生成された設定用ファイル \texttt{LocalSettings.php} を mediawiki のディレクトリに移動する（権限も他ファイルと同じになるよう確認）．
 
-MediaWikiの設定において，下記のように設定すること．
+MediaWikiの（インストール時の）設定において，下記のように指定すること．
 
 \begin{cli}
-\end{cli}
 wikiname: HPの名称どのような名前でも良い．グループ名が分かるもの．
 mail: グループのメーリングリスト用メールアドレス
 Language: 希望の言語
@@ -993,12 +991,12 @@ DB username: mediawiki
 
 \subsection*{MediaWiki での補足}
 
-ブラウザから設定後，LocaSettings.php をサーバにアップロードするよう言わ
-れるので，SSH のファイル転送機能である SFTP, SCP を用いてアップロードす
-る．root 権限ではアップロードできないので，一般ユーザで転送した
-後，サーバ側の root ユーザで，MediaWiki のディレクトリに移動すること．
+ブラウザから設定後，LocaSettings.php をサーバにアップロードするよう指示
+されるので，SSH のファイル転送機能である SFTP, SCP 等を用いてアップロー
+ドする．root 権限ではアップロードできないので，一般ユーザで転送した後，
+サーバ側の root ユーザで，MediaWiki のディレクトリに移動すること．
 
-Mac, Linux の場合
+macOS, Ubuntu 等の場合
 \begin{cli}
 $ scp  LocalSettings.php  user@xxx.yyy.zzz.www:
 （userはサーバのユーザ名，xxx.yyy.zzz.www はサーバの IP）
@@ -1025,56 +1023,60 @@ ja.wordpress.org から Wordpress の PHP ファイル全体をダウンロー�
 
 $ wget https://ja.wordpress.org/latest-ja.tar.gz
 
-# sudo su
+  wget 使用時に IPv6 でのアクセスを試行して進まない場合は，
+  --inet4-only オプションを付与して実行することで IPv4 での
+  転送を強制させるとよい
 
 ファイルをWWW公開ディレクトリに移動する
-# mv latest-ja.tar.gz /var/www/html
 
-tar.gz 形式は，tar コマンドで解凍・展開する
+$ sudo mv latest-ja.tar.gz /var/www/html
+
+  tar.gz 形式は，tar コマンドで解凍・展開する
 
 まず展開する前に中身を確認する
-# tar tvzf latest-ja.tar.gz
 
-wordpress ディレクトリ以下に様々なファイルがあることを確認
-問題無ければ展開
+$ tar tvzf latest-ja.tar.gz
 
-# tar xvzf latest-ja.tar.gz
+  wordpress ディレクトリ以下に様々なファイルがあることを確認
+  問題無ければ展開
 
-wordpress ディレクトリがあることを確認
-root 権限では正常に動作しないため，権限を Apache プロセスのものにする
+$ sudo tar xvzf latest-ja.tar.gz
+
+  wordpress ディレクトリがあることを確認
+  root 権限では正常に動作しないため，権限を Apache プロセスのものにする
 
 Apache プロセスを確認
 
-# ps auxww | grep apache
+$ ps auxww | grep apache
 
-プロセスが動作するユーザを確認し，ディレクトリ以下のの全てのファイルのオーナを変更(-R は recursive 再帰的に全てのファイルを変更)
+  プロセスが動作するユーザを確認し，ディレクトリ以下の全てのファイルの
+  オーナを変更(-R は recursive 再帰的に全てのファイルを変更)
 
-# chown -R オーナ(ユーザ名) wordpress
-
+$ sudo chown -R オーナ(ユーザ名) wordpress
+\end{cli}
 
 以上でブラウザから，wordpress ディレクトリに接続することができる．
 
+\begin{cli}
 https://www.gX.exp.info.kochi-tech.ac.jp/wordpress
-
-ただし，下記データベース設定を行わないと設定は進められない．
-
 \end{cli}
 
-このディレクトリおよびディレクトリ中のすべてのファイル・サブディレクトリ
-の owner を Apache の実行権限に変更しておく．
+ただし，下記データベース設定を行わないと設定は進められない．
+%
+%このディレクトリおよびディレクトリ中のすべてのファイル・サブディレクトリ
+%の owner を Apache の実行権限に変更しておく．
 
 MySQL 上にて，データベース wordpressを作成し，wordpress を操作する MySQL のユーザ wordpress も作成し，データベース wordpress への操作権限を　grant 文で付与する．
 
 \begin{cli}
-# mysql -u root -p
+$ sudo mysql -u root -p
 
 mysql> create database wordpress;
 
 mysql> create user 'wordpress'@'localhost' identified by 'root00';
 
 mysql> grant all on wordpress.* to 'wordpress'@'localhost';
-
-\end{cli}
+\end{cli} %$
 
 Web ブラウザで http://\verb+<+Webサーバのホスト名\verb+>+/wordpress/ に接続し，設定を行う．
 
@@ -1088,7 +1090,6 @@ WordPressの設定において，各種設定内容は下記のようにする�
 
 Wordpress のユーザ名：Wordpress 管理用ユーザ．root
             パスワード：（いつもの）
-
 \end{cli}
 
 
@@ -1098,11 +1099,11 @@ Wordpress のユーザ名：Wordpress 管理用ユーザ．root
 
 \begin{description}
 \item[書き込み権限] CGI，PHP等のプログラムは，Apache の動作権限で実行さ
-	    れますので，ファイルの書き込み等は，その権限で書き込みできる
+	    れるため，ファイルの書き込み等は，その権限で書き込みできる
 	    必要がある(/etc/apache2/envvars にある環境変数
 	    APACHE\_RUN\_USER, APACHE\_RUN\_GROUP に権限が示されている)．
  \item[エラー対処] Internal Server Error が出力された場合は，動的コンテ
-	    ンツでの実行エラーです．ログファイル
+	    ンツでの実行エラーである．ログファイル
 	    \texttt{//var/log/apache2/} 以下のファイルを参照したり，コ
 	    マンドラインからその CGI を実行するなどして，デバッグする．
 \end{description}
@@ -1112,13 +1113,13 @@ Wordpress のユーザ名：Wordpress 管理用ユーザ．root
 \section{動作確認}
 
 \subsection*{データベース}
-MySQLが正しくインストール，設定されデータベースの操作が行えるか確認する．
+MySQL が正しくインストール，設定されデータベースの操作が行えるか確認する．
 
-\subsection*{動的コンテンツ}
-アクセスを行うごとに，CGIで構築されたカウンタが増加するか，
-SSI, CGI, PHP 全てで時刻表示が正常に行われるか確認する．
-
-掲示板・wiki の閲覧や編集が行えるか確認する．
+%\subsection*{動的コンテンツ}
+%アクセスを行うごとに，CGIで構築されたカウンタが増加するか，
+%SSI, CGI, PHP 全てで時刻表示が正常に行われるか確認する．
+%
+%掲示板・wiki の閲覧や編集が行えるか確認する．
 
 \subsection*{Web システム}
 Web システム用のデータベースが正しく構築できているか確認する．
