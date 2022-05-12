@@ -1,4 +1,9 @@
-今日においては，基幹システムなどが組織内ネットワークやインターネットといったネットワークを介する Web システムとして提供されることも多い．大規模なシステムにおいては基本的にデータの管理にデータベースを使うことになるため，Web システムとの連携技術が重要となる．また，そのようなシステムではアクセスする状況やデータそのものの変化に応じた処理を行う必要があり，Web ブラウザに返す Web 文書を Web サーバが動的に生成する技術が必要である．
+今日においては，基幹システムなどが組織内ネットワークやインターネットとい
+ったネットワークを介する Web システムとして提供されることも多い．大規模
+なシステムにおいては基本的にデータの管理にデータベースを使うことになるた
+め，Web システムとの連携技術が重要となる．また，そのようなシステムではア
+クセスする状況やデータそのものの変化に応じた処理を行う必要があり，Web ブ
+ラウザに返す Web 文書を Web サーバが動的に生成する技術が必要である．
 
 \section{データベース}
 コンピュータシステムにおいては，データの記憶は単に保存領域に保存すること
@@ -17,7 +22,8 @@
 属性を付与して記憶する．最も単純なものは配列であり，添字である整数に関連
 付けてデータを記憶する．配列では，添字がデータに対するキーとなり，キーを
 指定すると，キーに関係するデータを読み出すことができる．このように，デー
-タベースにおいては，データを検索する際にシステム入力する項目を\textbf{キー}と呼ぶ．
+タベースにおいては，データを検索する際にシステム入力する項目を\textbf{キ
+ー}と呼ぶ．
 
 配列をさらに進めたものが，連想配列である．連想配列は，キーとして一般の文
 字列を用いたものであり，perl や ruby, python などのスクリプト言語には最
@@ -40,20 +46,20 @@
 \subsection{ハッシュ (Hash)}
 
 記憶したデータから，キーに適合するものを照合しながら探す作業は，データ数
-（レコード数）を $n$ とすると，一般に $\mathcal{O}(n)$ の計算コストがかかる．辞書
-において必要な単語を求める際に，インデックスがなければ最初の項目から一つ
-ずつ探していくことになることと同じである．
+（レコード数）を $n$ とすると，一般に $\mathcal{O}(n)$ の計算コストがか
+かる．辞書において必要な単語を求める際に，インデックスがなければ最初の項
+目から一つずつ探していくことになることと同じである．
 
 このような計算コストがかかるのは，必要なデータが格納されている位置が分か
 らないためである．このため，必要なレコードがどこに格納されているかを知る
 ことができれば，その記憶場所を読み出すことができるため，データの取り出し
-を早めることができる．理想的には $\mathcal{O}(1)$ にすることができる．このため，デー
-タにインデックスを付与する．配列はキーそのものがインデックスであったが，
-一般のデータベースでは，キーは文字列などのデータである．このキーとインデッ
-クスの関連付けの方法により，検索の容易さが決まる．例えば辞書において，頭
-文字ごとにデータを集める方法は，データの検索速度を頭文字に使われる文字数
-の分だけ減らすことができる．アルファベット26文字であれば平均的に 1/26 に，
-日本語であれば 1/50 になる．
+を早めることができる．理想的には $\mathcal{O}(1)$ にすることができる．こ
+のため，データにインデックスを付与する．配列はキーそのものがインデックス
+であったが，一般のデータベースでは，キーは文字列などのデータである．この
+キーとインデックスの関連付けの方法により，検索の容易さが決まる．例えば辞
+書において，頭文字ごとにデータを集める方法は，データの検索速度を頭文字に
+使われる文字数の分だけ減らすことができる．アルファベット26文字であれば平
+均的に 1/26 に，日本語であれば 1/50 になる．
 
 このように，何らかの形でデータのキーから，そのデータを代表する値を求め，
 その値ごとに記憶場所に決めることを，インデクシング(indexing, 索引付け）
@@ -68,25 +74,27 @@
 
 ハッシュ関数は，ハッシュテーブル以外にも多くの分野で用いられ，多くのハッ
 シュ関数が定義されている．また，それぞれの分野において，ハッシュ関数に求
-められる性質は異なるが，データ検索の分野では，なるべくばらついていることが
-重要である．
+められる性質は異なるが，データ検索の分野では，なるべくばらついていること
+が重要である．
 
 \subsection{リレーショナルデータベース(RDB)}
 
-リレーショナルデータベース(関係データベース)は，複数のテーブルの間でキーを介して新たなデータの関係を見出すことを可能にするデータベースである．例えば，顧客がどのよ
-うなものを購入したかの売上一覧のテーブルと，顧客情報テーブルから，男性が
-購入した商品の一覧や，関東地方に出荷された商品の一覧を求めることができる．
+リレーショナルデータベース(関係データベース)は，複数のテーブルの間でキー
+を介して新たなデータの関係を見出すことを可能にするデータベースである．例
+えば，顧客がどのようなものを購入したかの売上一覧のテーブルと，顧客情報テ
+ーブルから，男性が購入した商品の一覧や，関東地方に出荷された商品の一覧を
+求めることができる．
 
 このようなデータベースのモデルの理論的な背景は，1960年代から70年代にかけ
 て IBM の Edgar F. Codd により体系付けられた関係モデルである．その後，
-1970年の Codd の論文\footnote{Codd, E. F. : ``A relational model
-of data for large shared data banks,'' Communications of the ACM 13 (6),
-pp.377-387 (1970)}に触発され，Larry Ellison により，データベースに応用
-された．Larry Ellinson は1970年代にデータベースソフトェアである Oracle
-を開発し，そこで SQL と呼ばれるデータ検索言語を開発した．現在，Oracle は
-世界でも有数のシェアを持つデータベースソフトウェアであり，SQL も多くのデー
-タベースソフトウェアに採用され，標準化されている\footnote{ISO/IEC 9075 :
-2008}．
+1970年の Codd の論文\footnote{Codd, E. F. : ``A relational model of data 
+for large shared data banks,'' Communications of the ACM 13 (6), 
+pp.377-387 (1970)}に触発され，Larry Ellison により，データベースに応用さ
+れた．Larry Ellinson は1970年代にデータベースソフトェアである Oracleを開
+発し，そこで SQL と呼ばれるデータ検索言語を開発した．現在，Oracle は世界
+でも有数のシェアを持つデータベースソフトウェアであり，SQL も多くのデータ
+ベースソフトウェアに採用され，標準化されている\footnote{ISO/IEC 9075 
+:2008}．
 
 \subsection{SQL}
 
@@ -163,11 +171,11 @@ SELECT などであり，それぞれデータの挿入，更新，削除，取�
 \section{Webシステム}
 動的コンテンツは，Web アクセスの際にプログラムを動作させることで，同じ
 URL にアクセスした場合でも状況に応じて出力を変化させる仕組みであり，これ
-まで解説した CGI，PHP などもその一例である．
-この動的コンテンツは，サーバおよびブラウザ上でプログラムを動作させて，様々
-な処理を行うため，Web 上のアプリケーションとして応用することができる．こ
-のような仕組みを一般に，\textbf{Web アプリケーション}，\textbf{Web アプ
-リケーションシステム}，あるいは単に \textbf{Web システム}と呼ぶ．
+まで解説した CGI，PHP などもその一例である．この動的コンテンツは，サーバ
+およびブラウザ上でプログラムを動作させて，様々な処理を行うため，Web 上の
+アプリケーションとして応用することができる．このような仕組みを一般に，
+\textbf{Web アプリケーション}，\textbf{Web アプリケーションシステム}，あ
+るいは単に \textbf{Web システム}と呼ぶ．
 
 また，一般に，頻繁にデータの更新を Web システムで行う場合は，データの書
 き込み，読み込み部分を，データベースを通して行うことが多い．これは，デー
@@ -185,14 +193,14 @@ PostgreSQL やOracle などがあるが，オープンソースのものでは M
 
 \subsection{動的コンテンツ}
 
-WWWサービス構築の際に述べたように，HTTP サーバによる Web サービスには，そのコンテンツの生成の方法により，2 
-通りの実現方法がある．一つ目は静的なコンテンツであり，もう一方は動的なコ
-ンテンツである．静的なコンテンツは，情報の発信者が，あらかじめ公開するファ
-イルをHTML形式や画像などのファイル形式で作成しておき，これを HTTP サーバ
-の公開するディレクトリの配置することで，ファイルを公開する．
-これに対して，クライアントからのリクエストに応じて，その場で処理を行い結
-果となるコンテンツデータを動的に生成して，レスポンスを行うものを動的コン
-テンツと呼ぶ．
+WWWサービス構築の際に述べたように，HTTP サーバによる Web サービスには，
+そのコンテンツの生成の方法により，2 通りの実現方法がある．一つ目は静的な
+コンテンツであり，もう一方は動的なコンテンツである．静的なコンテンツは，
+情報の発信者が，あらかじめ公開するファイルをHTML形式や画像などのファイル
+形式で作成しておき，これを HTTP サーバの公開するディレクトリの配置するこ
+とで，ファイルを公開する．これに対して，クライアントからのリクエストに応
+じて，その場で処理を行い結果となるコンテンツデータを動的に生成して，レス
+ポンスを行うものを動的コンテンツと呼ぶ．
 
 動的コンテンツの実現技術として下記のようなものがある．
 
@@ -247,32 +255,28 @@ Wiki はコンテンツ作成を，Web ブラウザから行うシステムの�
 \subsection{ブログ}
 ブログ(Blog) システムは，Weblog を略したものであり，もともとは個人が Web 
 上に様々な出来事や考えを記していた日記のようなコンテンツを発展させたもの
-である．
-現在では，ブログは世に広く普及し，個人の情報発信だけでなく，有名人や企業
-からのプロモーション，政府，機関などからの公式な情報発信手段としても，し
-ばしば用いられる．
+である．現在では，ブログは世に広く普及し，個人の情報発信だけでなく，有名
+人や企業からのプロモーション，政府，機関などからの公式な情報発信手段とし
+ても，しばしば用いられる．
 
 日記 (diary) の形のコンテンツは，ブログ以前から既に広く普及していたが，
-これを Web システム上でコンテンツ管理を行えるように，更に，コメントトラッ
-クバックという機能で，記事の読者の側からも情報に対するコメントを返信・発
-信できるようにしたものがブログである．
-ブログシステムの構築のために多くのソフトウェアがあるが，MovableType と
-WordPress がよく用いられる．MovableType はブログシステムの初期から使われ
-てきたが，現在では，GPL で配布されるオープンソースの WordPress が広く使
-われている．
+これを Web システム上でコンテンツ管理を行えるように，更に，コメントトラ
+ックバックという機能で，記事の読者の側からも情報に対するコメントを返信・
+発信できるようにしたものがブログである．ブログシステムの構築のために多く
+のソフトウェアがあるが，MovableType とWordPress がよく用いられる．
+MovableType はブログシステムの初期から使われてきたが，現在では，GPL で配
+布されるオープンソースの WordPress が広く使われている．
 
 \subsection{CMS (Content Management System)}
 Content Management System は，その名の通り Web コンテンツを管理するため
 の Web システムであり，Web コンテンツそのものを Web の仕組みを用いて，作
-成，編集，管理するものである．
-これまでは，エディタや HTML 編集ソフトウェアを用いて，別途 HTML ファイル
-の形でコンテンツを準備し，Web サーバの公開ディレクトリに置くことで公開し
-ていたが，作成から公開，編集，管理まですべて Web ブラウザから行えるよう
-になる．
+成，編集，管理するものである．これまでは，エディタや HTML 編集ソフトウェ
+アを用いて，別途 HTML ファイルの形でコンテンツを準備し，Web サーバの公開
+ディレクトリに置くことで公開していたが，作成から公開，編集，管理まですべ
+て Web ブラウザから行えるようになる．
 
-CMS の構築のためには，どのユーザがどのような処理を
-しているかを Web サーバ側で把握するために，\textbf{Cookie} などの仕組みが用
-いられる．
+CMS の構築のためには，どのユーザがどのような処理をしているかを Web サー
+バ側で把握するために，\textbf{Cookie} などの仕組みが用いられる．
 
 \subsection{SNS (Social Networking System)}
 
@@ -310,32 +314,39 @@ MySQL をインストールする．
 
 \subsubsection{データのダウンロード，文字コード変換}
 
-インポートを行うデータはメインサーバ (192.168.0.1) の /pub/data ディレクトリにあるCSV形式の以下の3ファイルである．
+インポートを行うデータはメインサーバ (192.168.0.1) の /pub/data ディレク
+トリにあるCSV形式の以下の3ファイルである．
 \begin{itemize}
  \item bunrui.csv
  \item tanka.csv
  \item uriage.csv
 \end{itemize}
 
-これは，ある中華料理店の商品分類表，メニュー単価表，売上表を Excel にて作成し，CSV ファイルで保存したものである．
+これは，ある中華料理店の商品分類表，メニュー単価表，売上表を Excel にて
+作成し，CSV ファイルで保存したものである．
 
 
 \subsubsection{nkf で日本語文字コード変換}
 
-データファイルは，Microsoft Excel で作成され保存された Shift-JIS コードによる CSV ファイル\footnote{CSV: Comma Separated Value カンマ',' で各フィールドが区切られた表データ．一般的な表計算ソフトウェアで読み書きできる形式である．}で，一行目にフィールドの項目名が日本語である．改行コードは Windows 形式の改行である．このままでは MySQL で用いることができない
-ため，日本語コード，改行コードをそれぞれ UTF-8，UNIX 形式の改行へと変更する．
+データファイルは，Microsoft Excel で作成され保存された Shift-JIS コード
+による CSV ファイル\footnote{CSV: Comma Separated Value カンマ',' で各フ
+ィールドが区切られた表データ．一般的な表計算ソフトウェアで読み書きできる
+形式である．}で，一行目にフィールドの項目名が日本語である．改行コードは 
+Windows 形式の改行である．このままでは MySQL で用いることができないため，
+日本語コード，改行コードをそれぞれ UTF-8，UNIX 形式の改行へと変更する．
 
-Unicode (UTF-8) 対応の日本語コード変換および，日本語テキスト閲覧プログラムを導入する．前者として nkf，後者として lv がよく用いられる．
+Unicode (UTF-8) 対応の日本語コード変換および，日本語テキスト閲覧プログラ
+ムを導入する．前者として nkf，後者として lv がよく用いられる．
 
 \begin{itemize}
     \item nkf コマンドをapt を使いインストール
 \end{itemize}
 
-なお，Ubuntu では通常のページャ less も UTF-8 に対応しているので，lv を用いずにそれをこの
-まま用いても良い．Ubuntu のパッケージ apt にて nkf （必要があれば lv も）
-を導入し変換する．使い方は，それぞれ\texttt{--help} や \texttt{-h} オプ
-ションによるヘルプを参照のこと．nkf 使用前・使用後は，\texttt{nkf
---guess} にてコードの確認をすること．
+なお，Ubuntu では通常のページャ less も UTF-8 に対応しているので，lv を
+用いずにそれをこのまま用いても良い．Ubuntu のパッケージ apt にて nkf 
+（必要があれば lv も）を導入し変換する．使い方は，それぞれ\texttt{--help} 
+や \texttt{-h} オプションによるヘルプを参照のこと．nkf 使用前・使用後は，
+\texttt{nkf--guess} にてコードの確認をすること．
 
 \begin{itemize}
     \item nkf コマンドを使い，
@@ -401,14 +412,16 @@ Unicode (UTF-8) 対応の日本語コード変換および，日本語テキス�
 \subsection{文字コード・改行コードの種類}
 \label{char}
 
-データベースの作成に先立ち，様々なテキストファイルを扱う必要があるが，使用する OS や各ソフトウェアによって取り扱う文字コードや改行コードが異なるため，これらに対応す
-る環境を構築する必要がある．
+データベースの作成に先立ち，様々なテキストファイルを扱う必要があるが，使
+用する OS や各ソフトウェアによって取り扱う文字コードや改行コードが異なる
+ため，これらに対応する環境を構築する必要がある．
 
-文字コードには，SHIFT\verb+_+JIS (JIS X 0208)，EUC-JP，JIS (ISO-2022-JP)，UTF-8（Unicode）
-などがあるが，MySQL 等サーバ系をはじめ各種環境で UTF-8 (Unicode) を採用する動きが
-進んでいるとみられるため，基本的には UTF-8 を使用するのが望ましい．しかし，Microsoft Excel 
-など，SHIFT\verb+_+JIS を基本設定とするアプリケーションも多いため，そのようなアプリケーショ
-ンとの間でデータ交換をする場合には文字コード等を変換する．
+文字コードには，SHIFT\verb+_+JIS (JIS X 0208)，EUC-JP，JIS (ISO-2022-JP)，
+UTF-8（Unicode）などがあるが，MySQL 等サーバ系をはじめ各種環境で UTF-8 
+(Unicode) を採用する動きが進んでいるとみられるため，基本的には UTF-8 を
+使用するのが望ましい．しかし，Microsoft Excel など，SHIFT\verb+_+JIS を
+基本設定とするアプリケーションも多いため，そのようなアプリケーションとの
+間でデータ交換をする場合には文字コード等を変換する．
 
 \begin{tabular}[t]{c|p{7cm}|p{3cm}}
 \hline \hline
@@ -480,10 +493,11 @@ Apple Mac OS & CR (キャリッジリターン: 行頭に（カーソルを）�
 \end{enumerate}
 
 1つ目は，Putty の設定の「ウインドウ(Window)」→「変換(Translation)」→
-「文字セット変換 (Character set)」の設定をUTF-8 にする\footnote{CJK とあるのは，Chinese,
-Japanese, Korean の特殊な文字にも対応するということ．}．
+「文字セット変換 (Character set)」の設定をUTF-8 にする\footnote{CJK とあ
+るのは，Chinese, Japanese, Korean の特殊な文字にも対応するということ．}．
 
-2つ目は，Putty 等からサーバにログイン後，変更する必要があれば下記の設定をする(\ref{char}節)．
+2つ目は，Putty 等からサーバにログイン後，変更する必要があれば下記の設定
+をする(\ref{char}節)．
 
 （LANG 変数のデフォルトは「C」）．
 
@@ -533,8 +547,8 @@ LANG=ja_JP.UTF-8
 server にパッケージシステムから mysql をインストールする．
 
 \begin{cli}
-# apt install mysql-server
-\end{cli}
+$ sudo apt install mysql-server
+\end{cli} %$
 
 必要があれば文字コードの設定を行う．
 
@@ -543,20 +557,20 @@ server にパッケージシステムから mysql をインストールする．
   ついては，/etc/myqsl/conf.d/ および /etc/myqsl/mysql.conf.d/
   以下の別ファイルに分けられ，my.cnf から include されている．
 
-# vi /etc/mysql/conf.d/mysql.cnf
+$ sudo vi /etc/mysql/conf.d/mysql.cnf
 
   下記の行を末尾に追加
   default-character-set=utf8
 
-# vi /etc/mysql/mysql.conf.d/mysqld.cnf
+$ sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
 
   下記の行を末尾に追加
   character-set-server=utf8
 
-# systemctl restart mysql
+$ sudo systemctl restart mysql
 
   MySQL の再起動
-\end{cli}
+\end{cli} %$
 
 \subsection{データベース構築の手順}
 データベース構築の手順を下記に示す．
@@ -570,9 +584,10 @@ server にパッケージシステムから mysql をインストールする．
  \item 漢字コード・改行コード変換フィルタを Server にパッケージからイン
        ストールする．手順は以下の通り．
 \begin{cli}
-# apt install nkf  （←nkf のパッケージ名の設定）
+$ sudo apt install nkf  （←nkf のパッケージ名の設定）
     （日本漢字フィルタ）
-\end{cli}
+\end{cli} %$
+
  \item CSV (Comma Separated Value) 形式（カンマ ``,'' で各フィールドの値
 が区切られた表（テーブル）を表したのテキストファイル）のファイルを入力に
 用いる．Microsoft Excelなどで作成された CSV ファイルは，日本語文字コード
@@ -599,13 +614,14 @@ ftp> get ファイル名.csv
 \end{cli}
  \item nkf コマンドで文字コードを調べる．\ref{char}節の内容も参考にして以下を進める．
 \begin{cli}
-# nkf --guess ファイル名
-\end{cli}
+$ nkf --guess ファイル名
+\end{cli} %$
+
  \item nkf コマンドで文字を変換する．
 \begin{cli}
-# man nkf または nkf --help  | less
+$ man nkf または nkf --help  | less
     オプションの意味を調べる
-# nkf 必要なオプション ファイル名 > 別のファイル名
+$ nkf 必要なオプション ファイル名 > 別のファイル名
 \end{cli}
 必要なオプションは，「出力を UTF-8 にすること」，「出力を UNIX 改行にす
        ること」の2点である．このようにして UTF-8, UNIX 改行コードに変換
@@ -638,10 +654,11 @@ mysql> show variables like 'char%';
 \end{cli}
 
 \subsection*{データベースへの接続}
-mysqlコマンドを用い， -u で接続するユーザ名を -p でパスワードによる認証を行う．
-MySQL 8.0 より，ユーザ root には，該当ユーザとシステム上のユーザとが合致してい
-る必要があるというオプションが設定されているため，管理者権限で mysql コマンドを
-実行する．
+mysqlコマンドを用い， -u で接続するユーザ名を -p でパスワードによる認証
+を行う．MySQL 8.0 より，ユーザ root には，データベースのサーバにおけるユ
+ーザとシステム上のユーザとが合致している必要があるというオプションが設定
+されているため，sudo コマンドによりユーザ root として mysql コマンドを実
+行する．
 	\begin{center}
 	\begin{breakbox}
 	\begin{alltt}
@@ -685,8 +702,9 @@ MySQL が自身の動作に用いるデータベースがいくつか作成さ�
 	\end{center}
 
 \subsection*{テーブルの作成}
-データベースに対し，新規にテーブルを作成する場合 create table コマンドを用いる．
-例として，データベス testdatabase に対し，テーブル \textbf{address} を作成する場合，
+データベースに対し，新規にテーブルを作成する場合 create table コマンドを
+用いる．例として，データベス testdatabase に対し，テーブル 
+\textbf{address} を作成する場合，
 
 	\begin{center}
 	\begin{breakbox}
@@ -702,20 +720,22 @@ MySQL が自身の動作に用いるデータベースがいくつか作成さ�
 となる．ただし，テーブル address は要素として name(text), address(text), phone(integer) の3つを持っている．
 	
 \subsection*{ファイルからのインポート}
-mysql では，load コマンドで外部ファイルからの一括入力が行える．
-例えば，各行にフィールドの値「名前,住所,電話番号」を列挙したファイル addresslist から
-先ほどのtestdatabase上のテーブルaddressにインポートを行う場合
+mysql では，load コマンドで外部ファイルからの一括入力が行える．例えば，
+各行にフィールドの値「名前,住所,電話番号」を列挙したファイル addresslist 
+から先ほどのtestdatabase上のテーブルaddressにインポートを行う場合
 
 \begin{cli}
-# mysql -u root --local-infile=1 -p
+$ sudo mysql -u root --local-infile=1 -p
 mysql> use testdatabase;
 mysql> load data local infile "addresslist" into table address fields
 terminated by ',';
 （addresslist ファイルから，',' で区切られた各項目を，テーブル address の各フィールドへ代入する．）
-\end{cli}
+\end{cli} %$
 となる．
 
-ただし，MySQL 8.0 から安全上の理由で，サーバ側でのローカルファイルからのデータ一括入力の可否を制御する変数 \texttt{local\_infile} のデフォルト値が 1 (可)から，0 (不可)の変わっているので，その場合は 1 に設定する．
+ただし，MySQL 8.0 から安全上の理由で，サーバ側でのローカルファイルからの
+データ一括入力の可否を制御する変数 \texttt{local\_infile} のデフォルト値
+が 1 (可)から，0 (不可)の変わっているので，その場合は 1 に設定する．
 
 \begin{cli}
 mysql> select @@local_infile;
@@ -731,8 +751,8 @@ mysql> set persist local_infile=1;
 \end{cli}
 
 \subsection*{表の確認}
-テーブルの内容を確認したい場合，select * from テーブル名 となる．
-例として，テーブルaddressの中身を確認する場合，
+テーブルの内容を確認したい場合，select * from テーブル名 となる．例とし
+て，テーブルaddressの中身を確認する場合，
 	\begin{center}
 	\begin{breakbox}
 	\begin{alltt}
@@ -759,8 +779,8 @@ mysql> select host,user,password from user;
 \end{cli}
 %$
 
-MySQL では，ユーザ名と接続ホストの組でパスワードを記憶する．ホスト名とユー
-ザ名，ハッシュ化されたパスワードが表示されていることを確認する．
+MySQL では，ユーザ名と接続ホストの組でパスワードを記憶する．ホスト名とユ
+ーザ名，ハッシュ化されたパスワードが表示されていることを確認する．
 
 データベース sales の作成と，3つのテーブルの作成を行う．
 
@@ -785,7 +805,7 @@ mysql> exit
 トする．
 
 \begin{cli}
-# mysql -u root --local-infile=1 -p
+$ sudo mysql -u root --local-infile=1 -p
 mysql> use sales;
 mysql> load data local infile "変換後のuriage.csv" into table
  sales fields terminated by ',';
@@ -793,7 +813,7 @@ mysql> load data local infile "変換後のtanka.csv" into table price
  fields terminated by ',';
 mysql> load data local infile "変換後のbunrui.csv" into table
  foodgroup fields terminated by ',';
-\end{cli}
+\end{cli} %$
 
 \subsection{SQL言語によるデータベース操作}
 \label{sec:sql-lang}
@@ -896,7 +916,7 @@ mysql> delete from sales.sales where sales.price<>100;
 MediaWiki および Wordpress のインストールを行う．
 
 
-\clearpage
+%\clearpage
 \section{必要となる知識}
 
 \subsection{SHELL の環境変数による言語設定}
@@ -931,28 +951,31 @@ ja_JP.eucJP     日本語(EUC JAPAN)
 
 \subsection{PHP の MySQL 拡張のインストール・有効化}
 
-Wordpress や MediaWiki 等のLAMP系Webシステムは PHP から MySQL を操作し，DB上にデータを保存するため，PHP の MySQL 連携機能をインストールする
+Wordpress や MediaWiki 等のLAMP系Webシステムは PHP から MySQL を操作し，
+DB上にデータを保存するため，PHP の MySQL 連携機能をインストールする
 
 \begin{cli}
-# apt install php-mysql
+$ sudo apt install php-mysql
 
 PHP機能追加・変更後には，Apache 再起動が必要
 
-# systemctl restart apache2
+$ sudo systemctl restart apache2
 
 \end{cli}
 
-更に，MediaWiki をインストールするには，XML，マルチバイト文字列（漢字等），国際化への対応が必要であり，下記もインストールする．
+更に，MediaWiki をインストールするには，XML，マルチバイト文字列（漢字等），
+国際化への対応が必要であり，下記もインストールする．
 
 \begin{cli}
-apt install php-xml
-apt install php-mbstring
-apt install php-intl
-\end{cli}
+$ sudo apt install php-xml
+$ sudo apt install php-mbstring
+$ sudo apt install php-intl
+\end{cli} %$
 
 \subsection{MediaWiki のインストール}
 
-MediaWiki のアーカイブを取得し展開する．その後，MySQL上でMediaWiki 用データベースを作成する．
+MediaWiki のアーカイブを取得し展開する．その後，MySQL上でMediaWiki 用デ
+ータベースを作成する．
 \begin{cli}
 mysql> create database mediawiki;
 mysql> create user 'mediawiki'@'localhost' identified by 'root00';
@@ -968,10 +991,12 @@ mysql> grant all on mediawiki.* to 'mediawiki'@'localhost';
 \end{description}
 の内容でデータベースを作成している．
 
-展開したディレクトリの名前を mediawiki に変更し，
-Webサーバの公開ディレクトリにディレクトリ内容を全て移動して，owner を全て WWW サーバのものに変更し，その後の設定は，ブラウザから接続して行う．
+展開したディレクトリの名前を mediawiki に変更し，Webサーバの公開ディレク
+トリにディレクトリ内容を全て移動して，owner を全て WWW サーバのものに変
+更し，その後の設定は，ブラウザから接続して行う．
 
-最後に生成された設定用ファイル \texttt{LocalSettings.php} を mediawiki のディレクトリに移動する（権限も他ファイルと同じになるよう確認）．
+最後に生成された設定用ファイル \texttt{LocalSettings.php} を mediawiki 
+のディレクトリに移動する（権限も他ファイルと同じになるよう確認）．
 
 MediaWikiの（インストール時の）設定において，下記のように指定すること．
 
@@ -1010,13 +1035,14 @@ putty のあるディレクトリに LocalSettings.php を移動
 > pscp LocalSettings.php user@xxx.yyy.zzz.www:
 （user, xxx.yyy.zzz.www は scp と同様）
 \end{cli}
-その他，Windows では，WinSCP というソフトウェアを用いることで，
-GUI でアップロードできる．
+その他，Windows では，WinSCP というソフトウェアを用いることで，GUI でア
+ップロードできる．
 
 この後，サーバ上で，mediawikiのディレクトリに移動させておく．
 
 \subsection{WordPress のインストール}
-WordPress のアーカイブを取得して展開した後，展開されたディレクトリを，公開ディレクトリの下に，wordpress という名前で移動する．
+WordPress のアーカイブを取得して展開した後，展開されたディレクトリを，公
+開ディレクトリの下に，wordpress という名前で移動する．
 
 \begin{cli}
 ja.wordpress.org から Wordpress の PHP ファイル全体をダウンロードする．
@@ -1066,7 +1092,9 @@ https://www.gX.exp.info.kochi-tech.ac.jp/wordpress
 %このディレクトリおよびディレクトリ中のすべてのファイル・サブディレクトリ
 %の owner を Apache の実行権限に変更しておく．
 
-MySQL 上にて，データベース wordpressを作成し，wordpress を操作する MySQL のユーザ wordpress も作成し，データベース wordpress への操作権限を　grant 文で付与する．
+MySQL 上にて，データベース wordpressを作成し，wordpress を操作する MySQL 
+のユーザ wordpress も作成し，データベース wordpress への操作権限を grant 
+文で付与する．
 
 \begin{cli}
 $ sudo mysql -u root -p
@@ -1078,7 +1106,8 @@ mysql> create user 'wordpress'@'localhost' identified by 'root00';
 mysql> grant all on wordpress.* to 'wordpress'@'localhost';
 \end{cli} %$
 
-Web ブラウザで http://\verb+<+Webサーバのホスト名\verb+>+/wordpress/ に接続し，設定を行う．
+Web ブラウザで http://\verb+<+Webサーバのホスト名\verb+>+/wordpress/ に
+接続し，設定を行う．
 
 WordPressの設定において，各種設定内容は下記のようにする．
 
@@ -1122,8 +1151,9 @@ MySQL が正しくインストール，設定されデータベースの操作�
 %掲示板・wiki の閲覧や編集が行えるか確認する．
 
 \subsection*{Web システム}
-Web システム用のデータベースが正しく構築できているか確認する．
-構築した Web システムについて，それぞれ閲覧，更新，修正などの作業が正しく行われるか確認する．
+Web システム用のデータベースが正しく構築できているか確認する．構築した 
+Web システムについて，それぞれ閲覧，更新，修正などの作業が正しく行われる
+か確認する．
 
 \section{考慮すべき点}
 
@@ -1198,17 +1228,20 @@ SSLCertificateKeyFile
 
 \end{cli}
 
-\url{SSLCertificateFile} のコメントに書かれているように，デフォルトは乱数で生成された 
-\url{/etc/ssl/certs/ssl-cert-snakeoil.pem} が証明書として，
-\url{/etc/ssl/private/ssl-cert-snakeoil.key} がその秘密鍵として指定さ
-れている．snakeoil は，いんちき薬の意であるが，サーバの身元を保証しない適当な証明書である．これを自己署名 (self-signed )証明書と言うが，俗に\textbf{オレオレ証明書}と呼ぶ．
+\url{SSLCertificateFile} のコメントに書かれているように，デフォルトは乱
+数で生成された \url{/etc/ssl/certs/ssl-cert-snakeoil.pem} が証明書として，
+\url{/etc/ssl/private/ssl-cert-snakeoil.key} がその秘密鍵として指定され
+ている．snakeoil は，いんちき薬の意であるが，サーバの身元を保証しない適
+当な証明書である．これを自己署名 (self-signed )証明書と言うが，俗に
+\textbf{オレオレ証明書}と呼ぶ．
 
 このままでも，経路上の第三者が通信内容を傍受することが不可能な，暗号化さ
-れた Web ページの構築はできており，研究室内などのごく小規模でインターネッ
-トへの公開サービスを必要としない場合は，この形での運用も可能である．
-しかし，公開サービスとする場合，第三者による偽のサイトと，本物のサイトと
-の見分けが付かず，フィッシングや偽情報発信等の詐称の問題が発生し得る問題
-がある．そのため，OpenSSL を用いて正式な証明書・秘密鍵を作成して運用する．その手順は以下の通りである．
+れた Web ページの構築はできており，研究室内などのごく小規模でインターネ
+ットへの公開サービスを必要としない場合は，この形での運用も可能である．し
+かし，公開サービスとする場合，第三者による偽のサイトと，本物のサイトとの
+見分けが付かず，フィッシングや偽情報発信等の詐称の問題が発生し得る問題が
+ある．そのため，OpenSSL を用いて正式な証明書・秘密鍵を作成して運用する．
+その手順は以下の通りである．
 
 \begin{enumerate}
  \item OpenSSL を使い，秘密鍵と公開鍵（証明書署名要求（CSR\footnote{Certificate Signing Request})＝署名前の証明書）を作成
@@ -1238,7 +1271,13 @@ OpenSSL のコマンドを使う．情報としては，下記が分かりやす
 
 コマンド openssl genrsa による秘密鍵生成の際，-des3 などによる秘密鍵を暗
 号化して保存するオプションは通常外しておく運用が多いため，ここでもそのよ
-うにする\footnote{サーバの管理者ユーザがだれでも，秘密鍵を簡単に読み込み，コピーなどができると，セキュリティ上良くないため，鍵ファイルにも暗号化を行い，パスワードを入力しないと読み込めないようにする設定だが，サーバ証明書の場合，Apache を再起動するたび，パスワードを入れる必要があり，サーバの自動起動などにおいて運用上の問題が起こる．そのため，サーバにログインアクセスできる人を最小限に絞って管理することで，サーバ秘密鍵へのパスワードは省略する運用も行われる．}．
+うにする\footnote{サーバの管理者ユーザがだれでも，秘密鍵を簡単に読み込み，
+コピーなどができると，セキュリティ上良くないため，鍵ファイルにも暗号化を
+行い，パスワードを入力しないと読み込めないようにする設定だが，サーバ証明
+書の場合，Apache を再起動するたび，パスワードを入れる必要があり，サーバ
+の自動起動などにおいて運用上の問題が起こる．そのため，サーバにログインア
+クセスできる人を最小限に絞って管理することで，サーバ秘密鍵へのパスワード
+は省略する運用も行われる．}．
 
 \begin{cli}
 # openssl genrsa -out server.key 2048
@@ -1280,7 +1319,9 @@ extra項目は，何も入れなくて良い．
 
 \end{cli}
 
-工科大の認証局は，ルート認証局(CA)ではなく中間認証局(CA)である．ルート認証局は文部科学省所管の国立情報学研究所(NII\footnote{National Institute of Informatics}) ) である．
+工科大の認証局は，ルート認証局(CA)ではなく中間認証局(CA)である．ルート認
+証局は文部科学省所管の国立情報学研究所(NII\footnote{National Institute 
+of Informatics}) ) である．
 
 NII のCAによる証明書作成については，下記の情報も参考にする．
 
@@ -1288,9 +1329,11 @@ NII のCAによる証明書作成については，下記の情報も参考に�
 
 \subsection{証明書の作成}
 
-正しく署名された証明書を作成するため，証明書署名要求 server.csr ファイルを，TA に渡す．
+正しく署名された証明書を作成するため，証明書署名要求 server.csr ファイル
+を，TA に渡す．
 
-後日，上位 CA （情報システム課) にて署名した証明書を各班に返すので，それを配置すること．
+後日，上位 CA （情報システム課) にて署名した証明書を各班に返すので，それ
+を配置すること．
 
 それまでの間，次の自己署名証明書を作成して使う．
 
@@ -1315,12 +1358,14 @@ Apache にて秘密鍵・証明書を設定して再起動すれば設定は終�
 SSLCertificateFile      /etc/ssl/certs/server.crt
 SSLCertificateKeyFile /etc/ssl/private/server.key
 
-秘密鍵・証明書の owner , パーミッションとも，元からあった snakeoil に合わせておくこと．
+秘密鍵・証明書の owner , パーミッションとも，元からあった snakeoil に合
+わせておくこと．
 
 Apache を再起動する．
 \end{cli}
 
-工科大から，下記2ファイルをもらったら，下記の証明書登録，中間CAの証明書登録をする．
+工科大から，下記2ファイルをもらったら，下記の証明書登録，中間CAの証明書
+登録をする．
 
 \begin{itemize}
     \item 証明書ファイル (crt)
@@ -1346,7 +1391,9 @@ Apache 再起動
 
 \subsection{注意点}
 
-証明書は，鍵長やアルゴリズム，ホスト名やパラメータの値など，様々な制約があり，少しでも合致しない証明書は，不正な証明書として扱われ，ブラウザでエラーが表示される．
+証明書は，鍵長やアルゴリズム，ホスト名やパラメータの値など，様々な制約が
+あり，少しでも合致しない証明書は，不正な証明書として扱われ，ブラウザでエ
+ラーが表示される．
 
 その他，有効期間も重要であるので，下記に注意する．
 
