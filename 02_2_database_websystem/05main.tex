@@ -330,7 +330,7 @@ MySQL をインストールする．
 
 \subsubsection{nkf で日本語文字コード変換}
 
-データファイルは，Microsoft Excel で作成され保存された Shift-JIS コード
+データファイルは，Microsoft Excel で作成され保存された SHIFT\verb+_+JIS コード
 による CSV ファイル\footnote{CSV: Comma Separated Value カンマ',' で各フ
 ィールドが区切られた表データ．一般的な表計算ソフトウェアで読み書きできる
 形式である．}で，一行目にフィールドの項目名が日本語である．改行コードは 
@@ -495,8 +495,10 @@ Apple Mac OS & CR (キャリッジリターン: 行頭に（カーソルを）�
 \end{enumerate}
 
 1つ目は，Putty の設定の「ウインドウ(Window)」→「変換(Translation)」→
-「文字セット変換 (Character set)」の設定をUTF-8 にする\footnote{CJK とあ
-るのは，Chinese, Japanese, Korean の特殊な文字にも対応するということ．}．
+「文字セット変換 (Character set)」の設定をUTF-8 にする
+%\footnote{CJK とあるのは，Chinese, Japanese, Korean の特殊な文字にも
+%対応するということ．}
+．
 
 2つ目は，Putty 等からサーバにログイン後，変更する必要があれば下記の設定
 をする(\ref{char}節)．
@@ -580,8 +582,10 @@ $ sudo systemctl restart mysql
  \item 日本語の入出力が必要になるため，日本語の入力・表示ができる端末を
        用いる必要がある．具体的には，Windows の Putty を使い，「Window
        (ウィンドウ)」→「変換(Translation)」の項目で，Remote Character
-       Set を UTF-8 (CJK) \footnote{Unicode 規格の UTF-8 文字コードで，
-       Chinese, Japanese Korean 文字を使うモード}に設定する．
+       Set を UTF-8 
+%       (CJK) \footnote{Unicode 規格の UTF-8 文字コードで，
+%       Chinese, Japanese Korean 文字を使うモード}
+       に設定する．
  \item Putty から，Server に SSH でログインし，root になる．
  \item 漢字コード・改行コード変換フィルタを Server にパッケージからイン
        ストールする．手順は以下の通り．
@@ -776,7 +780,7 @@ mysql> show tables;
       (user テーブルがあることを確認)
 mysql> describe user;
       (user テーブルの属性を確認)
-mysql> select host,user,password from user;
+mysql> select host,user,authentication_string from user;
       (user テーブルからホスト名・ユーザ名・パスワードの欄を出力)
 \end{cli}
 %$
@@ -942,9 +946,9 @@ LANG 変数が全ての言語系の挙動を決定するので，この変数を
 
 \begin{cli}
 C               英語
-ja_JP.SJIS      日本語(Shift JIS)
-ja_JP.UTF-8     日本語(UTF 8)
-ja_JP.eucJP     日本語(EUC JAPAN)
+ja_JP.SJIS      日本語(SHIFT\verb+_+ JIS)
+ja_JP.UTF-8     日本語(UTF-8)
+ja_JP.eucJP     日本語(EUC-JP)
 \end{cli}
 
 本実験では，日本語が表示できない端末も用いることがあるため，「C」にする．
