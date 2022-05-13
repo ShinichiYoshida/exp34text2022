@@ -1,8 +1,8 @@
-レポート採点ツール
+* レポート採点ツール
 
 ダウンロードしたレポートを1つにつなげる．
 
-0. 必要ツール
+* 0. 必要ツール
 
 Ubuntu での実行環境例 
 
@@ -12,12 +12,12 @@ Ubuntu での実行環境例
 - ZSH (shell script)
 - Unzip
 
-1. LMS から下記2点ダウンロード
+* 1. LMS から下記2点ダウンロード
 
 ZIPファイル (提出レポート本体PDF)
 Excelファイル (提出レポートメタ情報)
 
-2. unzip
+* 2. unzip
 
 レポート本体ZIPを伸長・展開
 
@@ -25,7 +25,7 @@ Excelファイル (提出レポートメタ情報)
 unzip downloadpdf.zip
 ```
 
-3. 下記 excel2csv.sh を実行
+* 3. 下記 excel2csv.sh を実行
 
 ```
 ./excel2csv.sh  downloadしたexcel.xls
@@ -56,7 +56,7 @@ hogehoge.xls.csv ができる
 First Name,Last Name,Email,Turnitin User ID,Title,Paper ID,Date Uploaded,Word Count,Grade,Student Viewed,Similarity Score,Internet Overlap,blications Overlap,Student Papers Overlap
 ```
 
-4. 下記にて，PDFファイル名を変換する
+* 4. 下記にて，PDFファイル名を変換する
 
 
 ```
@@ -78,7 +78,7 @@ sh ../move.sh
 
 PDFファイルにすべてファイル名が学籍番号(メール)がつく
 
-5. 下記コマンドでPDFを1つにする
+* 5. 下記コマンドでPDFを1つにする
 
 ```
 cd ZIPフォルダ
@@ -87,5 +87,7 @@ pdftk *.pdf cat output ../all.pdf
 
 all.pdfが学籍番号順になる
 
+* おまけ
 
+別途，グループ情報などを置いておけば，グループ順にすることも可能．
 
