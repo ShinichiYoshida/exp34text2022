@@ -130,9 +130,9 @@ VLAN では，受信したフレームがどの LAN に所属するかを判断�
     \begin{itemize}
         \item 自グループVLANにIPを設定する
     \end{itemize}
-\item タグVLAN (トランクVLAN) を設定（実験 4Cのみ．実験3iでは必要ない）
+\item タグVLAN (トランクVLAN) を設定
     \begin{itemize}
-        \item 23, 24番ポートには，自グループの VLAN とバックボーンの VLAN の両方を，IEEE 802.1q タグVLANで接続できるよう設定する（実験 4Cのみ．実験3iでは必要ない）．
+        \item 23, 24番ポートには，自グループの VLAN とバックボーンの VLAN の両方を，IEEE 802.1q タグVLANで接続できるよう設定する．
     \end{itemize}
 
 \item ケーブル接続変更    
@@ -145,8 +145,8 @@ VLAN では，受信したフレームがどの LAN に所属するかを判断�
     
 \item ポート接続設定
     \begin{itemize}
-    \item 23番ポートは接続できないよう，shutdownする（実験 4Cのみ．実験3iでは必要ない）．
-    \item 1～16番ポートは，スパニングツリーを無効にする（実験 4Cのみ．実験3iでは必要ない）．
+    \item 23番ポートは接続できないよう，shutdownする．
+    \item 1～16番ポートは，スパニングツリーを無効にする．
     \end{itemize}
     
 \item 設定後のスイッチの状況を確認
@@ -377,7 +377,7 @@ show interface status
 show mac address-table
 \end{cli}
 
-\subsection{トランクVLAN (4Cのみ)}
+\subsection{トランクVLAN}
 
 \begin{cli}
 最後に他グループのスイッチ間を接続するトランクポートを設定
@@ -404,7 +404,7 @@ switch12(config-if-range)#no shutdown
 
 \end{cli}
 
-\subsection{Spanning Tree 無効化 (4Cのみ)}
+\subsection{Spanning Tree 無効化}
 
 Cisco 社のWeb「CatalystスイッチのポートでSTPを無効にする」を参考に設定する．
 
@@ -420,8 +420,8 @@ Cisco 社のWeb「CatalystスイッチのポートでSTPを無効にする」を
  \item 自グループ用ポート同士で通信可能
  \item 自グループのWindows PCをバックボーン用ポート
        に接続すると通信不可能
- \item 以上を相互に ping や tracerouteで確認する．
- \item シャットダウンポートには，何を接続してもリンクアップしないことを確認(4C)．
+ \item 以上を相互に ping や tracerouteで確認
+ \item シャットダウンポートには，何を接続してもリンクアップしないことを確認
 \end{itemize}
 
 \section{考慮すべき点}
