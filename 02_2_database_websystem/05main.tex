@@ -640,7 +640,7 @@ $ nkf 必要なオプション ファイル名 > 別のファイル名
 \subsection*{データベースの文字コード}
 
 設定の確認はデータベース起動後に，mysql コマンドで MySQL に接続し，下記
-のコマンドで調べることができる．
+のコマンドで調べることができる．具体的な値は utf8mb3 のこともある．
 
 \begin{cli}
 mysql> show variables like 'char%';
@@ -1011,8 +1011,8 @@ wikiname: HPの名称どのような名前でも良い．グループ名が分�
 mail: グループのメーリングリスト用メールアドレス
 Language: 希望の言語
 Admin user: root (mediawiki管理用ユーザ)
-        MediaWiki 管理用ユーザの
-        パスワード：root00
+        MediaWiki 管理用ユーザのパスワード：root00
+        （パスワードの桁数が設定されている場合は2回繰り返したものとする．）
 Database: mediawiki
         MySQL 上でのデータベース名
 DB username: mediawiki
@@ -1124,7 +1124,9 @@ WordPressの設定において，各種設定内容は下記のようにする�
 テーブルの接頭辞 → そのままで OK
 
 Wordpress のユーザ名：Wordpress 管理用ユーザ．root
-            パスワード：（いつもの）
+            パスワード：（いつものを使用．パスワードの桁数が設定されてい
+            る場合は2回繰り返したものとする．）
+
 \end{cli}
 
 
