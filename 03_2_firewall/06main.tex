@@ -237,11 +237,11 @@ LAN の入口のルータにてパケットフィルタを行う．パケット�
 ルータによるアクセスリストを用いセキュリティーレベルを向上させる場合，先にネットワークのセキュリティーに関するポリシーを策定する必要がある．ここでは以下のようなセキュリティーポリシーとする．．
 
 \begin{itemize}
- \item サーバ以外のコンピュータ：内部←→外部の通信は全て遮断
+ \item サーバ以外の内部コンピュータ：内部←→外部の通信は全て遮断 (Linux, Win)
  \item サーバ： 外部ネットワークとサーバ間で，DNS, メール(MTA同士)送受信，Web通信の送受信を行えるようにする（双方向）．
 \end{itemize}
-本実験でのネットワーク構成を図\ref{fig:06:packet-filter}に示す．
-\begin{figure}
+本実験でのネットワーク構成を図\ref{fig:06:packet-filter1}に示す．
+\begin{figure}[b]
   \centering
   \includegraphics[width=15cm,]{\chapfw packetfilter.pdf}
   \caption{ネットワークの構成図}
