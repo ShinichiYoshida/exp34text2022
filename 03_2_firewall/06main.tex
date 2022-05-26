@@ -305,9 +305,9 @@ access-list  リスト番号  アクション  プロトコル
 
 \begin{itemize}
  \item ブラケット[]内は省略することができる．
- \item リスト番号は，ひとまとまりのアクセスリストに対して同じ番号（100~199）を
-付与する(1~99: 標準ACL⇒送信元IPのみで判断，100~199: 拡張ACL⇒IP・TCP・
-       UDPヘッダ)
+ \item リスト番号は，ひとまとまりのアクセスリストに対して同じ番号（100～199）を
+付与する(1～99: 標準ACL⇒送信元IPのみで判断，100～199: 拡張ACL⇒送信元・宛先IPアドレス・TCP・
+       UDPヘッダ（ポート番号等）も確認する)
  \item アクション→permit (許可) or deny(拒否)
  \item プロトコル→ip(すべてのIPパケット)，tcp，udp，icmp
  \item ポート番号→UDP・TCPの時のみ有効．ポート番号を指定．省略した場合ポート番号の検査は行わない
@@ -316,6 +316,8 @@ access-list  リスト番号  アクション  プロトコル
  \item icmp type→ICMPの時のみ有効．ICMPタイプ番号を指定．
  \item icmp code→ICMPの時のみ有効．ICMPコード番号を指定．
 \end{itemize}
+
+\textbf{established}は，TCP接続(スリーウェイハンドシェイク)成功後のパケットを全て許可する設定として使われる．単体で存在してもTCP接続は成立しないため，別途必要なTCP接続を書く必要がある．
 
 このようなパケット照合のパターンを複数行続けて書いたものがアクセスリスト
 である．パケットの照合はリストの上から順に行われ，最初にマッチしたパター
@@ -347,7 +349,9 @@ interface fastethernet0
 
 \subsection*{アクセスリストの設定}
 
-アクセスリストの設定はルータにコンソール接続をして行う．．
+アクセスリストの設定はルータにコンソール接続をして行う．
+
+Telnet接続でリモート設定もできるが，設定を行いパケットフィルタが有効になった瞬間，操作はできなくなる（注意深く設定することが必要）．
 
 \begin{cli}
 下記はグループ 12 の例
@@ -355,10 +359,11 @@ interface fastethernet0
 [[101番のリストは，外側インターフェース向け]]
 router12(config)# no access-list 101
 
-router12(config)# access-list 101 permit tcp 0.0.0.0 255.255.255.255
-サーバのIP 0.0.0.0 established
+router12(config)# access-list 101 permit tcp any (続けて↓)
+host サーバのIP  established
 
-(↑ access-list 101 permit tcp any host サーバのIP established
+(↑ access-list 101 permit tcp 0.0.0.0 255.255.255.255
+サーバのIP 0.0.0.0 established
  と書いても良い)
 
 router12(config)# access-list 101 permit tcp any host サーバIP eq 53
@@ -401,9 +406,11 @@ router12(config-if)# no ip access-group XXX in
 
 \clearpage
 
-\subsection{実験内容(2)}
+\section{実験内容(2)}
 
 \subsubsection{NAPTの設定}
+
+下記のようなセキュリティポリシーで，NATを用いたアクセス制限を行う．
 
 \begin{itemize}
  \item サーバ以外のコンピュータ：内部→ 外部の通信はNAT(NAPT, PAT)で許可
@@ -414,7 +421,7 @@ router12(config-if)# no ip access-group XXX in
  \item Ubuntu Linux Desktop への外部からの SSH 接続は，ポートフォワーディング（静的NAT）で許可．このとき，ルータの外部IPアドレスへの TCP ポート 8022への接続を，Linux Desktop の TCP ポート 22 (SSH)へ転送するようにする． 
  \item DNS のサーバの IP アドレスを，NAT変換後（外部から見えるIPアドレス）に変更する．クライアントはそのままで構わない（内部のみで用いられる）．
 \end{itemize}
-本実験でのネットワーク構成を図\ref{fig:06:packet-filter}に示す．
+本実験でのネットワーク構成を図\ref{fig:06:nat}に示す．
 \begin{figure}
   \centering
   \includegraphics[width=15cm,]{\chapfw fw_pf_nat_4c.pdf}
