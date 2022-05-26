@@ -406,7 +406,29 @@ router12(config-if)# no ip access-group XXX in
 
 \clearpage
 
-\subsection{NAPTの設定}
+\subsection{実験内容(2)}
+
+\subsubsection{NAPTの設定}
+
+\begin{itemize}
+ \item サーバ以外のコンピュータ：内部→ 外部の通信はNAT(NAPT, PAT)で許可
+ \item サーバ以外のコンピュータ：外部→ 内部の通信は不許可
+ \item サーバ： 外部ネットワークとサーバ間で，DNS, メール(MTA同士)送受信，Web通信の送受信を行えるようにする（双方向）．
+ \item サーバから外部へは，その他の任意のTCP通信を可能とする．
+ \item 外部からサーバへ，TCPポート22(SSH)のポートフォワーディングを許可する．
+ \item Ubuntu Linux Desktop への外部からの SSH 接続は，ポートフォワーディング（静的NAT）で許可．このとき，ルータの外部IPアドレスへの TCP ポート 8022への接続を，Linux Desktop の TCP ポート 22 (SSH)へ転送するようにする． 
+ \item DNS のサーバの IP アドレスを，NAT変換後（外部から見えるIPアドレス）に変更する．クライアントはそのままで構わない（内部のみで用いられる）．
+\end{itemize}
+本実験でのネットワーク構成を図\ref{fig:06:packet-filter}に示す．
+\begin{figure}
+  \centering
+  \includegraphics[width=15cm,]{\chapfw fw_pf_nat_4c.pdf}
+  \caption{ネットワークの構成図}
+  \label{fig:06:packet-filter}
+\end{figure}
+図\ref{fig:06:packet-filter}の172.21.Y.S, 172.21.Y.L, 172.21.Y.W, はそれぞれ，各グループのサーバのIPアドレス，LinuxのIPアドレス，Windows のIPアドレスである．
+
+\subsubsection{NAPTの設定方法}
 
 NAPTの設定は以下の作業をルータで行うことで実現できる．
 
