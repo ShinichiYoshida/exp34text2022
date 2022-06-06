@@ -1,0 +1,161 @@
+
+ITシステムの使用終了に伴う，初期化・廃棄を行う．
+
+サーバ機器の交換などによる機器の廃棄を行う際，サーバで重要な情報や個人情報などを扱っていた場合は適切な処置を行う必要がある．
+
+\section{実験内容}
+
+システムの廃棄を行う．コンピュータについては，ストレージを完全に消去し，
+それ以外のアプライアンス機器（ルータ・スイッチ等）は，工場出荷時の状態に
+初期化し，ケーブル等を元の状態に原状復帰する．
+
+\subsection*{廃棄}
+ \begin{itemize}
+  \item 各機器・設備ごとの手順に従って廃棄を行う．
+  \item 順序として，初期化にコンソールによる端末操作が必要な\textbf{ルータ・スイッチから先に行う}．
+ \end{itemize}
+
+\subsection{各設備ごとの初期化手順}
+
+各設備について初期化の手順を示す．
+
+\subsection*{ルータ}
+
+設定情報は，startup-config という名前のファイルで nvram: と呼ばれる記憶
+領域に保存されている．erase コマンドでこれを消去する．
+
+\begin{cli}
+router# erase startup-config
+router#dir nvram:  （確認）
+Directory of nvram:/
+
+  190  -rw-           0                    <no date>  startup-config
+  191  ----          24                    <no date>  private-config
+  192  -rw-        1567                    <no date>  underlying-config
+    1  ----          16                    <no date>  persistent-data
+    2  -rw-           0                    <no date>  ifIndex-table
+    3  -rw-         595                    <no date>  IOS-Self-Sig#1.cer
+    4  -rw-         595                    <no date>  IOS-Self-Sig#2.cer
+
+↑ startup-config がないか，0バイトになっていれば良い．
+\end{cli}
+
+また，VLAN 情報が設定されている場合は，delete vlan.dat コマンドで消去す
+る (dir flash: コマンドで確認できる）．本実験では，ルータではVLANの作成を行っていないので，必要はない．スイッチでは必要である．
+
+\paragraph{注意!} 
+delete コマンドは，flash: 領域のファイルを消去するが，
+flash: 領域には，OS 本体(IOS)も保存されている(bin で終わるファイル名)．vlan.dat 
+以外のファイルを決して消去しないこと．
+
+\subsection*{スイッチ}
+
+設定情報は，ルータと同様，nvram: の startup-config に保存されているので，
+erase コマンドで消去する．
+
+\begin{cli}
+Switch#erase startup-config
+Erasing the nvram filesystem will remove all configuration files!
+ Continue? [confirm]
+[OK]
+Erase of nvram: complete
+
+Switch#dir nvram:
+Directory of nvram:/
+
+   62  -rw-           0                    <no date>  startup-config
+   63  ----           0                    <no date>  private-config
+\end{cli}
+
+また，VLAN 情報は，flash: と呼ばれる別の記憶領域に，vlan.dat というファ
+イルで保存されている．これを delete コマンドで消去する．
+
+\begin{cli}
+Switch#dir flash:
+Directory of flash:/
+
+    2  -rwx         796  May 10 1993 01:42:15 +00:00  vlan.dat
+    3  -rwx        1914  May 21 1993 01:44:48 +00:00  n
+    4  -rwx        2072  Oct 30 1993 21:57:37 +00:00  multiple-fs
+    5  drwx         512   Mar 1 1993 00:07:53 +00:00  c2960-lanlitek9-mz.122-50.SE5
+
+27998208 bytes total (16788992 bytes free)
+
+Switch#delete vlan.dat
+Delete filename [vlan.dat]?
+Delete flash:vlan.dat? [confirm]
+Switch#dir flash:
+Directory of flash:/
+
+    3  -rwx        1914  May 21 1993 01:44:48 +00:00  n
+    5  drwx         512   Mar 1 1993 00:07:53 +00:00  c2960-lanlitek9-mz.122-50.SE5
+
+27998208 bytes total (16793600 bytes free)
+\end{cli}
+
+\paragraph{注意!} 
+delete コマンドは，flash: 領域のファイルを消去するが，
+flash: 領域には，OS 本体(IOS)も保存されている（c2950 で始まるファイル名）．vlan.dat 以外のファイルを決して消去しないこと．
+
+\subsection*{PC類の初期化}
+
+プレインストールのコンピュータ（ノートPC=Windows 10, macOS, ChromeOS)については，メーカ標準のマニュアル記載の初期化手順を実施する（本当に廃棄する場合など重要情報の削除が必要な場合は，下記サーバの初期化と同等のことを行う必要がある）．
+
+マニュアル類はGoogle Drive等に別添する．
+
+\subsection*{サーバ・Desktopの完全初期化}
+
+多くのLinux・UNIXに付属するコマンド shred を用いる．
+
+shred コマンドは，ストレージ上のファイルあるいはストレージのブロックデバ
+イス（セクタ単位のアクセスを行うデバイス）に対して，ランダム値や DoD，
+NSA などで規定される消去方式に対応した書き込み動作を行うコマンドである．
+
+\begin{cli}
+# shred ファイル名
+\end{cli}
+
+OS も含めた HDD 全体の初期化を行う場合は，OS 全体を表すブロックデバイス
+を指定する．ブロックデバイスにアクセスする際は，root 権限でしか行えない
+ことに注意する．
+
+デフォルトではランダムな値を3回書き込むが，-z オプションではゼロを書き込
+むことも可能である\footnote{ゼロを書き込むだけで良ければ，ゼロを出力する
+/dev/zero ファイルを in に指定し，OS 標準の dd (disk dump)コマンドを dd
+if=/dev/zero of=出力ファイル bs=65536 などと実行しても良い．}．
+
+OS 全体を初期化する場合は，消去するOS とは別の OS から実行する必要がある．
+このような用途に，DVD \footnote{USB や CD-ROM から起動するものもある} か
+ら起動できる OS がある．Knoppix は，よく用いられる DVD Live Linux で，
+Debian をベースに産業総合技術研究所で日本語化が行われている．
+
+Knoppix から，OS を起動し，shred コマンドを用いる．Linux では，ハードディ
+スクなどのストレージのブロックファイルは，/dev/sda (一台目の HDD の 全体)，
+/dev/sdb （2台目以降，sdb, sdc 等と続く）であり，パーティションがある場
+合は，さらに，/dev/sda1, /dev/sda2 などパーティション番号が付いたファイ
+ルが各パーティション全体を表している．パーティション番号は，1 から 4まで
+が基本パーティション，論理（拡張）パーティションは，/dev/sda5 など 5以上
+の番号が用いられる．ここでは，ハードディスク全体を消去するよう指定する．
+
+DVD からの起動は，DVD を挿入し起動するか，挿入しても起動しない場合は，
+BIOS POST 中に特定のファンクションキーを押すなどして DVD から起動するよ
+う指定する．Mac Miniの場合は，「C」キーを押しながら起動し，OS なしにDVD 
+を排出したい場合は，マウスのボタンを押しながら起動する．
+
+\subsection*{ケーブル類}
+
+ケーブル類はすべて抜き，数量を確認し，まとめておく．
+
+本来は，ケーブルタイなどで結んだり，長いネットワークケーブルは8の字巻き
+と呼ばれる方法\footnote{ケーブルのクセがつきにくく，次回使用する際に便利
+と言われる．}で丸めて結んでおくと良いが，本実験ではまとめておくだけで良
+い．
+
+\subsection*{マニュアル・書類・DVDメディア}
+
+マニュアル・書類は元あった場所に戻す．
+
+パスワードや顧客情報，ネットワーク情報等が書かれた文書やメモ類はシュレッ
+ダーにかけて廃棄する．
+
+
