@@ -1,0 +1,51 @@
+%% %% %% %%
+%% %% %%
+%% %% %%  ip nat
+%% %% %%
+%% %% %%
+\section{show ip nat translations: NATの設定確認・削除}
+\label{cmd:ios-show-int-status-nat}
+Cisco IOS上で，NAT (NAPT, IP masquerading) の設定，および，NATテーブル確認を行う．
+
+また，削除方法についても本項目に記述する．
+
+
+\noindent
+{\bf ◆書式}
+\begin{center}
+\begin{screen}
+\begin{alltt}
+【NATテーブルの確認】
+Router#show ip nat translations
+Pro Inside global         Inside local          Outside local         Outside global
+tcp 222.229.69.3:8080     172.21.22.100:80      ---                   ---
+
+【NATテーブルからNATエントリ削除】
+Router#clear ip nat translation *
+
+(次項NAT設定削除に先立って行う必要がある場合が多い．
+ 既にNAT通信中の場合でエントリがある場合は，NATの
+ 設定削除が行えないため）
+
+【NATの設定削除】
+静的 NAT の設定削除 (no を付けて消したい内容を記述)
+
+Router(config)#no ip nat inside source static tcp 172.21.22.100 80 222.229.69.3 8080
+\end{alltt}
+\end{screen}
+\end{center}
+
+
+{\bf ◆使用例}
+\begin{center}
+\begin{breakbox}
+\begin{alltt}
+Router#show ip nat translations
+Pro Inside global         Inside local          Outside local         Outside global
+tcp 222.229.69.3:8080     172.21.22.100:80      ---                   ---
+
+\end{alltt}
+\end{breakbox}
+\end{center}
+                
+

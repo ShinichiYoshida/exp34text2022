@@ -46,3 +46,14 @@ cisco(config)#ip route 192.168.0.0 255.255.255.0 172.21.10.101 2
 \end{alltt}
 \end{screen}
 \end{center}
+
+222.222.22.22 宛ての経路を削除する例
+　
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#conf t
+cisco(config)#no ip route 222.222.22.22 255.255.255.0 222.221.1.1
+\end{alltt}
+\end{screen}
+\end{center}

@@ -1,10 +1,10 @@
 %% %% %% %%
 %% %% %%
-%% %% %%  ip route
+%% %% %%  ip nat
 %% %% %%
 %% %% %%
-\section{show ip nat translations, ip nat}
-\label{cmd:ios-show-int-status-nat}
+\section{NATの設定： ip nat}
+\label{cmd:ios-ip-nat}
 Cisco IOS上で，NAT (NAPT, IP masquerading) の設定，および，NATテーブル確認を行う．
 
 \noindent
@@ -12,55 +12,58 @@ Cisco IOS上で，NAT (NAPT, IP masquerading) の設定，および，NATテー�
 \begin{center}
 \begin{screen}
 \begin{alltt}
-静的 NAT の設定
+【静的 NAT の設定】
+（ポートフォワーディング）
 Router(config)#ip nat inside source static tcp 172.21.22.100 80 222.229.69.3 8080
 
 内側(inside) の(送信元)IPアドレス 172.21.22.100, TCP ポート 80 を，
 外側(outside, インターネット側) に対して，222.229.69.3 TCP ポート 8080 で
 公開する．
 
-NATテーブルの確認
+【NATテーブルの確認】
 Router#show ip nat translations
 Pro Inside global         Inside local          Outside local         Outside global
 tcp 222.229.69.3:8080     172.21.22.100:80      ---                   ---
 
-静的 NAT の設定削除
-Router(config)#no ip nat inside source static tcp 172.21.22.100 80 222.229.69.3 8080
+【削除する場合】
 
 NATテーブルから削除
 Router#clear ip nat translations *
 
+静的 NAT の設定削除
+Router(config)#no ip nat inside source static tcp 172.21.22.100 80 222.229.69.3 8080
 \end{alltt}
 \end{screen}
 \end{center}
 
+\textbf{動的NAT (PAT, NAPT, IP Masquerading) の設定}
 
-{\bf ◆機能説明}
-
-どのポートが，どの VLAN に所属しているかを確認する．
-
-{\bf ◆使用例}
 \begin{center}
-\begin{breakbox}
+\begin{screen}
 \begin{alltt}
-静的 NAT の設定
-Router(config)#ip nat inside source static tcp 172.21.22.100 80 222.229.69.3 8080
 
-内側(inside) の(送信元)IPアドレス 172.21.22.100, TCP ポート 80 を，
-外側(outside, インターネット側) に対して，222.229.69.3 TCP ポート 8080 で
-公開する．
+【変換元のアドレス】
+（変換対象の変換前（内部ＰＣ）のアドレスを
+　アクセスリストで設定）
 
-すなわち外から，222.229.69.3 TCP ポート 8080 へのアクセスがあれば，
-内側のサーバ 172.21.22.100, TCP ポート 80 へ転送
-(ポートフォワーディング)する．
+Router(config)# access-list 1 permit 192.168.11.0 0.0.0.255
+(192.168.11.0～192.168.11.255を変換する例）
 
-Router#show ip nat translations
-Pro Inside global         Inside local          Outside local         Outside global
-tcp 222.229.69.3:8080     172.21.22.100:80      ---                   ---
+【変換後のアドレス】
+（変換後のパブリック（外部）IPアドレスを
+　IPアドレスプールとして設定）
 
-NAT 設定の確認
+Router(config)# ip nat pool groupX 222.229.22.2 222.229.22.2 255.255.255.0
+
+(222.229.22.2から222.229.22.2まで(1つのIPアドレスのみ
+例)を使う)
+
+【上記リストとプールを使ったNAPTの設定】
+
+Router(config)# ip nat inside source list 1 pool groupX overload
+(overloadを付けることで，NAPTを行う)
+(1つのIPアドレスで複数PCが外部接続できる)
 \end{alltt}
-\end{breakbox}
+\end{screen}
 \end{center}
-                
 

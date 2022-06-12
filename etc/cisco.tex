@@ -86,7 +86,7 @@ cisco>
 
 一般ユーザモードから，``enable'' コマンドで特権モードに遷移する．プロン
 プトが \# に変わり，多くのシステム閲覧コマンド ( show xxxx ... )が使えるよ
-うになる．設定変更は行えない．
+うになる．\textbf{設定の確認はできるが，設定は行えない}．
 
 \begin{center}
 \begin{screen}
@@ -102,7 +102,7 @@ cisco#
 
 設定変更を行うモード．特権モードから `` configure terminal'' コマンドで
 遷移する．ルーティングやアクセスコントロールリスト等，様々なシステム全
-体に及ぶ設定変更コマンドが使える．
+体に及ぶ設定変更コマンドが使える．\textbf{設定を行うことができるが，設定の確認は行えない．}exit にて特権モードに戻ってからせて値を確認するか，do コマンドを使うことでコンフィグコードで一時的に設定を確認できる（例：do show int）．
 
 \begin{center}
 \begin{screen}
@@ -119,8 +119,7 @@ cisco(config)#
 各インターフェイスの設定変更を行うモード．コンフィグモードから
 ``interface インターフェイス名'' コマンドで遷移する．
 
-IP アドレスやネットマスクの変更，アクセスコントロールリストのインターフェ
-イスへの適用が行える．
+IP アドレスやネットマスクの変更，アクセスコントロールリストのインターフェイスへの適用が行える．
 
 \begin{center}
 \begin{screen}
@@ -188,7 +187,7 @@ cisco(config-if)#ip address 192.168.1.2 255.255.255.0
 \end{screen}
 \end{center}
 
-\subsection*{IPアドレスの変更や設定取り消し}
+\subsection*{設定取り消し，IPアドレスの変更など}
 IP アドレスの変更は，そのまま別の IP を設定すれば，上書きされる．
 
 IP アドレスの無効化は，取り消したいコマンドに \texttt{no} を付けて実行する．
@@ -203,6 +202,19 @@ cisco(config-if)#no ip address 192.168.1.2 255.255.255.0
 \end{alltt}
 \end{screen}
 \end{center}
+
+同様に，アクセスリストなど，既に行った設定を元に戻したい，無効化したい場合は，``no'' を行頭に付けて，消去したいコマンドをコンフィグモードで入力する．
+
+\begin{center}
+\begin{screen}
+\begin{alltt}
+cisco#conf t
+cisco(config)#no ip route 222.222.22.22 255.255.255.0 222.221.1.1
+　（222.222.22.22 宛ての経路を消したい場合）
+\end{alltt}
+\end{screen}
+\end{center}
+
 
 \subsection*{インターフェイスの無効化：shutdown コマンド}
 インターフェイスを無効化（down）させたい場合に用いる．
@@ -314,4 +326,6 @@ cisco#write memory    (wr)
 \input{./etc/cisco/ios-show-int-status.tex}
 \clearpage
 \input{./etc/cisco/ios-nat.tex}
+\clearpage
+\input{./etc/cisco/show-ip-nat-translations.tex}
 \clearpage
