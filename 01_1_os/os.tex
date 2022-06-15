@@ -183,7 +183,7 @@ OSは，コンピュータのアーキテクチャ（CPU やメモリ，周辺�
 	   \item Ubuntu\\
 		 Ubuntu は UNIX 系 OS の一つである Linux のディストリビューション
 		 \footnote{Distribution: Linux OS の配布形態には数多くの種類があ
-		 り，Ubuntu はその一つである}の一つで，Debian 系\footnote{Linux
+		 り，Ubuntu はその一つである}の一つで，Debian 系\footnote{RedHat
 		 系，Debian系，Slackware系があり，それぞれ rpm(RedHat Package Manager)，
 		 deb，tgz という別の仕組みのパッケージ管理システムを採用してい
 		 る．}のディストリビューションである．
@@ -248,7 +248,7 @@ Windows は Microsoft 社が販売している OS であり，1980年代から�
 	\begin{itemize}
 	 \item キーボードの接続
          \item モニタの接続
-	 \item マウスの接続（サーバ用コンピュータには必須ではない）
+	 \item マウスの接続（サーバ用コンピュータには不要）
 	\end{itemize}
   \item 各装置の電源の接続
   \item 各端末へのOSのインストール
@@ -290,7 +290,8 @@ Windows は Microsoft 社が販売している OS であり，1980年代から�
  \item Dell製タワーPCには，Dell 製英語キーボードを用いる．
  \item デスクトップPCのディスプレイ接続は，D-SUB 15ピン，アナログ RGB 接続を用いる
        （``D'' の字を横にしたような，端子のピンが3列15個あるもの）．ただ
-       し，Mac には Display Port 変換アダプタ，Windows デスクトップには，
+       し，%% Mac には Display Port 変換アダプタ，
+       Windows デスクトップには，
        DVI-I（ディジタル・アナログ混在端子）と RGB の変換アダプタが必要
        になる．
  \item 端子のピンは細く，折れ曲がりやすいので，無理に差し込むなどはしな
@@ -338,7 +339,7 @@ USB は，Universal Serial Bus の略称で，それまでキーボードやマ�
 うな規格がある．
 
 \begin{description}
- \item[USB 1.1] 1.5Mbps と 12Mbps の帯域幅がが存在．マウスやキーボードな
+ \item[USB 1.1] 1.5Mbps と 12Mbps の帯域幅が存在．マウスやキーボードな
 	    どの低速デバイス向け．電源供給は，5V, 500mA (2.5W) までであ
 	    り，ポータブル HDD など電力が大きいものは，セルフパワーと呼
 	    ばれ，機器側でコンセントから電源供給する必要がある．
@@ -622,7 +623,8 @@ ls コマンドでユーザディレクトリが作成されているかも確�
        ``exp'' とする）．管理者ユーザのパスワードは，``root00'' にする．
  \item ユーザ登録画面などが出た場合は，氏名は「KUT GroupX」（Xはグループ
        名），住所等は，大学のものを登録する．
- \item Chromebook では，Google アカウントが必要なため，kutexpG@gmail.com (Gはグループ番号) というアカウントを作成し，これを使う．またパスワードは強固なものとし，TAに伝える．
+   %\item Chromebook では，Google アカウントが必要なため，kutexpG@gmail.com (Gはグループ番号) というアカウントを作成し，これを使う．またパスワードは強固なものとし，TAに伝える．
+ \item Chromebook の使用には，指定された実験用の Google アカウントを用いる．
  \item ネットワーク設定は後に行うので，特に設定しなくて良い．
  \item ディスクのパーティション設定は，オペレーティングシステムのための
        領域をあまり小さくしすぎないこと．これは，オペレーティングシステ
@@ -651,7 +653,7 @@ ls コマンドでユーザディレクトリが作成されているかも確�
 \end{table}
 
 \section{OSのインストール手順}
-\subsection{Ubuntu}
+\subsection{Ubuntu Server}
 
 \begin{itemize}
 \item{\bf インストールメディアの挿入} \\
@@ -669,9 +671,7 @@ Ubuntu 20.04 LTS server 64ビット版のインストールメディアを用い
      ルする．
 
 \item{\bf 起動}\\
-DVD を挿入したら，リセットボタンまたは，電源を押し直すなどして再起動する．DVD
-ドライブから起動しない場合は，\keybox{F8} を押すとブート選択メニューが出
-るので，光学ドライブを選択する．
+USBメモリを挿入したら，リセットボタンまたは，電源を押し直すなどして再起動する．USB メモリから起動しない場合は，BIOS のブート選択メニューで USB を選択する．
 
 \item{\bf インストール言語，キーボード配列}\\
 
@@ -772,7 +772,7 @@ sda ＝1台目のディスクを選択する．
 以上で終了である．Continue を選択し再起動する．
 
 \item{\bf 再起動}\\
-再起動は，DVD-RW メディアを抜いて行う．
+再起動は，メディアを抜いて行う．
 
 \item{\bf ログイン}\\
 login プロンプトが現れるので，exp ユーザでログインする．
