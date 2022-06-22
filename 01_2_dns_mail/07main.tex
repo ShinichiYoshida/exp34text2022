@@ -108,10 +108,14 @@ SMTP は RFC5321 で規定されているプロトコルである．}
 そのメールアドレスを管理しているメールサーバに配送するというような
 動作をする（図\ref{fig:07:mailserver.eps}）．
 
-MTA の代表的なソフトウェアには， sendmail や postfix ，qmail などがあり，
-世界中でもっとも使われているのは sendmail であるが，現在，採用が増加し
-ている MTA に postfix がある．本実験では，この postfix を用いて MTA の
-構築を行う．
+%% MTA の代表的なソフトウェアには， sendmail や postfix ，qmail などがあり，
+%% 世界中でもっとも使われているのは sendmail であるが，現在，採用が増加し
+%% ている MTA に postfix がある．本実験では，この postfix を用いて MTA の
+%% 構築を行う．
+
+MTA の代表的なソフトウェアには， sendmail や postfix ，qmail などがあ
+る．本実験では，postfix を用いて MTA の構築を行う．
+
 
 MTA により送受信され宛先メールサーバへ到着したメールは，メールサーバ上
 のメールスプールに保存される．ユーザは，メールサーバにアクセスし，メー
@@ -241,8 +245,9 @@ mail name: には，英語で指示された通り（メールのドメイン名
   ■mynetworks に自ネットワークのセグメントを追加
     （xxx.xxx.xxx.xxx/zz のようにネットワークアドレスと
         プレフィックスによる表記で記述．192.168の場合は，/24全てで良い）
-  ■myhostname がサーバの FQDN を書く
-
+  ■myhostname にサーバの FQDN を書く（インストール時に適切に設定していれば，
+    サーバの FQDN に最初からなっている）
+  
 # systemctl restart postfix （もう動作しているため）
 
 \end{cli}
@@ -369,8 +374,10 @@ QUIT
 \paragraph{注意} パスワードは生で画面表示されるので，差障りのある場合は
 passwd コマンドなどであらかじめ差障りのないものに変更しておくこと．
 
-PASS コマンドでパスワードを入力した後，ERR が出力されずに OK と出力され
-れば良い．ただし，root ユーザは認証に失敗するOSがある．
+PASS コマンドでパスワードを入力した後，ERR が出力されずに OK と出力さ
+れれば良い．ただし，root ユーザは認証に失敗するOSがある．メッセージ番
+号を引数として RETR コマンドを実行すれば，メッセージ番号のメッセージを
+読める．
 
 \subsection{DNSの設定の追加}
 \subsubsection{MXレコードの追加}
@@ -415,7 +422,7 @@ smtp       IN      CNAME   server
 % \subsubsection*{クライアントPCでメールを読む}
 クライアントの MUA の設定を行い，メール送受信のテストを行う．
 
-Cent OS，Windows には，メールクライアントが付属していないため，
+Windows には，メールクライアントが付属していないため，
 GNU Public License でフリーの使用ができる Thunderbird を
 Mozilla\footnote{Mozilla はオープンソースのブラウザ，メールクライアント
 等を開発している団体} のサイト（下記 URI）からインストールする
@@ -425,7 +432,7 @@ Mozilla\footnote{Mozilla はオープンソースのブラウザ，メールク�
 https://www.mozilla.org/en-US/thunderbird/all/ 
 \end{center}
 
-Linux (デスクトップ)の Thunderbird は，下記の公式サイトからダウンロードしてインストールしても，パッケージ管理システムからインストールしてもどちらもで良い．
+%% Linux (デスクトップ)の Thunderbird は，下記の公式サイトからダウンロードしてインストールしても，パッケージ管理システムからインストールしてもどちらもで良い．
 
 macOS の Thunderbird は公式サイトからダウンロードしてインストールする．
 
