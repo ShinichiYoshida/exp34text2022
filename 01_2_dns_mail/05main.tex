@@ -101,8 +101,10 @@ DNSサービスを構築する．ここでは，DNSサービスとは下記に�
 サーバ& \texttt{server} & serverのIPアドレス \\\hline
 Ubuntu Desktop & \texttt{linux} & Ubuntu Desktop のIPアドレス \\\hline
 Windows 10 & \texttt{win} & Windows 10 のIPアドレス \\\hline
-Macbook & \texttt{mac} & DHCPのためここでは設定しない \\\hline
-ChromeBook & \texttt{note} & DHCPのためここでは設定しない \\\hline
+%% Macbook & \texttt{mac} & DHCPのためここでは設定しない \\\hline
+%% ChromeBook & \texttt{note} & DHCPのためここでは設定しない \\\hline
+Macbook & \texttt{mac} & Macbook の IPアドレス \\\hline
+ChromeBook & \texttt{note} & ChromeBook の IPアドレス \\\hline
 %ルータの内側I/F & router & ルータのFE1のIPアドレス \\\Hline
 %スイッチ & sw & スイッチのIPアドレス \\\Hline
 \Hline
@@ -159,7 +161,7 @@ CNAME レコード，MXレコードをそれぞれ追加する必要がある．
 ネット規模での名前解決には適さない．また，動的なネットワーク構成の変更に
 は対応しづらい，すべてのホストが同じファイルを保持しなければならない，な
 どという欠点がある．比較的ホスト数が少なく，内に閉じた LAN であればこれ
-でも構わないが，世界中のホストと通信するインターネットでは，ホスト名よる
+でも構わないが，世界中のホストと通信するインターネットでは，hosts ファイルによる
 名前解決は不可能である．
 
 \subsection*{LAN内のディレクトリサービス}
@@ -250,7 +252,7 @@ DNS では階層的な名前空間を用いているため，ホスト名
   
 DNS サーバは世界中のコンピュータのホスト名と IP アドレスを知っているわけではな
 い．名前空間の第一階層にある \verb|jp| ネームサーバは，
-第二階層である \verb|ac.jp|，\verb|co.jp|，\verb|ne.jp| などドメインのネー
+第二階層である \verb|ac.jp|，\verb|co.jp|，\verb|ne.jp| などのドメインのネー
 ムサーバのホスト名と IP アドレスを知っている．
 同様に，\verb|kochi-tech.ac.jp| ネームサーバは，
 \verb|ugs.kochi-tech.ac.jp|，\verb|www.kochi-tech.ac.jp| のホスト名と IP %
@@ -391,7 +393,7 @@ options {
 \end{cli}
 
 named.conf.local 内で自分が管理するドメインを zone で指定する．named.conf.local 
-を新規に作成し，次を参考に記述する．以下の例は，gX.info.kochi-tech.ac.jp 
+を新規に作成し，次を参考に記述する．以下の例は，gX.exp.info.kochi-tech.ac.jp 
 ドメインの情報を，ゾーンファイル \texttt{/etc/bind/gX.zone} に記述する場合である．
 \begin{cli}
 //↓下記記述中の X はグループ番号にすること
@@ -553,7 +555,7 @@ win     IN      A       Windows 10 の IP
 bind の起動を行う．
 
 \begin{cli}
-# systemctl enable bind9
+# systemctl enable named
     ↑再起動時に BIND の自動起動
 
 # systemctl start bind9
@@ -675,7 +677,8 @@ nslookup や ping では，自ドメイン名を省略できる．
 		DNSとはどのような仕組みで名前の解決を行うのか．
 		また，リゾルバ・キャッシュサーバはどのように違うものか．
 \paragraph{管理外ホストの名前解決}
-		自分の管理外のホストに対しどのように名前の解決を行うのか．
+%% 		自分の管理外のホストに対しどのように名前の解決を行うのか．
+どのクライアントからのクエリを受け付け，どのクライアントからのクエリは拒否すべきか（オープンリゾルバ問題の対策）．
 \paragraph{hostsファイルなどとの併用}
 	hosts ファイルなど，他の名前解決サービスとDNSサーバを併用するときの注意．この挙動を変更したい場合はどうするか．
  
