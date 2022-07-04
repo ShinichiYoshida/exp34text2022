@@ -891,34 +891,10 @@ mysql> delete from sales.sales where sales.price<>100;
 \clearpage
 \section{実験内容(2)}
 
-%\subsection*{動的コンテンツ}
-%
-%動的コンテンツを生成するための設定と動的コンテンツの配置を行う．
-%\begin{itemize}
-%\item Apache にて SSI，CGI が実行できる環境の設定
-%\item 簡単な動的コンテンツの作成
-%\item PHP の動作環境をサーバに作成
-%\end{itemize}
-%
-%簡単な動的なコンテンツの作成として，時刻を表示するプログラムをそ
-%れぞれ下記の技術を用いて作成し，それぞれの技術的違いを考えてみよ．
-%\begin{itemize}
-% \item SSI
-% \item CGI (用いる言語は何でも良いが，本テキストではシェルスクリプトを提供)
-% \item PHP
-%\end{itemize}
-%
-%次に，CGI でカウンタプログラムを作成せよ．カウンタプログラ
-%ムはユーザからリクエストを受けるたびに，カウンタの値を1つずつ増加させ，
-%そのウェブページに何回のリクエストがあったかを表示するものである．プログ
-%ラムやカウンタを記録するデータファイルの書き込み権限に注意すること．
-%
-%\subsection*{Web システムのインストール1}
-%
-%CGI, PHPを用いた掲示板(Minibbs)，Wiki (PukiWiki)のインストールを行う．
-%
 \subsection*{Web システムのインストール}
 
+%CGI, PHPを用いた掲示板(Minibbs)，Wiki (PukiWiki)のインストールを行う．
+%
 MediaWiki および Wordpress のインストールを行う．
 
 
@@ -1130,21 +1106,6 @@ Wordpress のユーザ名：Wordpress 管理用ユーザ．root
 \end{cli}
 
 
-\section{デバッグ}
-
-下記の点に注意する．
-
-\begin{description}
-\item[書き込み権限] CGI，PHP等のプログラムは，Apache の動作権限で実行さ
-	    れるため，ファイルの書き込み等は，その権限で書き込みできる
-	    必要がある(/etc/apache2/envvars にある環境変数
-	    APACHE\_RUN\_USER, APACHE\_RUN\_GROUP に権限が示されている)．
- \item[エラー対処] Internal Server Error が出力された場合は，動的コンテ
-	    ンツでの実行エラーである．ログファイル
-	    \texttt{//var/log/apache2/} 以下のファイルを参照したり，コ
-	    マンドラインからその CGI を実行するなどして，デバッグする．
-\end{description}
-
 
 \clearpage
 \section{動作確認}
@@ -1152,13 +1113,9 @@ Wordpress のユーザ名：Wordpress 管理用ユーザ．root
 \subsection*{データベース}
 MySQL が正しくインストール，設定されデータベースの操作が行えるか確認する．
 
-%\subsection*{動的コンテンツ}
-%アクセスを行うごとに，CGIで構築されたカウンタが増加するか，
-%SSI, CGI, PHP 全てで時刻表示が正常に行われるか確認する．
-%
-%掲示板・wiki の閲覧や編集が行えるか確認する．
-
 \subsection*{Web システム}
+%掲示板・wiki の閲覧や編集が行えるか確認する．
+%
 Web システム用のデータベースが正しく構築できているか確認する．構築した 
 Web システムについて，それぞれ閲覧，更新，修正などの作業が正しく行われる
 か確認する．
@@ -1187,228 +1144,4 @@ Web システムについて，それぞれ閲覧，更新，修正などの作�
 \end{itemize}
 
 \clearpage
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{実験内容(2’)}
-
-\subsection{HTTPSサーバの設定～認証局による証明書の署名 (これ以降は実験4Cのみ)}
-
-Ubuntu 標準手順での TLS 対応設定では，サーバ証明書およびその秘密鍵として，
-サーバ名などが正しく設定されていない self-signed (自己署名) 証明書が使わ
-れている．
-
-
-詳しくは，Ubuntu のSSL/TLS 設定が書かれている下記の設定ファイルを参照する．
-
-\begin{itemize}
-    \item \texttt{/etc/apache2/sites-enabled/default-ssl.conf}
-\end{itemize}
-
-このファイルの内容は，大まかに下記の意味を持っている．
-
-\begin{cli}
-<IfModule mod_ssl.c>
-→ Apache2用SSL機能モジュールがある場合に以下を設定
-
-VirtualHost _default_:443
-→ 仮想ホスト(バーチャルホスト) 機能で，任意のIPアドレスのポート443でアクセスされた場合の設定（それ以外，例えば，80番や，特に設定した別のIPアドレスなどでは以下の設定は有効にならない
-
-ServerAdmin サーバ管理者の連絡先メールアドレス
-
-DocumentRoot /var/www/html
-→ コンテンツ（トップページ）の場所
-
-ErrorLog, CustomLog
-→ エラーログの場所
-
-SSLEngine on
-→ SSL(TLS)機能の有効化
-
-SSLCertificateFile
-→ SSL 証明書（公開鍵と鍵の持ち主（身元）の情報）ファイルのパス．Ubuntu デフォルトでは，/etc/ssl/certs/ssl-cert-snakeoil.pem となっている．
-
-SSLCertificateKeyFile
-→ SSL 証明書の秘密鍵ファイルのパス．Ubuntu デフォルトでは，
-/etc/ssl/private/ssl-cert-snakeoil.key となっている．
-
-\end{cli}
-
-\url{SSLCertificateFile} のコメントに書かれているように，デフォルトは乱
-数で生成された \url{/etc/ssl/certs/ssl-cert-snakeoil.pem} が証明書として，
-\url{/etc/ssl/private/ssl-cert-snakeoil.key} がその秘密鍵として指定され
-ている．snakeoil は，いんちき薬の意であるが，サーバの身元を保証しない適
-当な証明書である．これを自己署名 (self-signed )証明書と言うが，俗に
-\textbf{オレオレ証明書}と呼ぶ．
-
-このままでも，経路上の第三者が通信内容を傍受することが不可能な，暗号化さ
-れた Web ページの構築はできており，研究室内などのごく小規模でインターネ
-ットへの公開サービスを必要としない場合は，この形での運用も可能である．し
-かし，公開サービスとする場合，第三者による偽のサイトと，本物のサイトとの
-見分けが付かず，フィッシングや偽情報発信等の詐称の問題が発生し得る問題が
-ある．そのため，OpenSSL を用いて正式な証明書・秘密鍵を作成して運用する．
-その手順は以下の通りである．
-
-\begin{enumerate}
- \item OpenSSL を使い，秘密鍵と公開鍵（証明書署名要求（CSR\footnote{Certificate Signing Request})＝署名前の証明書）を作成
- \item 証明書署名要求ファイルに署名を行い，証明書ファイル (CRT\footnote{Certificate}) を作成
- \item 秘密鍵・証明書を配置し，Apache 設定ファイル\url{default-ssl.conf} の\url{SSLCertificateFile}, \url{SSLCerificateKeyFile} で両ファイルを指定
-\end{enumerate}
-
-作成した証明書は，然るべき認証機関\footnote{ルートCAあるいはルート認
-証局と呼ぶ．VeriSign 社が有名．日本法人は，「合同会社シマンテック・ウェブ
-サイトセキュリティ」．他にも GMO などが証明書発行業務を行っている}にて，
-所定の費用を支払うなどして署名される必要がある．この方法が通常の機関で行
-われる運用である．サーバを複数台運用する場合は，中間認証局を設置しその認
-証局証明書が上位認証局やルート認証局にて署名された後，各サーバの証明書を
-中間認証局で署名する．次に2つ目の方法として，大学などの小規模機関では，
-独自のルート認証局を設置し機関内のクライアントに安全な手段でルート証明書
-を配布・インストールして運用する場合もある．ここでは，この方法を用いるこ
-ととし，サーバで認証局を設置し，認証局の証明書をルート証明書としてクライ
-アントにインストールし，サーバ証明書を認証局で署名して用いる．
-
-\subsection{Apache のサーバ証明書の作成}
-
-OpenSSL のコマンドを使う．情報としては，下記が分かりやすい．
-\begin{itemize}
- \item Ubuntu のサーバ運用マニュアル\\
- \url{https://ubuntu.com/server/docs/security-certificates}
-\end{itemize}
-
-コマンド openssl genrsa による秘密鍵生成の際，-des3 などによる秘密鍵を暗
-号化して保存するオプションは通常外しておく運用が多いため，ここでもそのよ
-うにする\footnote{サーバの管理者ユーザがだれでも，秘密鍵を簡単に読み込み，
-コピーなどができると，セキュリティ上良くないため，鍵ファイルにも暗号化を
-行い，パスワードを入力しないと読み込めないようにする設定だが，サーバ証明
-書の場合，Apache を再起動するたび，パスワードを入れる必要があり，サーバ
-の自動起動などにおいて運用上の問題が起こる．そのため，サーバにログインア
-クセスできる人を最小限に絞って管理することで，サーバ秘密鍵へのパスワード
-は省略する運用も行われる．}．
-
-\begin{cli}
-# openssl genrsa -out server.key 2048
--> RSAアルゴリズムでの秘密鍵の作成．ファイル名は server.key 鍵長は 2048 ビット
-
-# openssl req -new -key server.key -sha256 -out server.csr
--> 秘密鍵 server.key に対応する証明書署名要求 (CSR) を作成
-  証明書の内容の入力は次の通りとすること．
-  署名アルゴリズムには SHA256 を使うこと．
-  これは，工科大の認証局の証明書ファイルの要求仕様による
-
-Country Name:
-→JP
-
-State or Privince Name:
-→Kochi
-
-Locality Name:
-→Kochi-shi
-
-Organization Name:
-→Kochi Prefectural Public University Corporation
-
-Organization Unit Name:
-→無
-(入れる場合は大学に要事前申請)
-
-Common Name:
-→サーバのFQDN
-   www.gX.exp.info.kochi-tech.ac.jp
-   (X:グループ名)
-  (ブラウザからアクセスされるURLホスト名)
-
-Email Address:
-→ピリオド「.」のみ入力しEnter
- (サポート外なので入力キャンセル)
-
-extra項目は，何も入れなくて良い．
-
-\end{cli}
-
-工科大の認証局は，ルート認証局(CA)ではなく中間認証局(CA)である．ルート認
-証局は文部科学省所管の国立情報学研究所(NII\footnote{National Institute 
-of Informatics}) ) である．
-
-NII のCAによる証明書作成については，下記の情報も参考にする．
-
-\url{https://meatwiki.nii.ac.jp/confluence/pages/viewpage.action?pageId=26188809}
-
-\subsection{証明書の作成}
-
-正しく署名された証明書を作成するため，証明書署名要求 server.csr ファイル
-を，TA に渡す．
-
-後日，上位 CA （情報システム課) にて署名した証明書を各班に返すので，それ
-を配置すること．
-
-それまでの間，次の自己署名証明書を作成して使う．
-
-\begin{cli}
-# openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
-
-signkey にて自分の秘密鍵を指定するため，自己署名となる．
-有効期間は，作成時から 365 日である．
-server.crt が証明書ファイルである．
-\end{cli}
-
-\subsection{証明書ファイルの配置}
-
-Apache にて秘密鍵・証明書を設定して再起動すれば設定は終了である．
-
-\begin{cli}
-# mv server.key /etc/ssl/private/
-# mv server.crt /etc/ssl/certs/
-(証明書ファイル名は各自確認し，適宜読み替えること)
-
-# vi /etc/apache2/sites-available/default-ssl.conf
-SSLCertificateFile      /etc/ssl/certs/server.crt
-SSLCertificateKeyFile /etc/ssl/private/server.key
-
-秘密鍵・証明書の owner , パーミッションとも，元からあった snakeoil に合
-わせておくこと．
-
-Apache を再起動する．
-\end{cli}
-
-工科大から，下記2ファイルをもらったら，下記の証明書登録，中間CAの証明書
-登録をする．
-
-\begin{itemize}
-    \item 証明書ファイル (crt)
-    \item kut.ca (中間証明書ファイル)
-\end{itemize}
-
-\begin{cli}
-# mv server.crt /etc/ssl/certs/
- 新しい証明書を置く
-
-# mv kut.crt /etc/ssl/certs/
- 工科大の中間証明書を置く
-
-# vi /etc/apache2/sites-available/default-ssl.conf
-SSLCertificateFile      /etc/ssl/certs/server.crt
-
-SSLCertificateChainFile /etc/ssl/certs/kut.crt
-→ こちらは無ければ追加 (証明書チェーン)
-
-Apache 再起動
-
-\end{cli}
-
-\subsection{注意点}
-
-証明書は，鍵長やアルゴリズム，ホスト名やパラメータの値など，様々な制約が
-あり，少しでも合致しない証明書は，不正な証明書として扱われ，ブラウザでエ
-ラーが表示される．
-
-その他，有効期間も重要であるので，下記に注意する．
-
-\begin{itemize}
-    \item 有効期限を過ぎた証明書は不正．\\
-    長期のサーバ運用では，証明書の定期的なアップデートに注意する．
-    \item 有効期限前の証明書は不正．\\
-    サーバの時計の設定には注意する．
-\end{itemize}　
 
